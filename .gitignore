@@ -1,0 +1,16 @@
+# Exported diagrams
+*.png
+
+# Intellij
+.idea/
+*.iml
+*.iws
+
+# Maven
+log/
+target/
+
+#test files
+*.txt
+# class files
+*.class
