@@ -1,4 +1,6 @@
 # Aplikace Šachy
+## O aplikaci
+Autor: *Vojtěch Tilhon*, e-mail: *tilhovoj@fel.cvut.cz*
 ## Co aplikace nabízí?
 - Možnosti hry
     - Volba počáteční pozice
