@@ -32,6 +32,14 @@ public class ChessClock {
 		return playersTime.get(player).getTime();
 	}
 	
+	public Double getIncrement() {
+		return increment;
+	}
+	
+	public Double getStartTime() {
+		return startTime;
+	}
+	
 	public void start() {
 		if (!isRunning) {
 			playersTime.get(playerOnTurn).start();

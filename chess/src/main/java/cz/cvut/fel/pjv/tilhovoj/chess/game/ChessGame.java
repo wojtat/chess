@@ -7,4 +7,8 @@ public class ChessGame {
 	public ChessGame(ChessClock clock) {
 		this.clock = clock;
 	}
+	
+	public ChessClock getClock() {
+		return clock;
+	}
 }
