@@ -7,7 +7,7 @@ public class MainGuiModel {
 	private GameModel gameModel;
 	
 	public MainGuiModel() {
-		ChessGame newGame = new ChessGame(new ChessClock(5.0, .5));
+		ChessGame newGame = new ChessGame(new ChessClock(5.0, .5), new ChessBoard());
 		this.gameModel = new GameModel(newGame);
 	}
 	
