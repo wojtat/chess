@@ -1,5 +1,8 @@
 package cz.cvut.fel.pjv.tilhovoj.chess.gui;
 
+import cz.cvut.fel.pjv.tilhovoj.chess.gui.model.MainGuiModel;
+import cz.cvut.fel.pjv.tilhovoj.chess.gui.view.MainGuiView;
+
 public class MainGuiController {
 	
 	private MainGuiModel model;

@@ -4,10 +4,10 @@ import javax.swing.SwingUtilities;
 
 import cz.cvut.fel.pjv.tilhovoj.chess.game.*;
 import cz.cvut.fel.pjv.tilhovoj.chess.gui.*;
+import cz.cvut.fel.pjv.tilhovoj.chess.gui.model.MainGuiModel;
+import cz.cvut.fel.pjv.tilhovoj.chess.gui.view.MainGuiView;
 
 public class App {
-	
-	private ChessGame game;
 	
 	public void runApp() {
 		/*
@@ -25,13 +25,11 @@ public class App {
 		System.out.println("WHITE has " + c.getTime(PlayerColor.COLOR_WHITE) + " seconds.");
 		System.out.println("BLACK has " + c.getTime(PlayerColor.COLOR_BLACK) + " seconds.");
 		*/
-		
-		game = new ChessGame(new ChessClock(5.0, .5));
 
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-        		MainGuiModel model = new MainGuiModel(game);
+        		MainGuiModel model = new MainGuiModel();
         		MainGuiView view = new MainGuiView();
         		MainGuiController controller = new MainGuiController(model, view);
         		controller.init();

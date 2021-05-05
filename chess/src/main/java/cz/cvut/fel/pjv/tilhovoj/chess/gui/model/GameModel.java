@@ -1,11 +1,12 @@
-package cz.cvut.fel.pjv.tilhovoj.chess.gui;
+package cz.cvut.fel.pjv.tilhovoj.chess.gui.model;
 
 import cz.cvut.fel.pjv.tilhovoj.chess.game.*;
 
-public class MainGuiModel {
+public class GameModel {
+
 	private ChessGame game;
 	
-	public MainGuiModel(ChessGame game) {
+	public GameModel(ChessGame game) {
 		this.game = game;
 	}
 	
