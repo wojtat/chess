@@ -12,6 +12,7 @@ public class ChessPawn extends ChessPiece {
 
 	public ChessPawn(ChessBoard board, ChessCoord coord, PlayerColor player) {
 		super(board, coord, player);
+		this.kind = ChessPieces.PIECE_PAWN;
 	}
 
 	@Override
@@ -27,5 +28,4 @@ public class ChessPawn extends ChessPiece {
 		
 		return moves;
 	}
-
 }

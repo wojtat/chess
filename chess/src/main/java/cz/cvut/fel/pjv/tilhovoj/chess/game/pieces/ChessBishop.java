@@ -12,6 +12,7 @@ public class ChessBishop extends ChessDirectionalPiece {
 
 	public ChessBishop(ChessBoard board, ChessCoord coord, PlayerColor player) {
 		super(board, coord, player);
+		this.kind = ChessPieces.PIECE_BISHOP;
 	}
 
 	@Override

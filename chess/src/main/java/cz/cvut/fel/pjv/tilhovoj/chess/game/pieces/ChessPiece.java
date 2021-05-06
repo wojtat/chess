@@ -8,11 +8,20 @@ public abstract class ChessPiece {
 	protected ChessBoard board;
 	protected ChessCoord coord;
 	protected PlayerColor player;
+	protected ChessPieces kind;
 	
 	public ChessPiece(ChessBoard board, ChessCoord coord, PlayerColor player) {
 		this.board = board;
 		this.coord = coord;
 		this.player = player;
+	}
+	
+	public PlayerColor getColor() {
+		return player;
+	}
+	
+	public ChessPieces getKind() {
+		return kind;
 	}
 	
 	public abstract List<ChessMove> generatePossibleMoves();

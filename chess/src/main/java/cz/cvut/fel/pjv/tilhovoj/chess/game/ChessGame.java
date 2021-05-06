@@ -1,5 +1,7 @@
 package cz.cvut.fel.pjv.tilhovoj.chess.game;
 
+import java.util.EnumMap;
+
 public class ChessGame {
 	
 	private ChessClock clock;
@@ -16,5 +18,9 @@ public class ChessGame {
 	
 	public ChessClock getClock() {
 		return clock;
+	}
+	
+	public void playMove(ChessMove move) {
+		
 	}
 }

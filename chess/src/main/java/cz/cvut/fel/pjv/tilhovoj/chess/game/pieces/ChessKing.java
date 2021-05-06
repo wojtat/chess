@@ -9,6 +9,7 @@ public class ChessKing extends ChessPiece {
 	
 	public ChessKing(ChessBoard board, ChessCoord coord, PlayerColor player) {
 		super(board, coord, player);
+		this.kind = ChessPieces.PIECE_KING;
 	}
 
 	@Override

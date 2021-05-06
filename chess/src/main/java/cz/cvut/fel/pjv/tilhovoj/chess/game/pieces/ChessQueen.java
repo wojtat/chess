@@ -12,6 +12,7 @@ public class ChessQueen extends ChessDirectionalPiece {
 
 	public ChessQueen(ChessBoard board, ChessCoord coord, PlayerColor player) {
 		super(board, coord, player);
+		this.kind = ChessPieces.PIECE_QUEEN;
 	}
 	
 	@Override

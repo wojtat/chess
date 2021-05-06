@@ -12,6 +12,7 @@ public class ChessKnight extends ChessPiece {
 
 	public ChessKnight(ChessBoard board, ChessCoord coord, PlayerColor player) {
 		super(board, coord, player);
+		this.kind = ChessPieces.PIECE_KNIGHT;
 	}
 
 	@Override

@@ -12,6 +12,7 @@ public class ChessRook extends ChessDirectionalPiece {
 
 	public ChessRook(ChessBoard board, ChessCoord coord, PlayerColor player) {
 		super(board, coord, player);
+		this.kind = ChessPieces.PIECE_ROOK;
 	}
 
 	@Override
