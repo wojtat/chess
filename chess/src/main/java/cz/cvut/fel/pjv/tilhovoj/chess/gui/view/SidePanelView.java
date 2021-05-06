@@ -10,7 +10,7 @@ import cz.cvut.fel.pjv.tilhovoj.chess.gui.model.MainGuiModel;
 
 public class SidePanelView extends GuiSubView {
 
-	static final int WIDTH = 120;
+	private static final int WIDTH = 120;
 
 	private EnumMap<PlayerColor, JLabel> timeLabels;
 	private JButton playMoveButton;
