@@ -10,19 +10,19 @@ import cz.cvut.fel.pjv.tilhovoj.chess.game.PlayerColor;
 
 public class ChessBishop extends ChessDirectionalPiece {
 
-	public ChessBishop(ChessBoard board, ChessCoord coord, PlayerColor player) {
-		super(board, coord, player);
+	public ChessBishop(ChessBoard board, PlayerColor player) {
+		super(board, player);
 		this.kind = ChessPieces.PIECE_BISHOP;
 	}
 
 	@Override
-	public List<ChessMove> generatePossibleMoves() {
+	public List<ChessMove> generatePossibleMoves(ChessCoord coord) {
 		List<ChessMove> moves = new ArrayList<>();
 
-		doDirection(moves, coord.getAllUpLeft());
-		doDirection(moves, coord.getAllUpRight());
-		doDirection(moves, coord.getAllDownLeft());
-		doDirection(moves, coord.getAllDownRight());
+		doDirection(moves, coord.getAllUpLeft(), coord);
+		doDirection(moves, coord.getAllUpRight(), coord);
+		doDirection(moves, coord.getAllDownLeft(), coord);
+		doDirection(moves, coord.getAllDownRight(), coord);
 		
 		return moves;
 	}

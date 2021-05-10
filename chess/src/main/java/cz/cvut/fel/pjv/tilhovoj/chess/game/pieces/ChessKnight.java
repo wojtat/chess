@@ -10,13 +10,13 @@ import cz.cvut.fel.pjv.tilhovoj.chess.game.PlayerColor;
 
 public class ChessKnight extends ChessPiece {
 
-	public ChessKnight(ChessBoard board, ChessCoord coord, PlayerColor player) {
-		super(board, coord, player);
+	public ChessKnight(ChessBoard board, PlayerColor player) {
+		super(board, player);
 		this.kind = ChessPieces.PIECE_KNIGHT;
 	}
 
 	@Override
-	public List<ChessMove> generatePossibleMoves() {
+	public List<ChessMove> generatePossibleMoves(ChessCoord coord) {
 		List<ChessMove> moves = new ArrayList<>();
 		
 		for (ChessCoord candidate : coord.getNeighbours()) {

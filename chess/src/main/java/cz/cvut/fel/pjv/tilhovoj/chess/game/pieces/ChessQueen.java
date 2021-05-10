@@ -10,23 +10,23 @@ import cz.cvut.fel.pjv.tilhovoj.chess.game.PlayerColor;
 
 public class ChessQueen extends ChessDirectionalPiece {
 
-	public ChessQueen(ChessBoard board, ChessCoord coord, PlayerColor player) {
-		super(board, coord, player);
+	public ChessQueen(ChessBoard board, PlayerColor player) {
+		super(board, player);
 		this.kind = ChessPieces.PIECE_QUEEN;
 	}
 	
 	@Override
-	public List<ChessMove> generatePossibleMoves() {
+	public List<ChessMove> generatePossibleMoves(ChessCoord coord) {
 		List<ChessMove> moves = new ArrayList<>();
 
-		doDirection(moves, coord.getAllUp());
-		doDirection(moves, coord.getAllDown());
-		doDirection(moves, coord.getAllLeft());
-		doDirection(moves, coord.getAllRight());
-		doDirection(moves, coord.getAllUpLeft());
-		doDirection(moves, coord.getAllUpRight());
-		doDirection(moves, coord.getAllDownLeft());
-		doDirection(moves, coord.getAllDownRight());
+		doDirection(moves, coord.getAllUp(), coord);
+		doDirection(moves, coord.getAllDown(), coord);
+		doDirection(moves, coord.getAllLeft(), coord);
+		doDirection(moves, coord.getAllRight(), coord);
+		doDirection(moves, coord.getAllUpLeft(), coord);
+		doDirection(moves, coord.getAllUpRight(), coord);
+		doDirection(moves, coord.getAllDownLeft(), coord);
+		doDirection(moves, coord.getAllDownRight(), coord);
 		
 		return moves;
 	}

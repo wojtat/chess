@@ -4,6 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChessCoord {
+	public static final ChessCoord WHITE_KING_ROOK = new ChessCoord(1, 8);
+	public static final ChessCoord WHITE_QUEEN_ROOK = new ChessCoord(1, 1);
+	public static final ChessCoord BLACK_KING_ROOK = new ChessCoord(8, 8);
+	public static final ChessCoord BLACK_QUEEN_ROOK = new ChessCoord(8, 1);
+	public static final ChessCoord WHITE_KING_ROOK_DESTINATION = new ChessCoord(1, 6);
+	public static final ChessCoord WHITE_QUEEN_ROOK_DESTINATION = new ChessCoord(1, 4);
+	public static final ChessCoord BLACK_KING_ROOK_DESTINATION = new ChessCoord(8, 6);
+	public static final ChessCoord BLACK_QUEEN_ROOK_DESTINATION = new ChessCoord(8, 4);
+	public static final ChessCoord WHITE_KING = new ChessCoord(1, 5);
+	public static final ChessCoord BLACK_KING = new ChessCoord(8, 5);
+	
 	private Integer rank;
 	private Integer file;
 	

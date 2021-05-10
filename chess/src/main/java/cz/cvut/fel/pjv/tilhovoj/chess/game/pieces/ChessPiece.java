@@ -6,13 +6,11 @@ import cz.cvut.fel.pjv.tilhovoj.chess.game.*;
 
 public abstract class ChessPiece {
 	protected ChessBoard board;
-	protected ChessCoord coord;
 	protected PlayerColor player;
 	protected ChessPieces kind;
 	
-	public ChessPiece(ChessBoard board, ChessCoord coord, PlayerColor player) {
+	public ChessPiece(ChessBoard board, PlayerColor player) {
 		this.board = board;
-		this.coord = coord;
 		this.player = player;
 	}
 	
@@ -24,5 +22,5 @@ public abstract class ChessPiece {
 		return kind;
 	}
 	
-	public abstract List<ChessMove> generatePossibleMoves();
+	public abstract List<ChessMove> generatePossibleMoves(ChessCoord coord);
 }

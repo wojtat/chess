@@ -7,13 +7,13 @@ import cz.cvut.fel.pjv.tilhovoj.chess.game.*;
 
 public class ChessKing extends ChessPiece {
 	
-	public ChessKing(ChessBoard board, ChessCoord coord, PlayerColor player) {
-		super(board, coord, player);
+	public ChessKing(ChessBoard board, PlayerColor player) {
+		super(board, player);
 		this.kind = ChessPieces.PIECE_KING;
 	}
 
 	@Override
-	public List<ChessMove> generatePossibleMoves() {
+	public List<ChessMove> generatePossibleMoves(ChessCoord coord) {
 		List<ChessMove> moves = new ArrayList<>();
 		
 		for (ChessCoord candidate : coord.getNeighbours()) {

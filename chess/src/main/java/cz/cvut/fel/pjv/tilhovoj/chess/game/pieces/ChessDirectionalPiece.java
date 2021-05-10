@@ -9,11 +9,11 @@ import cz.cvut.fel.pjv.tilhovoj.chess.game.PlayerColor;
 
 public abstract class ChessDirectionalPiece extends ChessPiece {
 
-	public ChessDirectionalPiece(ChessBoard board, ChessCoord coord, PlayerColor player) {
-		super(board, coord, player);
+	public ChessDirectionalPiece(ChessBoard board, PlayerColor player) {
+		super(board, player);
 	}
 
-	protected void doDirection(List<ChessMove> moves, List<ChessCoord> direction) {
+	protected void doDirection(List<ChessMove> moves, List<ChessCoord> direction, ChessCoord coord) {
 		// TODO: Add actual movement restrictions
 		for (ChessCoord candidate : direction) {
 			if (board.getTileAt(candidate).isEmpty()) {

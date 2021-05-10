@@ -19,6 +19,10 @@ public class Tile {
 		return piece;
 	}
 	
+	public ChessCoord getCoord() {
+		return coord;
+	}
+	
 	public boolean isEmpty() {
 		return piece == null;
 	}

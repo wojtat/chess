@@ -8,4 +8,12 @@ public class ChessMove {
 		this.from = from;
 		this.to = to;
 	}
+
+	public ChessCoord getFrom() {
+		return from;
+	}
+
+	public ChessCoord getTo() {
+		return to;
+	}
 }

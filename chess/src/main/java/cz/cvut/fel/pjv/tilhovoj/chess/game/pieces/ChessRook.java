@@ -10,19 +10,19 @@ import cz.cvut.fel.pjv.tilhovoj.chess.game.PlayerColor;
 
 public class ChessRook extends ChessDirectionalPiece {
 
-	public ChessRook(ChessBoard board, ChessCoord coord, PlayerColor player) {
-		super(board, coord, player);
+	public ChessRook(ChessBoard board, PlayerColor player) {
+		super(board, player);
 		this.kind = ChessPieces.PIECE_ROOK;
 	}
 
 	@Override
-	public List<ChessMove> generatePossibleMoves() {
+	public List<ChessMove> generatePossibleMoves(ChessCoord coord) {
 		List<ChessMove> moves = new ArrayList<>();
 
-		doDirection(moves, coord.getAllUp());
-		doDirection(moves, coord.getAllDown());
-		doDirection(moves, coord.getAllLeft());
-		doDirection(moves, coord.getAllRight());
+		doDirection(moves, coord.getAllUp(), coord);
+		doDirection(moves, coord.getAllDown(), coord);
+		doDirection(moves, coord.getAllLeft(), coord);
+		doDirection(moves, coord.getAllRight(), coord);
 		
 		return moves;
 	}

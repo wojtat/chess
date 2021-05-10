@@ -14,8 +14,8 @@ public class GameModel {
 		return game.getClock().getTime(player);
 	}
 	
-	public ChessBoard getBoard() {
-		return game.getBoard();
+	public ChessGame getGame() {
+		return game;
 	}
 	
 	public void playMove() {
