@@ -1,5 +1,7 @@
 package cz.cvut.fel.pjv.tilhovoj.chess.gui;
 
+import java.util.logging.Logger;
+
 import cz.cvut.fel.pjv.tilhovoj.chess.game.ChessCoord;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.ChessMove;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.PlayerColor;
@@ -8,6 +10,7 @@ import cz.cvut.fel.pjv.tilhovoj.chess.gui.model.MainGuiModel;
 import cz.cvut.fel.pjv.tilhovoj.chess.gui.view.MainGuiView;
 
 public class MainGuiController {
+	private static final Logger LOG = Logger.getLogger(MainGuiController.class.getName());
 	
 	private MainGuiModel model;
 	private MainGuiView view;
@@ -39,7 +42,7 @@ public class MainGuiController {
 				if (coord.equals(move.getTo())) {
 					// If move is possible, then do it
 					model.getGameModel().getGame().playMove(move);
-					System.out.println("Moving from " + move.getFrom() + " to " + move.getTo());
+					LOG.fine("Moving from " + move.getFrom() + " to " + move.getTo());
 					break;
 				}
 			}

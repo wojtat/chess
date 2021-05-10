@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.util.logging.Logger;
 
 import javax.swing.*;
 
@@ -16,6 +17,8 @@ import cz.cvut.fel.pjv.tilhovoj.chess.gui.MainGuiController;
 import cz.cvut.fel.pjv.tilhovoj.chess.gui.model.MainGuiModel;
 
 public class ChessBoardView extends GuiSubView {
+	private static final Logger LOG = Logger.getLogger(ChessBoardView.class.getName());
+	
 	public static final int TILE_SIZE = 64;
 	private final Color LIGHT_COLOR = Color.WHITE;
 	private final Color DARK_COLOR = Color.BLACK;
@@ -138,6 +141,7 @@ public class ChessBoardView extends GuiSubView {
 	}
 	
 	private class TileButtonListener implements MouseListener {
+		
 		private ChessCoord coord;
 		private AbstractButton button;
 		private MainGuiModel model;
@@ -151,7 +155,7 @@ public class ChessBoardView extends GuiSubView {
 	    @Override
 	    public void mouseClicked(MouseEvent e) {
 	    	controller.clickTile(coord);
-	    	System.out.println("MOUSE CLICKED");
+	    	LOG.fine("Mouse clicked on coord " + coord);
 	    }
 		
 	    @Override
