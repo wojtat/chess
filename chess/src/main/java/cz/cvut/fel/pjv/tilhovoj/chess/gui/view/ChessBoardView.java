@@ -22,7 +22,7 @@ public class ChessBoardView extends GuiSubView {
 	public static final int TILE_SIZE = 64;
 	private final Color LIGHT_COLOR = Color.WHITE;
 	private final Color DARK_COLOR = Color.BLACK;
-	private final Color HILIGHT_COLOR = Color.BLUE;
+	private final Color HILIGHT_COLOR = new Color(172, 172, 128);
 	private AbstractButton[][] boardTiles;
 	private ChessCoord selectedTile;
 	
@@ -32,11 +32,27 @@ public class ChessBoardView extends GuiSubView {
 	}
 	
 	public void setSelectedTile(ChessCoord coord) {
+		if (selectedTile != null) {
+			// Unselect tile
+			setTileBackground(boardTiles[selectedTile.getRank()-1][selectedTile.getFile()-1], selectedTile);
+		}
 		selectedTile = coord;
+		// Select tile
+		if (selectedTile != null) {
+			boardTiles[selectedTile.getRank()-1][selectedTile.getFile()-1].setBackground(HILIGHT_COLOR);
+		}
 	}
 	
 	public ChessCoord getSelectedTile() {
 		return selectedTile;
+	}
+	
+	private void setTileBackground(AbstractButton tile, ChessCoord coord) {
+		if ((coord.getRank() % 2 == 1 && coord.getFile() % 2 == 1) || (coord.getRank() % 2 == 0 && coord.getFile() % 2 == 0)) {
+            tile.setBackground(DARK_COLOR);
+        } else {
+            tile.setBackground(LIGHT_COLOR);
+        }
 	}
 	
 	private void setTileIcon(AbstractButton tile, ChessCoord coord) {
@@ -54,7 +70,6 @@ public class ChessBoardView extends GuiSubView {
 	}
 	
 	private void initChessboard(JPanel boardPanel) {
-
 		Insets tileInsets = new Insets(0, 0, 0, 0);
 		for (int y = ChessBoard.NUM_RANKS; y >= 0; --y) {
 			for (int x = 0; x < ChessBoard.NUM_FILES + 1; ++x) {
@@ -83,12 +98,7 @@ public class ChessBoardView extends GuiSubView {
 					tile.setEnabled(false);
 					
 					setTileIcon(tile, coord);
-					
-					if ((y % 2 == 1 && x % 2 == 1) || (y % 2 == 0 && x % 2 == 0)) {
-	                    tile.setBackground(DARK_COLOR);
-	                } else {
-	                    tile.setBackground(LIGHT_COLOR);
-	                }
+					setTileBackground(tile, coord);
 					boardPanel.add(tile);
 					boardTiles[y - 1][x - 1] = tile;
 				}
@@ -154,8 +164,8 @@ public class ChessBoardView extends GuiSubView {
 
 	    @Override
 	    public void mouseClicked(MouseEvent e) {
-	    	controller.clickTile(coord);
 	    	LOG.fine("Mouse clicked on coord " + coord);
+	    	controller.clickTile(coord);
 	    }
 		
 	    @Override
