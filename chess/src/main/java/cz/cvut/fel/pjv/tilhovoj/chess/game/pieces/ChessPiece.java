@@ -1,5 +1,6 @@
 package cz.cvut.fel.pjv.tilhovoj.chess.game.pieces;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cz.cvut.fel.pjv.tilhovoj.chess.game.*;
@@ -22,5 +23,7 @@ public abstract class ChessPiece {
 		return kind;
 	}
 	
-	public abstract List<ChessMove> generatePossibleMoves(ChessCoord coord);
+	public abstract ChessMoveAction getActionFromMove(ChessMove move);
+	
+	public abstract List<ChessMove> generateLegalMoves(ChessCoord coord);
 }

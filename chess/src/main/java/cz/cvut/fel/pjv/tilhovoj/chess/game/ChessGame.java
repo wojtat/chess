@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 
-import cz.cvut.fel.pjv.tilhovoj.chess.game.pieces.ChessPiece;
-import cz.cvut.fel.pjv.tilhovoj.chess.game.pieces.ChessPieces;
+import cz.cvut.fel.pjv.tilhovoj.chess.game.pieces.*;
 
 public class ChessGame {
 
@@ -49,7 +48,7 @@ public class ChessGame {
 	}
 	
 	public void playMove(ChessMove move) {
-		ChessMoveAction action = new ChessMoveAction(move, this);
+		ChessMoveAction action = board.getTileAt(move.getFrom()).getPiece().getActionFromMove(move);
 		// If king, then can no longer castle
 		if (board.getTileAt(move.getFrom()).getPiece().getKind() == ChessPieces.PIECE_KING) {
 			switch (board.getTileAt(move.getFrom()).getPiece().getColor()) {
@@ -63,31 +62,49 @@ public class ChessGame {
 		}
 		if (action.isCapture()) {
 			// If rook, then can no longer castle this side
-			if (action.getToBeCaptured().getPiece().getKind() == ChessPieces.PIECE_ROOK) {
-				switch (action.getToBeCaptured().getPiece().getColor()) {
+			if (board.getTileAt(action.getToBeCaptured()).getPiece().getKind() == ChessPieces.PIECE_ROOK) {
+				switch (board.getTileAt(action.getToBeCaptured()).getPiece().getColor()) {
 				case COLOR_WHITE:
-					if (action.getToBeCaptured().getCoord().equals(ChessCoord.WHITE_KING_ROOK)) {
+					if (action.getToBeCaptured().equals(ChessCoord.WHITE_KING_ROOK)) {
 						whiteCanCastleShort = false;
-					} else if (action.getToBeCaptured().getCoord().equals(ChessCoord.WHITE_QUEEN_ROOK)) {
+					} else if (action.getToBeCaptured().equals(ChessCoord.WHITE_QUEEN_ROOK)) {
 						whiteCanCastleLong = false;
 					}
 					break;
 				case COLOR_BLACK:
-					if (action.getToBeCaptured().getCoord().equals(ChessCoord.BLACK_KING_ROOK)) {
+					if (action.getToBeCaptured().equals(ChessCoord.BLACK_KING_ROOK)) {
 						blackCanCastleShort = false;
-					} else if (action.getToBeCaptured().getCoord().equals(ChessCoord.BLACK_QUEEN_ROOK)) {
+					} else if (action.getToBeCaptured().equals(ChessCoord.BLACK_QUEEN_ROOK)) {
 						blackCanCastleLong = false;
 					}
 					break;
 				}
 			}
 			// Replace the captured piece with null
-			action.getToBeCaptured().setPiece(null);
+			board.getTileAt(action.getToBeCaptured()).setPiece(null);
 		}
 		board.movePieceAndReplace(move);
 		if (action.isPromotion()) {
 			// If promotion, then replace the pawn with the promoted piece
-			board.getTileAt(move.getTo()).setPiece(action.getPromotionPiece());
+			ChessPiece promotedPiece;
+			switch (action.getPromotionPieceKind()) {
+			case PIECE_BISHOP:
+				promotedPiece = new ChessBishop(board, toMove);
+				break;
+			case PIECE_KNIGHT:
+				promotedPiece = new ChessKnight(board, toMove);
+				break;
+			case PIECE_ROOK:
+				promotedPiece = new ChessRook(board, toMove);
+				break;
+			case PIECE_QUEEN:
+				promotedPiece = new ChessQueen(board, toMove);
+				break;
+			default:
+				promotedPiece = null;
+				break;
+			}
+			board.getTileAt(move.getTo()).setPiece(promotedPiece);
 		}
 		if (action.isCastle()) {
 			// Move the rook as well
@@ -107,6 +124,9 @@ public class ChessGame {
 			}
 			board.movePieceAndReplace(rookMove);
 		}
+		
+		board.setEnPassantCoord(action.getEnPassantCoord());
+		System.out.println("En passant coord is " + action.getEnPassantCoord());
 		
 		moveList.add(action);
 		toMove = PlayerColor.getNext(toMove);

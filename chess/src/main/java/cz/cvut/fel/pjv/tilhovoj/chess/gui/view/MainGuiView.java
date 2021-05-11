@@ -3,9 +3,12 @@ package cz.cvut.fel.pjv.tilhovoj.chess.gui.view;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.EnumMap;
+import java.util.List;
+
 import javax.swing.*;
 
 import cz.cvut.fel.pjv.tilhovoj.chess.game.*;
+import cz.cvut.fel.pjv.tilhovoj.chess.game.pieces.ChessPiece;
 import cz.cvut.fel.pjv.tilhovoj.chess.gui.MainGuiController;
 import cz.cvut.fel.pjv.tilhovoj.chess.gui.model.MainGuiModel;
 

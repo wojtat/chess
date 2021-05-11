@@ -6,6 +6,7 @@ import cz.cvut.fel.pjv.tilhovoj.chess.game.ChessCoord;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.ChessMove;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.PlayerColor;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.pieces.ChessPiece;
+import cz.cvut.fel.pjv.tilhovoj.chess.game.pieces.ChessPieces;
 import cz.cvut.fel.pjv.tilhovoj.chess.gui.model.MainGuiModel;
 import cz.cvut.fel.pjv.tilhovoj.chess.gui.view.MainGuiView;
 
@@ -24,7 +25,19 @@ public class MainGuiController {
 		view.initView(model, this);
 	}
 	
+	public void clickPromotion(ChessMove move, ChessPieces kind) {
+		move = new ChessMove(move.getFrom(), move.getTo(), kind);
+		LOG.fine("Moving from " + move.getFrom() + " to " + move.getTo());
+		view.getBoardView().hidePromoteToDialog();
+		model.getGameModel().getGame().playMove(move);
+		view.getBoardView().updateView();
+	}
+	
 	public void clickTile(ChessCoord coord) {
+		if (view.getBoardView().isInPromotionDialog()) {
+			// Ignore tile clicks when we're in the process of promotion
+			return;
+		}
 		ChessCoord selected = view.getBoardView().getSelectedTile(); 
 		if (selected == null) {
 			if (!model.getGameModel().getGame().getBoard().getTileAt(coord).isEmpty()) {
@@ -38,11 +51,17 @@ public class MainGuiController {
 			// Get the selected piece
 			ChessPiece piece = model.getGameModel().getGame().getBoard().getTileAt(selected).getPiece();
 
-			for (ChessMove move : piece.generatePossibleMoves(selected)) {
+			for (ChessMove move : piece.generateLegalMoves(selected)) {
 				if (coord.equals(move.getTo())) {
-					// If move is possible, then do it
-					model.getGameModel().getGame().playMove(move);
-					LOG.fine("Moving from " + move.getFrom() + " to " + move.getTo());
+					// The move is possible
+					if (move.getPromoteToKind() != null) {
+						// It's a promotion. Let the player choose the promoted piece
+						view.getBoardView().showPromoteToDialog(move);
+						break;
+					} else {
+						LOG.fine("Moving from " + move.getFrom() + " to " + move.getTo());
+						model.getGameModel().getGame().playMove(move);
+					}
 					break;
 				}
 			}

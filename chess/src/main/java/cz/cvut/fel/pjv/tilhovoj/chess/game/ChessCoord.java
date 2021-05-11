@@ -136,6 +136,45 @@ public class ChessCoord {
 		return neighbours;
 	}
 	
+	public boolean isValid() {
+		return rank > 0 && rank <= ChessBoard.NUM_RANKS && file > 0 && file <= ChessBoard.NUM_FILES;
+	}
+	
+	public List<ChessCoord> getKnightMoves() {
+		List<ChessCoord> knights = new ArrayList<>();
+		
+		final int SHORT = 1, LONG = 2;
+		int y = rank, x = file;
+		ChessCoord coord;
+		
+		coord = new ChessCoord(y + SHORT, x + LONG);
+		if (coord.isValid())
+			knights.add(coord);
+		coord = new ChessCoord(y + SHORT, x - LONG);
+		if (coord.isValid()) 
+			knights.add(coord);
+		coord = new ChessCoord(y - SHORT, x + LONG);
+		if (coord.isValid())
+			knights.add(coord);
+		coord = new ChessCoord(y - SHORT, x - LONG);
+		if (coord.isValid())
+			knights.add(coord);
+		coord = new ChessCoord(y + LONG, x + SHORT);
+		if (coord.isValid())
+			knights.add(coord);
+		coord = new ChessCoord(y + LONG, x - SHORT);
+		if (coord.isValid())
+			knights.add(coord);
+		coord = new ChessCoord(y - LONG, x + SHORT);
+		if (coord.isValid())
+			knights.add(coord);
+		coord = new ChessCoord(y - LONG, x - SHORT);
+		if (coord.isValid())
+			knights.add(coord);
+		
+		return knights;
+	}
+	
 	@Override
 	public String toString() {
 		Character fileAsChar = Character.valueOf((char)('a' + file - 1));

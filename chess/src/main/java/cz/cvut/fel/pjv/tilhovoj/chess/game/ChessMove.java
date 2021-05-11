@@ -1,12 +1,21 @@
 package cz.cvut.fel.pjv.tilhovoj.chess.game;
 
+import cz.cvut.fel.pjv.tilhovoj.chess.game.pieces.ChessPiece;
+import cz.cvut.fel.pjv.tilhovoj.chess.game.pieces.ChessPieces;
+
 public class ChessMove {
 	private ChessCoord from;
 	private ChessCoord to;
+	private ChessPieces promoteToKind;
 	
-	public ChessMove(ChessCoord from, ChessCoord to) {
+	public ChessMove(ChessCoord from, ChessCoord to, ChessPieces promoteToKind) {
 		this.from = from;
 		this.to = to;
+		this.promoteToKind = promoteToKind;
+	}
+	
+	public ChessMove(ChessCoord from, ChessCoord to) {
+		this(from, to, null);
 	}
 
 	public ChessCoord getFrom() {
@@ -15,5 +24,9 @@ public class ChessMove {
 
 	public ChessCoord getTo() {
 		return to;
+	}
+	
+	public ChessPieces getPromoteToKind() {
+		return promoteToKind;
 	}
 }

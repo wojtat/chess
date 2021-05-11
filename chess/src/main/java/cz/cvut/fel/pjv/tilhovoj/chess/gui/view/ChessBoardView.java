@@ -1,16 +1,19 @@
 package cz.cvut.fel.pjv.tilhovoj.chess.gui.view;
 
 import java.awt.*;
+import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.util.List;
 import java.util.logging.Logger;
 
 import javax.swing.*;
 
 import cz.cvut.fel.pjv.tilhovoj.chess.game.*;
+import cz.cvut.fel.pjv.tilhovoj.chess.game.pieces.ChessPiece;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.pieces.ChessPieces;
 import cz.cvut.fel.pjv.tilhovoj.chess.gui.GuiResourceManager;
 import cz.cvut.fel.pjv.tilhovoj.chess.gui.MainGuiController;
@@ -26,9 +29,27 @@ public class ChessBoardView extends GuiSubView {
 	private AbstractButton[][] boardTiles;
 	private ChessCoord selectedTile;
 	
+	private boolean isInPromotionDialog;
+	private JPanel promotionPanel;
+	private AbstractButton[] promotionButtons;
+	private ChessMove promotionMove;
+	
 	public ChessBoardView() {
 		super();
 		this.boardTiles = new AbstractButton[ChessBoard.NUM_RANKS][ChessBoard.NUM_FILES];
+		this.promotionButtons = new AbstractButton[ChessPieces.PROMOTABLE_PIECES.length];
+	}
+	
+	public void showPromoteToDialog(ChessMove move) {
+		promotionMove = move;
+		isInPromotionDialog = true;
+		promotionPanel.setVisible(true);
+	}
+	
+	public void hidePromoteToDialog() {
+		promotionMove = null;
+		isInPromotionDialog = false;
+		promotionPanel.setVisible(false);
 	}
 	
 	public void setSelectedTile(ChessCoord coord) {
@@ -41,6 +62,10 @@ public class ChessBoardView extends GuiSubView {
 		if (selectedTile != null) {
 			boardTiles[selectedTile.getRank()-1][selectedTile.getFile()-1].setBackground(HILIGHT_COLOR);
 		}
+	}
+	
+	public boolean isInPromotionDialog() {
+		return isInPromotionDialog;
 	}
 	
 	public ChessCoord getSelectedTile() {
@@ -91,7 +116,7 @@ public class ChessBoardView extends GuiSubView {
 					ChessCoord coord = new ChessCoord(y, x);
 					AbstractButton tile = new JButton();
 					
-					tile.addMouseListener(new TileButtonListener(tile, coord, model));
+					tile.addMouseListener(new TileButtonListener(coord));
 					
 					tile.setPreferredSize(new Dimension(TILE_SIZE, TILE_SIZE));
 					tile.setMargin(tileInsets);
@@ -148,18 +173,67 @@ public class ChessBoardView extends GuiSubView {
 		this.add(side, BorderLayout.EAST);
 		side.add(new JButton("Next Move"));
 		side.add(new JButton("Last Move"));
+		
+		promotionPanel = new JPanel();
+		promotionPanel.setLayout(new BoxLayout(promotionPanel, BoxLayout.PAGE_AXIS));
+		side.add(promotionPanel);
+		promotionPanel.add(new JLabel("Select a piece to promote to!", JLabel.CENTER));
+		for (int i = 0; i < ChessPieces.PROMOTABLE_PIECES.length; ++i) {
+			promotionButtons[i] = new JButton();
+
+			promotionButtons[i].setPreferredSize(new Dimension(TILE_SIZE, TILE_SIZE));
+			promotionButtons[i].setMargin(new Insets(0, 0, 0, 0));
+			promotionButtons[i].setEnabled(false);
+
+			PlayerColor color = PlayerColor.getFirst();
+			ChessPieces pieceKind = ChessPieces.PROMOTABLE_PIECES[i];
+			Icon tileIcon = GuiResourceManager.get().getChessPieceIcon(color, pieceKind);
+			promotionButtons[i].setIcon(tileIcon);
+			promotionButtons[i].setDisabledIcon(tileIcon);
+			promotionButtons[i].setBackground(HILIGHT_COLOR);
+			promotionButtons[i].addMouseListener(new PromotionButtonListener(pieceKind));
+			promotionPanel.add(promotionButtons[i]);
+		}
+		promotionPanel.setVisible(false);
+	}
+	
+	private class PromotionButtonListener implements MouseListener {
+		
+		private ChessPieces kind;
+		
+		public PromotionButtonListener(ChessPieces kind) {
+			this.kind = kind;
+		}
+
+	    @Override
+	    public void mouseClicked(MouseEvent e) {
+	    	LOG.fine("Mouse clicked on " + kind);
+	    	controller.clickPromotion(promotionMove, kind);
+	    }
+		
+	    @Override
+	    public void mouseReleased(MouseEvent e) {
+	    }
+
+	    @Override
+	    public void mousePressed(MouseEvent e) {
+	    }
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+		}
+		
+		@Override
+		public void mouseExited(MouseEvent e) {
+		}
 	}
 	
 	private class TileButtonListener implements MouseListener {
 		
 		private ChessCoord coord;
-		private AbstractButton button;
-		private MainGuiModel model;
 		
-		public TileButtonListener(AbstractButton button, ChessCoord coord, MainGuiModel model) {
-			this.button = button;
+		public TileButtonListener(ChessCoord coord) {
 			this.coord = coord;
-			this.model = model;
 		}
 
 	    @Override

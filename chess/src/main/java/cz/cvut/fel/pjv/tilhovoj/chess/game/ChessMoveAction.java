@@ -1,28 +1,32 @@
 package cz.cvut.fel.pjv.tilhovoj.chess.game;
 
 import cz.cvut.fel.pjv.tilhovoj.chess.game.pieces.ChessPiece;
+import cz.cvut.fel.pjv.tilhovoj.chess.game.pieces.ChessPieces;
 
 public class ChessMoveAction {
 	private ChessMove move;
 	private boolean isCapture;
-	private Tile toBeCaptured;
+	private ChessCoord toBeCaptured;
 	private ChessPiece beingCaptured;
+	private ChessCoord enPassantCoord;
 	private boolean isCastleShort;
 	private boolean isCastleLong;
 	private boolean isPromotion;
-	private ChessPiece promotionPiece;
+	private ChessPieces promotionPieceKind;
 	
-	public ChessMoveAction(ChessMove move, ChessGame game) {
-		this.move = move;
-		
+	private ChessMoveAction() {
 	}
 
 	public boolean isPromotion() {
 		return isPromotion;
 	}
 	
-	public ChessPiece getPromotionPiece() {
-		return promotionPiece;
+	public ChessPieces getPromotionPieceKind() {
+		return promotionPieceKind;
+	}
+	
+	public ChessCoord getEnPassantCoord() {
+		return enPassantCoord;
 	}
 
 	public boolean isCastleLong() {
@@ -37,7 +41,7 @@ public class ChessMoveAction {
 		return isCastleShort || isCastleLong;
 	}
 	
-	public Tile getToBeCaptured() {
+	public ChessCoord getToBeCaptured() {
 		return toBeCaptured;
 	}
 
@@ -47,5 +51,59 @@ public class ChessMoveAction {
 
 	public ChessMove getMove() {
 		return move;
+	}
+	
+	public static class Builder {
+		private ChessMove move;
+		private boolean isCapture;
+		private ChessCoord toBeCaptured;
+		private ChessPiece beingCaptured;
+		private ChessCoord enPassantCoord;
+		private boolean isCastleShort;
+		private boolean isCastleLong;
+		private boolean isPromotion;
+		private ChessPieces promotionPieceKind;
+		
+		public Builder(ChessMove move) {
+			this.move = move;
+		}
+		
+		public Builder isCapture(ChessCoord toBeCaptured, ChessBoard board) {
+			this.isCapture = true;
+			this.toBeCaptured = toBeCaptured;
+			this.beingCaptured = board.getTileAt(toBeCaptured).getPiece();
+			return this;
+		}
+		
+		public Builder isPawnDoubleMove(ChessCoord enPassantCoord) {
+			this.enPassantCoord = enPassantCoord;
+			return this;
+		}
+		
+		public Builder isCastle(boolean isShort) {
+			this.isCastleShort = isShort;
+			this.isCastleLong = !isShort;
+			return this;
+		}
+		
+		public Builder isPromotion(ChessPieces promotionPieceKind) {
+			this.isPromotion = true;
+			this.promotionPieceKind = promotionPieceKind;
+			return this;
+		}
+		
+		public ChessMoveAction build() {
+			ChessMoveAction action = new ChessMoveAction();
+			action.move = this.move;
+			action.isCapture = this.isCapture;
+			action.toBeCaptured = this.toBeCaptured;
+			action.beingCaptured = this.beingCaptured;
+			action.enPassantCoord = this.enPassantCoord;
+			action.isCastleShort = this.isCastleShort;
+			action.isCastleLong = this.isCastleLong;
+			action.isPromotion = this.isPromotion;
+			action.promotionPieceKind = this.promotionPieceKind;
+			return action;
+		}
 	}
 }

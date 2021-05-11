@@ -7,6 +7,7 @@ public class ChessBoard {
 	public static final int NUM_FILES = 8;
 	
 	private Tile[][] tiles;
+	private ChessCoord enPassantCoord;
 	
 	private void setEmptyBoard() {
 		for (int rank = 1; rank <= NUM_RANKS; ++rank) {
@@ -58,7 +59,16 @@ public class ChessBoard {
 	
 	public ChessBoard() {
 		this.tiles = new Tile[NUM_RANKS][NUM_FILES];
+		this.enPassantCoord = null;
 		setInitialBoard();
+	}
+	
+	public void setEnPassantCoord(ChessCoord coord) {
+		enPassantCoord = coord;
+	}
+	
+	public ChessCoord getEnPassantCoord() {
+		return enPassantCoord;
 	}
 	
 	public void movePieceAndReplace(ChessMove move) {

@@ -16,7 +16,7 @@ public class ChessRook extends ChessDirectionalPiece {
 	}
 
 	@Override
-	public List<ChessMove> generatePossibleMoves(ChessCoord coord) {
+	public List<ChessMove> generateLegalMoves(ChessCoord coord) {
 		List<ChessMove> moves = new ArrayList<>();
 
 		doDirection(moves, coord.getAllUp(), coord);

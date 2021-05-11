@@ -6,6 +6,7 @@ import java.util.List;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.ChessBoard;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.ChessCoord;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.ChessMove;
+import cz.cvut.fel.pjv.tilhovoj.chess.game.ChessMoveAction;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.PlayerColor;
 
 public class ChessKnight extends ChessPiece {
@@ -16,12 +17,12 @@ public class ChessKnight extends ChessPiece {
 	}
 
 	@Override
-	public List<ChessMove> generatePossibleMoves(ChessCoord coord) {
+	public List<ChessMove> generateLegalMoves(ChessCoord coord) {
 		List<ChessMove> moves = new ArrayList<>();
 		
-		for (ChessCoord candidate : coord.getNeighbours()) {
+		for (ChessCoord candidate : coord.getKnightMoves()) {
 			// TODO: Add actual movement restrictions
-			if (board.getTileAt(candidate).isEmpty()) {
+			if (board.getTileAt(candidate).isEmpty() || board.getTileAt(candidate).getPiece().player != this.player) {
 				moves.add(new ChessMove(coord, candidate));
 			}
 		}
@@ -29,4 +30,14 @@ public class ChessKnight extends ChessPiece {
 		return moves;
 	}
 
+	@Override
+	public ChessMoveAction getActionFromMove(ChessMove move) {
+		ChessMoveAction.Builder builder = new ChessMoveAction.Builder(move);
+		if (!board.getTileAt(move.getTo()).isEmpty()) {
+			builder.isCapture(move.getTo(), board);
+		}
+		
+		ChessMoveAction action = builder.build();
+		return action;
+	}
 }
