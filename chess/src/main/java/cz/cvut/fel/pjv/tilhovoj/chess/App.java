@@ -1,5 +1,12 @@
 package cz.cvut.fel.pjv.tilhovoj.chess;
 
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
+import java.util.logging.StreamHandler;
+
 import javax.swing.SwingUtilities;
 
 import cz.cvut.fel.pjv.tilhovoj.chess.game.*;
@@ -8,6 +15,21 @@ import cz.cvut.fel.pjv.tilhovoj.chess.gui.model.MainGuiModel;
 import cz.cvut.fel.pjv.tilhovoj.chess.gui.view.MainGuiView;
 
 public class App {
+	
+	private void setupDebugLogging() {
+		Logger rootLogger = Logger.getLogger("cz.cvut.fel.pjv.tilhovoj.chess");
+		rootLogger.setLevel(Level.FINE);
+		
+		Handler stdout = new StreamHandler(System.out, new SimpleFormatter()) {
+		    @Override
+		    public void publish(LogRecord record) {
+		        super.publish(record);
+		        flush();
+		    }
+		};
+		stdout.setLevel(Level.FINE);
+		rootLogger.addHandler(stdout);
+	}
 	
 	public void runApp() {
 		/*
@@ -25,7 +47,10 @@ public class App {
 		System.out.println("WHITE has " + c.getTime(PlayerColor.COLOR_WHITE) + " seconds.");
 		System.out.println("BLACK has " + c.getTime(PlayerColor.COLOR_BLACK) + " seconds.");
 		*/
-
+		
+		// Setup logging
+		setupDebugLogging();
+		
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
