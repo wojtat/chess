@@ -28,7 +28,7 @@ public class GuiResourceManager {
     private final void createPieceImages() {
     	pieceImages = new BufferedImage[2][ChessPieces.values().length];
         try {
-            BufferedImage bi = ImageIO.read(GuiResourceManager.class.getResource("/images/pieces.png"));
+            BufferedImage bi = ImageIO.read(GuiResourceManager.class.getResource("/pieces.png"));
             for (int color = 0; color < 2; ++color) {
                 for (int i = 0; i < ChessPieces.values().length; i++) {
                 	int w, h;
