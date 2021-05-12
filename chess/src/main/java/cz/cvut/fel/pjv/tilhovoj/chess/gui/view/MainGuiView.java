@@ -44,7 +44,7 @@ public class MainGuiView extends GuiTopView {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("New game started");
+				MainGuiView.super.controller.newGame();
 			}
 		};
 		mainToolBar.add(newGameAction);

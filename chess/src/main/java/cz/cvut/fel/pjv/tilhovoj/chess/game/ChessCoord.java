@@ -18,6 +18,18 @@ public class ChessCoord {
 	private Integer rank;
 	private Integer file;
 	
+	public static ChessCoord fromString(String notation) {
+		if (notation.length() != 2) {
+			return null;
+		}
+		char fileChar = Character.toLowerCase(notation.charAt(0));
+		char rankChar = notation.charAt(1);
+		
+		int file = fileChar - 'a' + 1;
+		int rank = rankChar - '0';
+		return new ChessCoord(rank, file);
+	}
+	
 	public ChessCoord(Integer rank, Integer file) {
 		this.rank = rank;
 		this.file = file;

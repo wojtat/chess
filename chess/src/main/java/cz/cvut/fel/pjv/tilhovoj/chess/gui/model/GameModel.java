@@ -10,6 +10,10 @@ public class GameModel {
 		this.game = game;
 	}
 	
+	public void setGame(ChessGame game) {
+		this.game = game;
+	}
+	
 	public Double getTime(PlayerColor player) {
 		return game.getClock().getTime(player);
 	}

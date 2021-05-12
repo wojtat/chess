@@ -31,6 +31,11 @@ public class ChessKnight extends ChessPiece {
 	}
 
 	@Override
+	public List<ChessCoord> generateAllControlledCoords(ChessCoord coord) {
+		return coord.getKnightMoves();
+	}
+
+	@Override
 	public ChessMoveAction getActionFromMove(ChessMove move) {
 		ChessMoveAction.Builder builder = new ChessMoveAction.Builder(move);
 		if (!board.getTileAt(move.getTo()).isEmpty()) {

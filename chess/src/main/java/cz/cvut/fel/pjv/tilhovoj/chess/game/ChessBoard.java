@@ -1,5 +1,7 @@
 package cz.cvut.fel.pjv.tilhovoj.chess.game;
 
+import java.util.List;
+
 import cz.cvut.fel.pjv.tilhovoj.chess.game.pieces.*;
 
 public class ChessBoard {
@@ -8,6 +10,13 @@ public class ChessBoard {
 	
 	private Tile[][] tiles;
 	private ChessCoord enPassantCoord;
+	
+	private PlayerColor toMove;
+	
+	private boolean whiteCanCastleShort;
+	private boolean whiteCanCastleLong;
+	private boolean blackCanCastleShort;
+	private boolean blackCanCastleLong;
 	
 	private void setEmptyBoard() {
 		for (int rank = 1; rank <= NUM_RANKS; ++rank) {
@@ -20,6 +29,7 @@ public class ChessBoard {
 	}
 	
 	private void setInitialBoard() {
+		whiteCanCastleShort = whiteCanCastleLong = blackCanCastleShort = blackCanCastleLong = true;
 		for (int rank = 1; rank <= NUM_RANKS; ++rank) {
 			for (int file = 1; file <= NUM_FILES; ++file) {
 				ChessCoord coord = new ChessCoord(rank, file);
@@ -57,10 +67,94 @@ public class ChessBoard {
 		}
 	}
 	
+	public static ChessBoard fromFEN(String fenString)  {
+		ChessBoard board = new ChessBoard();
+		
+		String[] fields = fenString.split(" ");
+		if (fields.length != 6) {
+			return board;
+		}
+		
+		String[] piecePlacement = fields[0].split("/");
+		if (piecePlacement.length != NUM_RANKS) {
+			return board;
+		}
+		for (int rank = NUM_RANKS; rank >= 1; --rank) {
+			String rankString = piecePlacement[NUM_RANKS - rank];
+			int readIndex = 0;
+			int file = 1;
+			while (file <= NUM_FILES) {
+				char c = rankString.charAt(readIndex++);
+				if (Character.isDigit(c)) {
+					file += Character.getNumericValue(c);
+				} else {
+					board.getTileAt(rank, file++).setPiece(ChessPiece.fromFENCharacter(board, c));
+				}
+			}
+		}
+		
+		board.toMove = fields[1].charAt(0) == 'w' ? PlayerColor.COLOR_WHITE : PlayerColor.COLOR_BLACK;
+		String castlingRights = fields[2];
+		for (char c : castlingRights.toCharArray()) {
+			switch (c) {
+			case 'k':
+				board.blackCanCastleShort = true;
+				break;
+			case 'K':
+				board.whiteCanCastleShort = true;
+				break;
+			case 'q':
+				board.blackCanCastleLong = true;
+				break;
+			case 'Q':
+				board.whiteCanCastleLong = true;
+				break;
+			}
+		}
+		
+		// NOTE: If en passant coord is '-', then ChessCoord.fromString() returns null
+		board.enPassantCoord = ChessCoord.fromString(fields[3]);
+		
+		return board;
+	}
+	
 	public ChessBoard() {
 		this.tiles = new Tile[NUM_RANKS][NUM_FILES];
 		this.enPassantCoord = null;
-		setInitialBoard();
+		this.toMove = PlayerColor.getFirst();
+		setEmptyBoard();
+	}
+	
+	private boolean listContainsChessCoord(List<ChessCoord> list, ChessCoord coord) {
+		for (ChessCoord element : list) {
+			if (element.equals(coord)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public PlayerColor getOnTurn() {
+		return toMove;
+	}
+	
+	public void setOnTurn(PlayerColor player) {
+		toMove = player;
+	}
+	
+	public boolean isUnderAttackBy(ChessCoord coord, PlayerColor player) {
+		// For every piece, see if it can move to this square pseudo-legally
+		for (int rank = 1; rank <= NUM_RANKS; ++rank) {
+			for (int file = 1; file <= NUM_FILES; ++file) {
+				if (!getTileAt(rank, file).isEmpty() && getTileAt(rank, file).getPiece().getColor() == player) {
+					List<ChessCoord> controlledSquares = getTileAt(rank, file).getPiece().generateAllControlledCoords(new ChessCoord(rank, file));
+					if (listContainsChessCoord(controlledSquares, coord)) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 	
 	public void setEnPassantCoord(ChessCoord coord) {
@@ -69,6 +163,38 @@ public class ChessBoard {
 	
 	public ChessCoord getEnPassantCoord() {
 		return enPassantCoord;
+	}
+	
+	public void setWhiteCanCastleShort(boolean b) {
+		this.whiteCanCastleShort = b;
+	}
+	
+	public boolean whiteCanCastleShort() {
+		return whiteCanCastleShort;
+	}
+	
+	public void setWhiteCanCastleLong(boolean b) {
+		this.whiteCanCastleLong = b;
+	}
+	
+	public boolean whiteCanCastleLong() {
+		return whiteCanCastleLong;
+	}
+
+	public void setBlackCanCastleShort(boolean b) {
+		this.blackCanCastleShort = b;
+	}
+	
+	public boolean blackCanCastleShort() {
+		return blackCanCastleShort;
+	}
+
+	public void setBlackCanCastleLong(boolean b) {
+		this.blackCanCastleLong = b;
+	}
+	
+	public boolean blackCanCastleLong() {
+		return blackCanCastleLong;
 	}
 	
 	public void movePieceAndReplace(ChessMove move) {

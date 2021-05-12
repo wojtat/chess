@@ -14,7 +14,7 @@ public abstract class ChessDirectionalPiece extends ChessPiece {
 		super(board, player);
 	}
 
-	protected void doDirection(List<ChessMove> moves, List<ChessCoord> direction, ChessCoord coord) {
+	protected void doMovementDirection(List<ChessMove> moves, List<ChessCoord> direction, ChessCoord coord) {
 		// TODO: Add actual movement restrictions
 		for (ChessCoord candidate : direction) {
 			if (board.getTileAt(candidate).isEmpty()) {
@@ -23,6 +23,15 @@ public abstract class ChessDirectionalPiece extends ChessPiece {
 				moves.add(new ChessMove(coord, candidate));
 				break;
 			} else {
+				break;
+			}
+		}
+	}
+	
+	protected void doControllDirection(List<ChessCoord> coords, List<ChessCoord> direction, ChessCoord coord) {
+		for (ChessCoord candidate : direction) {
+			coords.add(candidate);
+			if (!board.getTileAt(candidate).isEmpty()) {
 				break;
 			}
 		}

@@ -76,6 +76,22 @@ public class ChessPawn extends ChessPiece {
 	}
 
 	@Override
+	public List<ChessCoord> generateAllControlledCoords(ChessCoord coord) {
+		List<ChessCoord> coords = new ArrayList<>();
+		
+		ChessCoord forwardLeft = new ChessCoord(coord.getRank() + MOVE_DIRECTION, coord.getFile() - 1);
+		ChessCoord forwardRight = new ChessCoord(coord.getRank() + MOVE_DIRECTION, coord.getFile() + 1);
+		if (forwardLeft.isValid()) {
+			coords.add(forwardLeft);
+		}
+		if (forwardRight.isValid()) {
+			coords.add(forwardRight);
+		}
+		
+		return coords;
+	}
+
+	@Override
 	public ChessMoveAction getActionFromMove(ChessMove move) {
 		ChessMoveAction.Builder builder = new ChessMoveAction.Builder(move);
 		

@@ -19,11 +19,23 @@ public class ChessRook extends ChessDirectionalPiece {
 	public List<ChessMove> generateLegalMoves(ChessCoord coord) {
 		List<ChessMove> moves = new ArrayList<>();
 
-		doDirection(moves, coord.getAllUp(), coord);
-		doDirection(moves, coord.getAllDown(), coord);
-		doDirection(moves, coord.getAllLeft(), coord);
-		doDirection(moves, coord.getAllRight(), coord);
+		doMovementDirection(moves, coord.getAllUp(), coord);
+		doMovementDirection(moves, coord.getAllDown(), coord);
+		doMovementDirection(moves, coord.getAllLeft(), coord);
+		doMovementDirection(moves, coord.getAllRight(), coord);
 		
 		return moves;
+	}
+
+	@Override
+	public List<ChessCoord> generateAllControlledCoords(ChessCoord coord) {
+		List<ChessCoord> coords = new ArrayList<>();
+
+		doControllDirection(coords, coord.getAllUp(), coord);
+		doControllDirection(coords, coord.getAllDown(), coord);
+		doControllDirection(coords, coord.getAllLeft(), coord);
+		doControllDirection(coords, coord.getAllRight(), coord);
+		
+		return coords;
 	}
 }

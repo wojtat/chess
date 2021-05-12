@@ -11,20 +11,13 @@ public class ChessGame {
 	private boolean beforeStartGame;
 	private ChessClock clock;
 	private ChessBoard board;
-	private PlayerColor toMove;
 	private List<ChessMoveAction> moveList;
-	private boolean whiteCanCastleShort;
-	private boolean whiteCanCastleLong;
-	private boolean blackCanCastleShort;
-	private boolean blackCanCastleLong;
 	
 	public ChessGame(ChessClock clock, ChessBoard board) {
 		this.clock = clock;
 		this.board = board;
 		this.moveList = new ArrayList<>();
 		this.beforeStartGame = true;
-		whiteCanCastleShort = whiteCanCastleLong = blackCanCastleShort = blackCanCastleLong = true;
-		this.toMove = PlayerColor.getFirst();
 	}
 	
 	public void startGame() {
@@ -43,20 +36,21 @@ public class ChessGame {
 		return clock;
 	}
 	
-	public PlayerColor getOnTurn() {
-		return toMove;
-	}
-	
 	public void playMove(ChessMove move) {
+		if (beforeStartGame) {
+			return;
+		}
 		ChessMoveAction action = board.getTileAt(move.getFrom()).getPiece().getActionFromMove(move);
 		// If king, then can no longer castle
 		if (board.getTileAt(move.getFrom()).getPiece().getKind() == ChessPieces.PIECE_KING) {
 			switch (board.getTileAt(move.getFrom()).getPiece().getColor()) {
 			case COLOR_WHITE:
-				whiteCanCastleShort = whiteCanCastleLong = false;
+				board.setWhiteCanCastleShort(false);
+				board.setWhiteCanCastleLong(false);
 				break;
 			case COLOR_BLACK:
-				blackCanCastleShort = blackCanCastleLong = false;
+				board.setBlackCanCastleShort(false);
+				board.setBlackCanCastleLong(false);
 				break;
 			}
 		}
@@ -66,16 +60,16 @@ public class ChessGame {
 				switch (board.getTileAt(action.getToBeCaptured()).getPiece().getColor()) {
 				case COLOR_WHITE:
 					if (action.getToBeCaptured().equals(ChessCoord.WHITE_KING_ROOK)) {
-						whiteCanCastleShort = false;
+						board.setWhiteCanCastleShort(false);
 					} else if (action.getToBeCaptured().equals(ChessCoord.WHITE_QUEEN_ROOK)) {
-						whiteCanCastleLong = false;
+						board.setWhiteCanCastleLong(false);
 					}
 					break;
 				case COLOR_BLACK:
 					if (action.getToBeCaptured().equals(ChessCoord.BLACK_KING_ROOK)) {
-						blackCanCastleShort = false;
+						board.setBlackCanCastleShort(false);
 					} else if (action.getToBeCaptured().equals(ChessCoord.BLACK_QUEEN_ROOK)) {
-						blackCanCastleLong = false;
+						board.setBlackCanCastleLong(false);
 					}
 					break;
 				}
@@ -89,16 +83,16 @@ public class ChessGame {
 			ChessPiece promotedPiece;
 			switch (action.getPromotionPieceKind()) {
 			case PIECE_BISHOP:
-				promotedPiece = new ChessBishop(board, toMove);
+				promotedPiece = new ChessBishop(board, board.getOnTurn());
 				break;
 			case PIECE_KNIGHT:
-				promotedPiece = new ChessKnight(board, toMove);
+				promotedPiece = new ChessKnight(board, board.getOnTurn());
 				break;
 			case PIECE_ROOK:
-				promotedPiece = new ChessRook(board, toMove);
+				promotedPiece = new ChessRook(board, board.getOnTurn());
 				break;
 			case PIECE_QUEEN:
-				promotedPiece = new ChessQueen(board, toMove);
+				promotedPiece = new ChessQueen(board, board.getOnTurn());
 				break;
 			default:
 				promotedPiece = null;
@@ -109,7 +103,7 @@ public class ChessGame {
 		if (action.isCastle()) {
 			// Move the rook as well
 			ChessMove rookMove;
-			if (toMove == PlayerColor.COLOR_WHITE) {
+			if (board.getOnTurn() == PlayerColor.COLOR_WHITE) {
 				if (action.isCastleShort()) {
 					rookMove = new ChessMove(ChessCoord.WHITE_KING_ROOK, ChessCoord.WHITE_KING_ROOK_DESTINATION);
 				} else {
@@ -129,6 +123,6 @@ public class ChessGame {
 		System.out.println("En passant coord is " + action.getEnPassantCoord());
 		
 		moveList.add(action);
-		toMove = PlayerColor.getNext(toMove);
+		board.setOnTurn(PlayerColor.getNext(board.getOnTurn()));
 	}
 }
