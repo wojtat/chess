@@ -42,6 +42,24 @@ public class ChessGame {
 		return currentMove == moveList.size();
 	}
 	
+	/*
+	public boolean goToPreviousMove() {
+		if (currentMove <= 0) {
+			return false;
+		}
+		unplayMove(moveList.get(--currentMove));
+		return true;
+	}
+	
+	public boolean goToNextMove() {
+		if (isUpdated()) {
+			return false;
+		}
+		replayMove(moveList.get(currentMove++));
+		return true;
+	}
+	*/
+	
 	public void playMove(ChessMove move) {
 		if (beforeStartGame || currentMove != moveList.size()) {
 			return;

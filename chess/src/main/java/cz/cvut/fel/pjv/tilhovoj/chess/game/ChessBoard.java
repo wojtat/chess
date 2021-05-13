@@ -1,5 +1,6 @@
 package cz.cvut.fel.pjv.tilhovoj.chess.game;
 
+import java.util.EnumSet;
 import java.util.List;
 
 import cz.cvut.fel.pjv.tilhovoj.chess.game.pieces.*;
@@ -12,11 +13,7 @@ public class ChessBoard {
 	private ChessCoord enPassantCoord;
 	
 	private PlayerColor toMove;
-	
-	private boolean whiteCanCastleShort;
-	private boolean whiteCanCastleLong;
-	private boolean blackCanCastleShort;
-	private boolean blackCanCastleLong;
+	private EnumSet<ChessCastlingRight> castlingRights;
 	
 	private void setEmptyBoard() {
 		for (int rank = 1; rank <= NUM_RANKS; ++rank) {
@@ -29,7 +26,7 @@ public class ChessBoard {
 	}
 	
 	private void setInitialBoard() {
-		whiteCanCastleShort = whiteCanCastleLong = blackCanCastleShort = blackCanCastleLong = true;
+		castlingRights = EnumSet.allOf(ChessCastlingRight.class);
 		for (int rank = 1; rank <= NUM_RANKS; ++rank) {
 			for (int file = 1; file <= NUM_FILES; ++file) {
 				ChessCoord coord = new ChessCoord(rank, file);
@@ -98,16 +95,16 @@ public class ChessBoard {
 		for (char c : castlingRights.toCharArray()) {
 			switch (c) {
 			case 'k':
-				board.blackCanCastleShort = true;
+				board.castlingRights.add(ChessCastlingRight.BLACK_KINGSIDE);
 				break;
 			case 'K':
-				board.whiteCanCastleShort = true;
+				board.castlingRights.add(ChessCastlingRight.WHITE_KINGSIDE);
 				break;
 			case 'q':
-				board.blackCanCastleLong = true;
+				board.castlingRights.add(ChessCastlingRight.BLACK_QUEENSIDE);
 				break;
 			case 'Q':
-				board.whiteCanCastleLong = true;
+				board.castlingRights.add(ChessCastlingRight.WHITE_QUEENSIDE);
 				break;
 			}
 		}
@@ -122,6 +119,7 @@ public class ChessBoard {
 		this.tiles = new Tile[NUM_RANKS][NUM_FILES];
 		this.enPassantCoord = null;
 		this.toMove = PlayerColor.getFirst();
+		this.castlingRights = EnumSet.noneOf(ChessCastlingRight.class);
 		setEmptyBoard();
 	}
 	
@@ -131,12 +129,12 @@ public class ChessBoard {
 		if (getTileAt(move.getFrom()).getPiece().getKind() == ChessPieces.PIECE_KING) {
 			switch (getTileAt(move.getFrom()).getPiece().getColor()) {
 			case COLOR_WHITE:
-				whiteCanCastleShort = false;
-				whiteCanCastleLong = false;
+				castlingRights.remove(ChessCastlingRight.WHITE_KINGSIDE);
+				castlingRights.remove(ChessCastlingRight.WHITE_QUEENSIDE);
 				break;
 			case COLOR_BLACK:
-				blackCanCastleShort = false;
-				blackCanCastleLong = false;
+				castlingRights.remove(ChessCastlingRight.BLACK_KINGSIDE);
+				castlingRights.remove(ChessCastlingRight.BLACK_QUEENSIDE);
 				break;
 			}
 		}
@@ -146,16 +144,16 @@ public class ChessBoard {
 				switch (getTileAt(action.getToBeCaptured()).getPiece().getColor()) {
 				case COLOR_WHITE:
 					if (action.getToBeCaptured().equals(ChessCoord.WHITE_KING_ROOK)) {
-						whiteCanCastleShort = false;
+						castlingRights.remove(ChessCastlingRight.WHITE_KINGSIDE);
 					} else if (action.getToBeCaptured().equals(ChessCoord.WHITE_QUEEN_ROOK)) {
-						whiteCanCastleLong = false;
+						castlingRights.remove(ChessCastlingRight.WHITE_QUEENSIDE);
 					}
 					break;
 				case COLOR_BLACK:
 					if (action.getToBeCaptured().equals(ChessCoord.BLACK_KING_ROOK)) {
-						blackCanCastleShort = false;
+						castlingRights.remove(ChessCastlingRight.BLACK_KINGSIDE);
 					} else if (action.getToBeCaptured().equals(ChessCoord.BLACK_QUEEN_ROOK)) {
-						blackCanCastleLong = false;
+						castlingRights.remove(ChessCastlingRight.BLACK_QUEENSIDE);
 					}
 					break;
 				}
@@ -236,19 +234,19 @@ public class ChessBoard {
 	}
 	
 	public boolean whiteCanCastleShort() {
-		return whiteCanCastleShort;
+		return castlingRights.contains(ChessCastlingRight.WHITE_KINGSIDE);
 	}
 	
 	public boolean whiteCanCastleLong() {
-		return whiteCanCastleLong;
+		return castlingRights.contains(ChessCastlingRight.WHITE_QUEENSIDE);
 	}
 	
 	public boolean blackCanCastleShort() {
-		return blackCanCastleShort;
+		return castlingRights.contains(ChessCastlingRight.BLACK_KINGSIDE);
 	}
 	
 	public boolean blackCanCastleLong() {
-		return blackCanCastleLong;
+		return castlingRights.contains(ChessCastlingRight.BLACK_QUEENSIDE);
 	}
 	
 	public Tile getTileAt(ChessCoord coord) {
