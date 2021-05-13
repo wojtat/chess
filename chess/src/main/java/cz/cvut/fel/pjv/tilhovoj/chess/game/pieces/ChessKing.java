@@ -97,7 +97,7 @@ public class ChessKing extends ChessPiece {
 
 	@Override
 	public ChessMoveAction getActionFromMove(ChessMove move) {
-		ChessMoveAction.Builder builder = new ChessMoveAction.Builder(move);
+		ChessMoveAction.Builder builder = new ChessMoveAction.Builder(move, player);
 		
 		int fileDifference = move.getTo().getFile() - move.getFrom().getFile();
 		if (!board.getTileAt(move.getTo()).isEmpty()) {

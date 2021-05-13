@@ -125,6 +125,76 @@ public class ChessBoard {
 		setEmptyBoard();
 	}
 	
+	public void playMove(ChessMoveAction action) {
+		ChessMove move = action.getMove();
+		// If king, then can no longer castle
+		if (getTileAt(move.getFrom()).getPiece().getKind() == ChessPieces.PIECE_KING) {
+			switch (getTileAt(move.getFrom()).getPiece().getColor()) {
+			case COLOR_WHITE:
+				whiteCanCastleShort = false;
+				whiteCanCastleLong = false;
+				break;
+			case COLOR_BLACK:
+				blackCanCastleShort = false;
+				blackCanCastleLong = false;
+				break;
+			}
+		}
+		if (action.isCapture()) {
+			// If rook, then can no longer castle this side
+			if (getTileAt(action.getToBeCaptured()).getPiece().getKind() == ChessPieces.PIECE_ROOK) {
+				switch (getTileAt(action.getToBeCaptured()).getPiece().getColor()) {
+				case COLOR_WHITE:
+					if (action.getToBeCaptured().equals(ChessCoord.WHITE_KING_ROOK)) {
+						whiteCanCastleShort = false;
+					} else if (action.getToBeCaptured().equals(ChessCoord.WHITE_QUEEN_ROOK)) {
+						whiteCanCastleLong = false;
+					}
+					break;
+				case COLOR_BLACK:
+					if (action.getToBeCaptured().equals(ChessCoord.BLACK_KING_ROOK)) {
+						blackCanCastleShort = false;
+					} else if (action.getToBeCaptured().equals(ChessCoord.BLACK_QUEEN_ROOK)) {
+						blackCanCastleLong = false;
+					}
+					break;
+				}
+			}
+			// Replace the captured piece with null
+			getTileAt(action.getToBeCaptured()).setPiece(null);
+		}
+		movePieceAndReplace(move);
+		if (action.isPromotion()) {
+			// If promotion, then replace the pawn with the promoted piece
+			ChessPiece promotedPiece = ChessPiece.fromKind(this, action.getOnTurn(), action.getPromotionPieceKind());
+			getTileAt(move.getTo()).setPiece(promotedPiece);
+		}
+		if (action.isCastle()) {
+			// Move the rook as well
+			ChessMove rookMove;
+			if (action.getOnTurn() == PlayerColor.COLOR_WHITE) {
+				if (action.isCastleShort()) {
+					rookMove = new ChessMove(ChessCoord.WHITE_KING_ROOK, ChessCoord.WHITE_KING_ROOK_DESTINATION);
+				} else {
+					rookMove = new ChessMove(ChessCoord.WHITE_QUEEN_ROOK, ChessCoord.WHITE_QUEEN_ROOK_DESTINATION);
+				}
+			} else {
+				if (action.isCastleShort()) {
+					rookMove = new ChessMove(ChessCoord.BLACK_KING_ROOK, ChessCoord.BLACK_KING_ROOK_DESTINATION);
+				} else {
+					rookMove = new ChessMove(ChessCoord.BLACK_QUEEN_ROOK, ChessCoord.BLACK_QUEEN_ROOK_DESTINATION);
+				}
+			}
+			movePieceAndReplace(rookMove);
+		}
+		setEnPassantCoord(action.getEnPassantCoord());
+		setOnTurn(PlayerColor.getNext(action.getOnTurn()));
+	}
+	
+	public void unplayMove(ChessMoveAction action) {
+		
+	}
+	
 	private boolean listContainsChessCoord(List<ChessCoord> list, ChessCoord coord) {
 		for (ChessCoord element : list) {
 			if (element.equals(coord)) {
@@ -132,14 +202,6 @@ public class ChessBoard {
 			}
 		}
 		return false;
-	}
-	
-	public PlayerColor getOnTurn() {
-		return toMove;
-	}
-	
-	public void setOnTurn(PlayerColor player) {
-		toMove = player;
 	}
 	
 	public boolean isUnderAttackBy(ChessCoord coord, PlayerColor player) {
@@ -157,6 +219,14 @@ public class ChessBoard {
 		return false;
 	}
 	
+	public PlayerColor getOnTurn() {
+		return toMove;
+	}
+	
+	public void setOnTurn(PlayerColor player) {
+		toMove = player;
+	}
+	
 	public void setEnPassantCoord(ChessCoord coord) {
 		enPassantCoord = coord;
 	}
@@ -165,45 +235,20 @@ public class ChessBoard {
 		return enPassantCoord;
 	}
 	
-	public void setWhiteCanCastleShort(boolean b) {
-		this.whiteCanCastleShort = b;
-	}
-	
 	public boolean whiteCanCastleShort() {
 		return whiteCanCastleShort;
-	}
-	
-	public void setWhiteCanCastleLong(boolean b) {
-		this.whiteCanCastleLong = b;
 	}
 	
 	public boolean whiteCanCastleLong() {
 		return whiteCanCastleLong;
 	}
-
-	public void setBlackCanCastleShort(boolean b) {
-		this.blackCanCastleShort = b;
-	}
 	
 	public boolean blackCanCastleShort() {
 		return blackCanCastleShort;
 	}
-
-	public void setBlackCanCastleLong(boolean b) {
-		this.blackCanCastleLong = b;
-	}
 	
 	public boolean blackCanCastleLong() {
 		return blackCanCastleLong;
-	}
-	
-	public void movePieceAndReplace(ChessMove move) {
-		if (getTileAt(move.getFrom()).isEmpty()) {
-			return;
-		}
-		ChessPiece piece = getTileAt(move.getFrom()).getPiece();
-		getTileAt(move.getTo()).setPiece(piece);
-		getTileAt(move.getFrom()).setPiece(null);
 	}
 	
 	public Tile getTileAt(ChessCoord coord) {
@@ -212,5 +257,14 @@ public class ChessBoard {
 	
 	public Tile getTileAt(int rank, int file) {
 		return tiles[rank - 1][file - 1];
+	}
+	
+	private void movePieceAndReplace(ChessMove move) {
+		if (getTileAt(move.getFrom()).isEmpty()) {
+			return;
+		}
+		ChessPiece piece = getTileAt(move.getFrom()).getPiece();
+		getTileAt(move.getTo()).setPiece(piece);
+		getTileAt(move.getFrom()).setPiece(null);
 	}
 }

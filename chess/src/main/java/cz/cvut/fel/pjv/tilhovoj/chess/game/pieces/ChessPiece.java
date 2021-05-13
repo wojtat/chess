@@ -31,6 +31,21 @@ public abstract class ChessPiece {
 		}
 	}
 	
+	public static ChessPiece fromKind(ChessBoard board, PlayerColor color, ChessPieces kind) {
+		switch (kind) {
+		case PIECE_BISHOP:
+			return new ChessBishop(board, color);
+		case PIECE_KNIGHT:
+			return new ChessKnight(board, color);
+		case PIECE_ROOK:
+			return new ChessRook(board, color);
+		case PIECE_QUEEN:
+			return new ChessQueen(board, color);
+		default:
+			return null;
+		}
+	}
+	
 	public ChessPiece(ChessBoard board, PlayerColor player) {
 		this.board = board;
 		this.player = player;

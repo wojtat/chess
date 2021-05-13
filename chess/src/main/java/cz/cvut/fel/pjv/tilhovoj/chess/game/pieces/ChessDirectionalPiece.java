@@ -39,7 +39,7 @@ public abstract class ChessDirectionalPiece extends ChessPiece {
 
 	@Override
 	public ChessMoveAction getActionFromMove(ChessMove move) {
-		ChessMoveAction.Builder builder = new ChessMoveAction.Builder(move);
+		ChessMoveAction.Builder builder = new ChessMoveAction.Builder(move, player);
 		if (!board.getTileAt(move.getTo()).isEmpty()) {
 			builder.isCapture(move.getTo(), board);
 		}

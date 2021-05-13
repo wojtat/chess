@@ -5,9 +5,11 @@ import cz.cvut.fel.pjv.tilhovoj.chess.game.pieces.ChessPieces;
 
 public class ChessMoveAction {
 	private ChessMove move;
+	private PlayerColor onTurn;
+	
 	private boolean isCapture;
 	private ChessCoord toBeCaptured;
-	private ChessPiece beingCaptured;
+	private ChessPieces beingCaptured;
 	private ChessCoord enPassantCoord;
 	private boolean isCastleShort;
 	private boolean isCastleLong;
@@ -52,26 +54,33 @@ public class ChessMoveAction {
 	public ChessMove getMove() {
 		return move;
 	}
+
+	public PlayerColor getOnTurn() {
+		return onTurn;
+	}
 	
 	public static class Builder {
 		private ChessMove move;
+		private PlayerColor onTurn;
+		
 		private boolean isCapture;
 		private ChessCoord toBeCaptured;
-		private ChessPiece beingCaptured;
+		private ChessPieces beingCaptured;
 		private ChessCoord enPassantCoord;
 		private boolean isCastleShort;
 		private boolean isCastleLong;
 		private boolean isPromotion;
 		private ChessPieces promotionPieceKind;
 		
-		public Builder(ChessMove move) {
+		public Builder(ChessMove move, PlayerColor onTurn) {
 			this.move = move;
+			this.onTurn = onTurn;
 		}
 		
 		public Builder isCapture(ChessCoord toBeCaptured, ChessBoard board) {
 			this.isCapture = true;
 			this.toBeCaptured = toBeCaptured;
-			this.beingCaptured = board.getTileAt(toBeCaptured).getPiece();
+			this.beingCaptured = board.getTileAt(toBeCaptured).getPiece().getKind();
 			return this;
 		}
 		
@@ -95,6 +104,7 @@ public class ChessMoveAction {
 		public ChessMoveAction build() {
 			ChessMoveAction action = new ChessMoveAction();
 			action.move = this.move;
+			action.onTurn = this.onTurn;
 			action.isCapture = this.isCapture;
 			action.toBeCaptured = this.toBeCaptured;
 			action.beingCaptured = this.beingCaptured;
