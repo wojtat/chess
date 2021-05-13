@@ -24,6 +24,9 @@ public class ChessCoord {
 		}
 		char fileChar = Character.toLowerCase(notation.charAt(0));
 		char rankChar = notation.charAt(1);
+		if (!Character.isDigit(rankChar)) {
+			return null;
+		}
 		
 		int file = fileChar - 'a' + 1;
 		int rank = rankChar - '0';
