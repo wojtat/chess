@@ -1,11 +1,14 @@
 package cz.cvut.fel.pjv.tilhovoj.chess.game;
 
-import cz.cvut.fel.pjv.tilhovoj.chess.game.pieces.ChessPiece;
+import java.util.EnumSet;
+
 import cz.cvut.fel.pjv.tilhovoj.chess.game.pieces.ChessPieces;
 
 public class ChessMoveAction {
 	private ChessMove move;
 	private PlayerColor onTurn;
+	private EnumSet<ChessCastlingRight> oldCastlingRights;
+	private ChessCoord oldEnPassantCoord;
 	
 	private boolean isCapture;
 	private ChessCoord toBeCaptured;
@@ -17,6 +20,14 @@ public class ChessMoveAction {
 	private ChessPieces promotionPieceKind;
 	
 	private ChessMoveAction() {
+	}
+	
+	public EnumSet<ChessCastlingRight> getOldCastlingRights() {
+		return oldCastlingRights;
+	}
+	
+	public ChessCoord getOldEnPassantCoord() {
+		return oldEnPassantCoord;
 	}
 
 	public boolean isPromotion() {
@@ -50,6 +61,10 @@ public class ChessMoveAction {
 	public boolean isCapture() {
 		return isCapture;
 	}
+	
+	public ChessPieces getBeingCaptured() {
+		return beingCaptured;
+	}
 
 	public ChessMove getMove() {
 		return move;
@@ -62,6 +77,8 @@ public class ChessMoveAction {
 	public static class Builder {
 		private ChessMove move;
 		private PlayerColor onTurn;
+		private EnumSet<ChessCastlingRight> oldCastlingRights;
+		private ChessCoord oldEnPassantCoord;
 		
 		private boolean isCapture;
 		private ChessCoord toBeCaptured;
@@ -72,9 +89,11 @@ public class ChessMoveAction {
 		private boolean isPromotion;
 		private ChessPieces promotionPieceKind;
 		
-		public Builder(ChessMove move, PlayerColor onTurn) {
+		public Builder(ChessMove move, PlayerColor onTurn, ChessBoard board) {
 			this.move = move;
 			this.onTurn = onTurn;
+			this.oldCastlingRights = board.getCastlingRights().clone();
+			this.oldEnPassantCoord = board.getEnPassantCoord();
 		}
 		
 		public Builder isCapture(ChessCoord toBeCaptured, ChessBoard board) {
@@ -105,6 +124,8 @@ public class ChessMoveAction {
 			ChessMoveAction action = new ChessMoveAction();
 			action.move = this.move;
 			action.onTurn = this.onTurn;
+			action.oldCastlingRights = this.oldCastlingRights;
+			action.oldEnPassantCoord = this.oldEnPassantCoord;
 			action.isCapture = this.isCapture;
 			action.toBeCaptured = this.toBeCaptured;
 			action.beingCaptured = this.beingCaptured;

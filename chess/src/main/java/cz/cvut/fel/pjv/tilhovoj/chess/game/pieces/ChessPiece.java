@@ -33,6 +33,8 @@ public abstract class ChessPiece {
 	
 	public static ChessPiece fromKind(ChessBoard board, PlayerColor color, ChessPieces kind) {
 		switch (kind) {
+		case PIECE_PAWN:
+			return new ChessPawn(board, color);
 		case PIECE_BISHOP:
 			return new ChessBishop(board, color);
 		case PIECE_KNIGHT:
@@ -41,6 +43,8 @@ public abstract class ChessPiece {
 			return new ChessRook(board, color);
 		case PIECE_QUEEN:
 			return new ChessQueen(board, color);
+		case PIECE_KING:
+			return new ChessKing(board, color);
 		default:
 			return null;
 		}

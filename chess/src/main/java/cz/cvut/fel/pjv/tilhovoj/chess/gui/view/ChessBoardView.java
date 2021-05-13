@@ -171,8 +171,24 @@ public class ChessBoardView extends GuiSubView {
 		JPanel side = new JPanel();
 		side.setLayout(new BoxLayout(side, BoxLayout.PAGE_AXIS));
 		this.add(side, BorderLayout.EAST);
-		side.add(new JButton("Next Move"));
-		side.add(new JButton("Last Move"));
+		
+		JButton nextMoveButton = new JButton("Next Move");
+		nextMoveButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ChessBoardView.this.controller.nextMove();
+			}
+		});
+		JButton previousMoveButton = new JButton("Last Move");
+		previousMoveButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ChessBoardView.this.controller.previousMove();
+			}
+		});
+		
+		side.add(nextMoveButton);
+		side.add(previousMoveButton);
 		
 		promotionPanel = new JPanel();
 		promotionPanel.setLayout(new BoxLayout(promotionPanel, BoxLayout.PAGE_AXIS));

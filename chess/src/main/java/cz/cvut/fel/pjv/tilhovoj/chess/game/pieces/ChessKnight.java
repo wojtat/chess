@@ -1,9 +1,11 @@
 package cz.cvut.fel.pjv.tilhovoj.chess.game.pieces;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 
 import cz.cvut.fel.pjv.tilhovoj.chess.game.ChessBoard;
+import cz.cvut.fel.pjv.tilhovoj.chess.game.ChessCastlingRight;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.ChessCoord;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.ChessMove;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.ChessMoveAction;
@@ -37,7 +39,7 @@ public class ChessKnight extends ChessPiece {
 
 	@Override
 	public ChessMoveAction getActionFromMove(ChessMove move) {
-		ChessMoveAction.Builder builder = new ChessMoveAction.Builder(move, player);
+		ChessMoveAction.Builder builder = new ChessMoveAction.Builder(move, player, board);
 		if (!board.getTileAt(move.getTo()).isEmpty()) {
 			builder.isCapture(move.getTo(), board);
 		}

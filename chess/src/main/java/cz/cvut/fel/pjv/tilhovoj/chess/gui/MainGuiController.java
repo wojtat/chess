@@ -28,6 +28,16 @@ public class MainGuiController {
 		view.initView(model, this);
 	}
 	
+	public void nextMove() {
+		model.getGameModel().getGame().goToNextMove();
+		view.getBoardView().updateView();
+	}
+	
+	public void previousMove() {
+		model.getGameModel().getGame().goToPreviousMove();
+		view.getBoardView().updateView();
+	}
+	
 	public void newGame() {
 		model.getGameModel().setGame(new ChessGame(new ChessClock(5.0,3.0), ChessBoard.fromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")));
 		model.getGameModel().getGame().startGame();

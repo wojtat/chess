@@ -93,7 +93,7 @@ public class ChessPawn extends ChessPiece {
 
 	@Override
 	public ChessMoveAction getActionFromMove(ChessMove move) {
-		ChessMoveAction.Builder builder = new ChessMoveAction.Builder(move, player);
+		ChessMoveAction.Builder builder = new ChessMoveAction.Builder(move, player, board);
 		
 		int rankDifference = move.getTo().getRank() - move.getFrom().getRank();
 		int fileDifference = move.getTo().getFile() - move.getFrom().getFile();
