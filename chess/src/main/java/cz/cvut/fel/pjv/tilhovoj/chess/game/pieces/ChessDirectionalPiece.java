@@ -11,13 +11,19 @@ public abstract class ChessDirectionalPiece extends ChessPiece {
 		super(board, player);
 	}
 
-	protected void doMovementDirection(List<ChessMove> moves, List<ChessCoord> direction, ChessCoord coord) {
+	protected void doMovementDirection(List<ChessMoveAction> moves, List<ChessCoord> direction, ChessCoord coord) {
 		// TODO: Add actual movement restrictions
 		for (ChessCoord candidate : direction) {
 			if (board.getTileAt(candidate).isEmpty()) {
-				moves.add(new ChessMove(coord, candidate));
+				ChessMoveAction action = getActionFromMove(new ChessMove(coord, candidate));
+				if (isActuallyLegal(action)) {
+					moves.add(action);
+				}
 			} else if (board.getTileAt(candidate).getPiece().player != this.player) {
-				moves.add(new ChessMove(coord, candidate));
+				ChessMoveAction action = getActionFromMove(new ChessMove(coord, candidate));
+				if (isActuallyLegal(action)) {
+					moves.add(action);
+				}
 				break;
 			} else {
 				break;

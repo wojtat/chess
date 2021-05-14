@@ -17,8 +17,8 @@ public class ChessBishop extends ChessDirectionalPiece {
 	}
 
 	@Override
-	public List<ChessMove> generateLegalMoves(ChessCoord coord) {
-		List<ChessMove> moves = new ArrayList<>();
+	public List<ChessMoveAction> generateLegalMoves(ChessCoord coord) {
+		List<ChessMoveAction> moves = new ArrayList<>();
 
 		doMovementDirection(moves, coord.getAllUpLeft(), coord);
 		doMovementDirection(moves, coord.getAllUpRight(), coord);

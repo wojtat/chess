@@ -24,6 +24,7 @@ public class ChessGame {
 	
 	public void startGame() {
 		beforeStartGame = false;
+		clock.start();
 	}
 	
 	public boolean beforeStartGame() {
@@ -64,8 +65,23 @@ public class ChessGame {
 		}
 		ChessMoveAction action = board.getTileAt(move.getFrom()).getPiece().getActionFromMove(move);
 		board.playMove(action);
+		clock.hit();
 		
 		++currentMove;
 		moveList.add(action);
+		
+		int numLegalMoves = board.getNumLegalMoves();
+		if (numLegalMoves == 0) {
+			// This is the end of the game
+			beforeStartGame = true;
+			clock.stop();
+			if (board.isKingUnderAttack(board.getOnTurn())) {
+				// Checkmate
+				System.out.println("CHECKMATE, " + PlayerColor.getPrevious(board.getOnTurn()) + " wins.");
+			} else {
+				// Stalemate
+				System.out.println("STALEMATE.");
+			}
+		}
 	}
 }

@@ -19,13 +19,15 @@ public class ChessKnight extends ChessPiece {
 	}
 
 	@Override
-	public List<ChessMove> generateLegalMoves(ChessCoord coord) {
-		List<ChessMove> moves = new ArrayList<>();
+	public List<ChessMoveAction> generateLegalMoves(ChessCoord coord) {
+		List<ChessMoveAction> moves = new ArrayList<>();
 		
 		for (ChessCoord candidate : coord.getKnightMoves()) {
-			// TODO: Add actual movement restrictions
 			if (board.getTileAt(candidate).isEmpty() || board.getTileAt(candidate).getPiece().player != this.player) {
-				moves.add(new ChessMove(coord, candidate));
+				ChessMoveAction action = getActionFromMove(new ChessMove(coord, candidate));
+				if (isActuallyLegal(action)) {
+					moves.add(action);
+				}
 			}
 		}
 		

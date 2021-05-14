@@ -23,8 +23,8 @@ public class ChessPawn extends ChessPiece {
 	}
 
 	@Override
-	public List<ChessMove> generateLegalMoves(ChessCoord coord) {
-		List<ChessMove> moves = new ArrayList<>();
+	public List<ChessMoveAction> generateLegalMoves(ChessCoord coord) {
+		List<ChessMoveAction> moves = new ArrayList<>();
 		
 		ChessCoord forward = new ChessCoord(coord.getRank() + MOVE_DIRECTION, coord.getFile());
 		ChessCoord forwardLeft = new ChessCoord(coord.getRank() + MOVE_DIRECTION, coord.getFile() - 1);
@@ -32,17 +32,26 @@ public class ChessPawn extends ChessPiece {
 		if (forward.isValid() && board.getTileAt(forward).isEmpty()) {
 			if (forward.getRank() == PROMOTION_RANK) {
 				for (ChessPieces promoteToKind : ChessPieces.PROMOTABLE_PIECES) {
-					moves.add(new ChessMove(coord, forward, promoteToKind));
+					ChessMoveAction action = getActionFromMove(new ChessMove(coord, forward, promoteToKind));
+					if (isActuallyLegal(action)) {
+						moves.add(action);
+					}
 				}
 			} else {
-				moves.add(new ChessMove(coord, forward));				
+				ChessMoveAction action = getActionFromMove(new ChessMove(coord, forward));
+				if (isActuallyLegal(action)) {
+					moves.add(action);
+				}
 			}
 			
 			if (coord.getRank() == START_RANK) {
 				// Can also move two squares up
 				ChessCoord forwardTwo = new ChessCoord(coord.getRank() + 2*MOVE_DIRECTION, coord.getFile());
 				if (board.getTileAt(forwardTwo).isEmpty()) {
-					moves.add(new ChessMove(coord, forwardTwo));
+					ChessMoveAction action = getActionFromMove(new ChessMove(coord, forwardTwo));
+					if (isActuallyLegal(action)) {
+						moves.add(action);
+					}
 				}
 			}
 		}
@@ -53,22 +62,35 @@ public class ChessPawn extends ChessPiece {
 			
 			if (forwardLeft.getRank() == PROMOTION_RANK) {
 				for (ChessPieces promoteToKind : ChessPieces.PROMOTABLE_PIECES) {
-					moves.add(new ChessMove(coord, forwardLeft, promoteToKind));
+					ChessMoveAction action = getActionFromMove(new ChessMove(coord, forwardLeft, promoteToKind));
+					if (isActuallyLegal(action)) {
+						moves.add(action);
+					}
 				}
 			} else {
-				moves.add(new ChessMove(coord, forwardLeft));				
+				ChessMoveAction action = getActionFromMove(new ChessMove(coord, forwardLeft));
+				if (isActuallyLegal(action)) {
+					moves.add(action);
+				}
 			}
 		}
+		// if (is valid && (is en passant coord || is enemy piece)):
 		if (forwardRight.isValid() 
 			&& (forwardRight.equals(board.getEnPassantCoord())
 			|| (!board.getTileAt(forwardRight).isEmpty() && board.getTileAt(forwardRight).getPiece().player != this.player))) {
 
 			if (forwardRight.getRank() == PROMOTION_RANK) {
 				for (ChessPieces promoteToKind : ChessPieces.PROMOTABLE_PIECES) {
-					moves.add(new ChessMove(coord, forwardRight, promoteToKind));
+					ChessMoveAction action = getActionFromMove(new ChessMove(coord, forwardRight, promoteToKind));
+					if (isActuallyLegal(action)) {
+						moves.add(action);
+					}
 				}
 			} else {
-				moves.add(new ChessMove(coord, forwardRight));				
+				ChessMoveAction action = getActionFromMove(new ChessMove(coord, forwardRight));
+				if (isActuallyLegal(action)) {
+					moves.add(action);
+				}				
 			}
 		}
 		

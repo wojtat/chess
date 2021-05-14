@@ -123,6 +123,39 @@ public class ChessBoard {
 		setEmptyBoard();
 	}
 	
+	public int perft(int depth) {
+		if (depth == 0) {
+			return 1;
+		}
+		int total = 0;
+		for (int rank = 1; rank <= NUM_RANKS; ++rank) {
+			for (int file = 1; file <= NUM_FILES; ++file) {
+				if (!getTileAt(rank, file).isEmpty() && getTileAt(rank, file).getPiece().getColor() == toMove) {
+					List<ChessMoveAction> allMoves = getTileAt(rank, file).getPiece().generateLegalMoves(new ChessCoord(rank, file));
+					for (ChessMoveAction action : allMoves) {
+						playMove(action);
+						total += perft(depth - 1);
+						unplayMove(action);
+					}
+				}
+			}
+		}
+		return total;
+	}
+	
+	public int getNumLegalMoves() {
+		// For every piece, get its number of possible moves
+		int total = 0;
+		for (int rank = 1; rank <= NUM_RANKS; ++rank) {
+			for (int file = 1; file <= NUM_FILES; ++file) {
+				if (!getTileAt(rank, file).isEmpty() && getTileAt(rank, file).getPiece().getColor() == toMove) {
+					total += getTileAt(rank, file).getPiece().generateLegalMoves(new ChessCoord(rank, file)).size();
+				}
+			}
+		}
+		return total;
+	}
+	
 	public void playMove(ChessMoveAction action) {
 		ChessMove move = action.getMove();
 		// If king, then can no longer castle
@@ -244,6 +277,17 @@ public class ChessBoard {
 					if (listContainsChessCoord(controlledSquares, coord)) {
 						return true;
 					}
+				}
+			}
+		}
+		return false;
+	}
+	
+	public boolean isKingUnderAttack(PlayerColor color) {
+		for (int rank = 1; rank <= NUM_RANKS; ++rank) {
+			for (int file = 1; file <= NUM_FILES; ++file) {
+				if (!getTileAt(rank, file).isEmpty() && getTileAt(rank, file).getPiece().getKind() == ChessPieces.PIECE_KING && getTileAt(rank, file).getPiece().getColor() == color) {
+					return isUnderAttackBy(new ChessCoord(rank, file), PlayerColor.getNext(color));
 				}
 			}
 		}

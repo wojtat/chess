@@ -7,6 +7,7 @@ import cz.cvut.fel.pjv.tilhovoj.chess.game.ChessClock;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.ChessCoord;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.ChessGame;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.ChessMove;
+import cz.cvut.fel.pjv.tilhovoj.chess.game.ChessMoveAction;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.PlayerColor;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.pieces.ChessPiece;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.pieces.ChessPieces;
@@ -54,8 +55,10 @@ public class MainGuiController {
 	}
 	
 	public void clickTile(ChessCoord coord) {
-		if (view.getBoardView().isInPromotionDialog()) {
-			// Ignore tile clicks when we're in the process of promotion
+		if (view.getBoardView().isInPromotionDialog()
+				|| !model.getGameModel().getGame().isUpdated()
+				|| model.getGameModel().getGame().beforeStartGame()) {
+			// Ignore tile clicks when we're in the process of promotion or not in the current position or game hasn't started
 			return;
 		}
 		ChessCoord selected = view.getBoardView().getSelectedTile(); 
@@ -71,7 +74,8 @@ public class MainGuiController {
 			// Get the selected piece
 			ChessPiece piece = model.getGameModel().getGame().getBoard().getTileAt(selected).getPiece();
 
-			for (ChessMove move : piece.generateLegalMoves(selected)) {
+			for (ChessMoveAction action : piece.generateLegalMoves(selected)) {
+				ChessMove move = action.getMove();
 				if (coord.equals(move.getTo())) {
 					// The move is possible
 					if (move.getPromoteToKind() != null) {

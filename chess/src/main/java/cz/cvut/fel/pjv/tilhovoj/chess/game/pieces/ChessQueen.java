@@ -6,6 +6,7 @@ import java.util.List;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.ChessBoard;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.ChessCoord;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.ChessMove;
+import cz.cvut.fel.pjv.tilhovoj.chess.game.ChessMoveAction;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.PlayerColor;
 
 public class ChessQueen extends ChessDirectionalPiece {
@@ -16,8 +17,8 @@ public class ChessQueen extends ChessDirectionalPiece {
 	}
 	
 	@Override
-	public List<ChessMove> generateLegalMoves(ChessCoord coord) {
-		List<ChessMove> moves = new ArrayList<>();
+	public List<ChessMoveAction> generateLegalMoves(ChessCoord coord) {
+		List<ChessMoveAction> moves = new ArrayList<>();
 
 		doMovementDirection(moves, coord.getAllUp(), coord);
 		doMovementDirection(moves, coord.getAllDown(), coord);

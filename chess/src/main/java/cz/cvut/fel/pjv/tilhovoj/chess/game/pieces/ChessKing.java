@@ -34,13 +34,15 @@ public class ChessKing extends ChessPiece {
 	}
 
 	@Override
-	public List<ChessMove> generateLegalMoves(ChessCoord coord) {
-		List<ChessMove> moves = new ArrayList<>();
+	public List<ChessMoveAction> generateLegalMoves(ChessCoord coord) {
+		List<ChessMoveAction> moves = new ArrayList<>();
 		
 		for (ChessCoord candidate : coord.getNeighbours()) {
-			// TODO: Add actual movement restrictions
 			if (board.getTileAt(candidate).isEmpty() || board.getTileAt(candidate).getPiece().player != this.player) {
-				moves.add(new ChessMove(coord, candidate));
+				ChessMoveAction action = getActionFromMove(new ChessMove(coord, candidate));
+				if (isActuallyLegal(action)) {
+					moves.add(action);
+				}
 			}
 		}
 		
@@ -61,7 +63,7 @@ public class ChessKing extends ChessPiece {
 					}
 				}
 				if (firstOccupiedSquare != null && firstOccupiedSquare.getFile() == 8) {
-					moves.add(new ChessMove(coord, SHORT_CASTLE_DESTINATION));
+					moves.add(getActionFromMove(new ChessMove(coord, SHORT_CASTLE_DESTINATION)));
 				}
 			}
 		}
@@ -82,7 +84,7 @@ public class ChessKing extends ChessPiece {
 					}
 				}
 				if (firstOccupiedSquare != null && firstOccupiedSquare.getFile() == 1) {
-					moves.add(new ChessMove(coord, LONG_CASTLE_DESTINATION));
+					moves.add(getActionFromMove(new ChessMove(coord, LONG_CASTLE_DESTINATION)));
 				}
 			}
 		}

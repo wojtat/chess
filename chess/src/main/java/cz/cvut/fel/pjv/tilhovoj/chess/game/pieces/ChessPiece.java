@@ -63,9 +63,16 @@ public abstract class ChessPiece {
 		return kind;
 	}
 	
+	protected boolean isActuallyLegal(ChessMoveAction action) {
+		board.playMove(action);
+		boolean inCheck = board.isKingUnderAttack(player);
+		board.unplayMove(action);
+		return !inCheck;
+	}
+	
 	public abstract ChessMoveAction getActionFromMove(ChessMove move);
 	
 	public abstract List<ChessCoord> generateAllControlledCoords(ChessCoord coord);
 	
-	public abstract List<ChessMove> generateLegalMoves(ChessCoord coord);
+	public abstract List<ChessMoveAction> generateLegalMoves(ChessCoord coord);
 }
