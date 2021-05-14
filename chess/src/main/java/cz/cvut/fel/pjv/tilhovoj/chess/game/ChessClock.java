@@ -5,24 +5,14 @@ import java.time.Instant;
 import java.util.EnumMap;
 
 public class ChessClock {
+	private ChessGame game;
 	
 	private Double startTime;
 	private Double increment;
 	private EnumMap<PlayerColor, ChessTimer> playersTime;
 	private PlayerColor playerOnTurn;
 	private boolean isRunning;
-	
-	public ChessClock(Double startTime, Double increment) {
-		this.startTime = startTime;
-		this.increment = increment;
-		
-		isRunning = false;
-		playersTime = new EnumMap<PlayerColor, ChessTimer>(PlayerColor.class);
-		for (PlayerColor p : PlayerColor.values()) {
-			playersTime.put(p, new ChessTimer(startTime));
-		}
-		playerOnTurn = PlayerColor.getFirst();
-	}
+	private Thread timeUpdater;
 
 	public static String timeToString(Double time) {
 		final Double SECONDS_IN_MINUTE = 60.0;
@@ -33,6 +23,40 @@ public class ChessClock {
 		builder.append(':');
 		builder.append(String.format("%02d", seconds));
 		return builder.toString();
+	}
+	
+	public ChessClock(ChessGame game, PlayerColor first, Double startTime, Double increment) {
+		this.game = game;
+		this.startTime = startTime;
+		this.increment = increment;
+		
+		isRunning = false;
+		playersTime = new EnumMap<PlayerColor, ChessTimer>(PlayerColor.class);
+		for (PlayerColor p : PlayerColor.values()) {
+			playersTime.put(p, new ChessTimer(startTime));
+		}
+		playerOnTurn = first;
+		timeUpdater = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while (true) {
+					if (isRunning) {
+						playersTime.get(playerOnTurn).updateTime();
+						if (playersTime.get(playerOnTurn).hasFlagged()) {
+							ChessClock.this.game.playerFlagged(playerOnTurn);
+						}
+					}
+					
+					try {
+						Thread.sleep(20);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+		timeUpdater.setDaemon(true);
+		timeUpdater.start();
 	}
 	
 	public boolean hasFlagged(PlayerColor player) {
@@ -54,7 +78,7 @@ public class ChessClock {
 	public void start() {
 		if (!isRunning) {
 			playersTime.get(playerOnTurn).start();
-			isRunning = true;	
+			isRunning = true;
 		}
 	}
 	
@@ -81,12 +105,11 @@ public class ChessClock {
 	}
 	
 	private class ChessTimer {
-		
 		private Double time;
 		private boolean isRunning;
 		private Instant timeWhenStarted;
 		
-		private void updateTime() {
+		private synchronized void updateTime() {
 			Instant now = Instant.now();
 			long elapsedMillis = Duration.between(timeWhenStarted, now).toMillis();
 			
@@ -114,7 +137,7 @@ public class ChessClock {
 			return time;
 		}
 		
-		public void addTime(Double seconds) {
+		public synchronized void addTime(Double seconds) {
 			time += seconds;
 			if (time < .0) {
 				time = .0;

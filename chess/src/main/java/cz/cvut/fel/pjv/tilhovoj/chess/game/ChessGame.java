@@ -14,8 +14,8 @@ public class ChessGame {
 	private int currentMove;
 	private List<ChessMoveAction> moveList;
 	
-	public ChessGame(ChessClock clock, ChessBoard board) {
-		this.clock = clock;
+	public ChessGame(Double startTime, Double increment, ChessBoard board) {
+		this.clock = new ChessClock(this, board.getOnTurn(), startTime, increment);
 		this.board = board;
 		this.currentMove = 0;
 		this.moveList = new ArrayList<>();
@@ -83,5 +83,9 @@ public class ChessGame {
 				System.out.println("STALEMATE.");
 			}
 		}
+	}
+
+	public void playerFlagged(PlayerColor player) {
+		beforeStartGame = true;
 	}
 }
