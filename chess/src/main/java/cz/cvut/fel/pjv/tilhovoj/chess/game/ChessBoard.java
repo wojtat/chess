@@ -114,7 +114,7 @@ public class ChessBoard {
 		
 		return board;
 	}
-	
+
 	public ChessBoard() {
 		this.tiles = new Tile[NUM_RANKS][NUM_FILES];
 		this.enPassantCoord = null;
@@ -342,4 +342,5 @@ public class ChessBoard {
 		getTileAt(to).setPiece(piece);
 		getTileAt(from).setPiece(null);
 	}
+
 }

@@ -12,6 +12,7 @@ import cz.cvut.fel.pjv.tilhovoj.chess.game.PlayerColor;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.pieces.ChessPiece;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.pieces.ChessPieces;
 import cz.cvut.fel.pjv.tilhovoj.chess.gui.model.MainGuiModel;
+import cz.cvut.fel.pjv.tilhovoj.chess.gui.view.Dialog;
 import cz.cvut.fel.pjv.tilhovoj.chess.gui.view.MainGuiView;
 
 public class MainGuiController {
@@ -39,11 +40,46 @@ public class MainGuiController {
 		view.getBoardView().updateView();
 	}
 	
-	public void newGame() {
-		model.getGameModel().setGame(new ChessGame(new ChessClock(5.0,3.0), ChessBoard.fromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")));
+	private void resetGame(ChessGame newGame) {
+		model.getGameModel().setGame(newGame);
 		model.getGameModel().getGame().startGame();
 		view.getBoardView().setSelectedTile(null);
 		view.getBoardView().updateView();
+	}
+	
+	public void newGame() {
+		ChessGame newGame = null;
+		newGame = Dialog.newGameDialog();
+		if (newGame == null) {
+			return;
+		}
+		resetGame(newGame);
+	}
+	
+	public void loadGame() {
+		ChessGame newGame = null;
+		newGame = Dialog.loadGameDialog();
+		if (newGame == null) {
+			return;
+		}
+		resetGame(newGame);
+	}
+	
+	public void saveGame() {
+		Dialog.saveGameDialog();
+	}
+	
+	public void loadGamePGN() {
+		ChessGame newGame = null;
+		newGame = Dialog.loadGamePGNDialog();
+		if (newGame == null) {
+			return;
+		}
+		resetGame(newGame);
+	}
+	
+	public void saveGamePGN() {
+		Dialog.saveGamePGNDialog();
 	}
 	
 	public void clickPromotion(ChessMove move, ChessPieces kind) {
