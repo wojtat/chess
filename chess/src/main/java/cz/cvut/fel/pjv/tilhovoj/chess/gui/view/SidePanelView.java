@@ -31,7 +31,7 @@ public class SidePanelView extends GuiSubView {
 		playMoveButton = new JButton("PLAY MOVE");
 		this.add(playMoveButton);
 		for (PlayerColor player : PlayerColor.values()) {
-			JLabel label = new JLabel(model.getGameModel().getTime(player).toString());
+			JLabel label = new JLabel(/*model.getGameModel().getGame().getClock().getTime(player).toString()*/);
 			this.add(label);
 			timeLabels.put(player, label);
 		}

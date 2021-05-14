@@ -16,7 +16,7 @@ public class Dialog {
 		};
 		int result = JOptionPane.showConfirmDialog(null, inputs, "New Game", JOptionPane.OK_CANCEL_OPTION);
 		if (result == JOptionPane.OK_OPTION) {
-			return new ChessGame(new ChessClock(5.0, 5.0), ChessBoard.fromFEN(fenField.getText()));
+			return new ChessGame(new ChessClock(5.0*60, 20.0), ChessBoard.fromFEN(fenField.getText()));
 		} else {
 			return null;
 		}

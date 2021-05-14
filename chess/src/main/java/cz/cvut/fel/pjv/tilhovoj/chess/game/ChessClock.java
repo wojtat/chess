@@ -23,6 +23,17 @@ public class ChessClock {
 		}
 		playerOnTurn = PlayerColor.getFirst();
 	}
+
+	public static String timeToString(Double time) {
+		final Double SECONDS_IN_MINUTE = 60.0;
+		int minutes = (int)(time / SECONDS_IN_MINUTE);
+		int seconds = (int)(time - minutes*SECONDS_IN_MINUTE);
+		StringBuilder builder = new StringBuilder();
+		builder.append(String.format("%02d", minutes));
+		builder.append(':');
+		builder.append(String.format("%02d", seconds));
+		return builder.toString();
+	}
 	
 	public boolean hasFlagged(PlayerColor player) {
 		return playersTime.get(player).hasFlagged();

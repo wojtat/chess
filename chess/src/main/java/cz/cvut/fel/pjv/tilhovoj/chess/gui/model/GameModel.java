@@ -14,15 +14,7 @@ public class GameModel {
 		this.game = game;
 	}
 	
-	public Double getTime(PlayerColor player) {
-		return game.getClock().getTime(player);
-	}
-	
 	public ChessGame getGame() {
 		return game;
-	}
-	
-	public void playMove() {
-		game.getClock().hit();
 	}
 }

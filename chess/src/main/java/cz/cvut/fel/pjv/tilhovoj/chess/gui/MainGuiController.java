@@ -31,12 +31,20 @@ public class MainGuiController {
 	}
 	
 	public void nextMove() {
-		model.getGameModel().getGame().goToNextMove();
+		ChessGame game = model.getGameModel().getGame();
+		if (game == null) {
+			return;
+		}
+		game.goToNextMove();
 		view.getBoardView().updateView();
 	}
 	
 	public void previousMove() {
-		model.getGameModel().getGame().goToPreviousMove();
+		ChessGame game = model.getGameModel().getGame();
+		if (game == null) {
+			return;
+		}
+		game.goToPreviousMove();
 		view.getBoardView().updateView();
 	}
 	
@@ -83,32 +91,38 @@ public class MainGuiController {
 	}
 	
 	public void clickPromotion(ChessMove move, ChessPieces kind) {
+		ChessGame game = model.getGameModel().getGame();
+		if (game == null) {
+			return;
+		}
 		move = new ChessMove(move.getFrom(), move.getTo(), kind);
 		LOG.fine("Moving from " + move.getFrom() + " to " + move.getTo());
 		view.getBoardView().hidePromoteToDialog();
-		model.getGameModel().getGame().playMove(move);
+		game.playMove(move);
 		view.getBoardView().updateView();
 	}
 	
 	public void clickTile(ChessCoord coord) {
-		if (view.getBoardView().isInPromotionDialog()
-				|| !model.getGameModel().getGame().isUpdated()
-				|| model.getGameModel().getGame().beforeStartGame()) {
+		ChessGame game = model.getGameModel().getGame();
+		if (game == null) {
+			return;
+		}
+		if (view.getBoardView().isInPromotionDialog() || !game.isUpdated() || game.beforeStartGame()) {
 			// Ignore tile clicks when we're in the process of promotion or not in the current position or game hasn't started
 			return;
 		}
 		ChessCoord selected = view.getBoardView().getSelectedTile(); 
 		if (selected == null) {
-			if (!model.getGameModel().getGame().getBoard().getTileAt(coord).isEmpty()) {
-				PlayerColor onTurn = model.getGameModel().getGame().getBoard().getOnTurn();
-				if (model.getGameModel().getGame().getBoard().getTileAt(coord).getPiece().getColor() == onTurn) {
+			if (!game.getBoard().getTileAt(coord).isEmpty()) {
+				PlayerColor onTurn = game.getBoard().getOnTurn();
+				if (game.getBoard().getTileAt(coord).getPiece().getColor() == onTurn) {
 					view.getBoardView().setSelectedTile(coord);
 					// TODO: Show possible moves
 				}
 			}
 		} else {
 			// Get the selected piece
-			ChessPiece piece = model.getGameModel().getGame().getBoard().getTileAt(selected).getPiece();
+			ChessPiece piece = game.getBoard().getTileAt(selected).getPiece();
 
 			for (ChessMoveAction action : piece.generateLegalMoves(selected)) {
 				ChessMove move = action.getMove();
@@ -120,7 +134,7 @@ public class MainGuiController {
 						break;
 					} else {
 						LOG.fine("Moving from " + move.getFrom() + " to " + move.getTo());
-						model.getGameModel().getGame().playMove(move);
+						game.playMove(move);
 					}
 					break;
 				}

@@ -29,6 +29,11 @@ public class ChessBoardView extends GuiSubView {
 	private AbstractButton[][] boardTiles;
 	private ChessCoord selectedTile;
 	
+	private JPanel clockPanel;
+	private JLabel whiteTime;
+	private JLabel blackTime;
+	private Timer clockUpdater;
+	
 	private boolean isInPromotionDialog;
 	private JPanel promotionPanel;
 	private AbstractButton[] promotionButtons;
@@ -72,6 +77,14 @@ public class ChessBoardView extends GuiSubView {
 		return selectedTile;
 	}
 	
+	public void setWhiteTime(Double time) {
+		whiteTime.setText(ChessClock.timeToString(time));
+	}
+	
+	public void setBlackTime(Double time) {
+		blackTime.setText(ChessClock.timeToString(time));
+	}
+	
 	private void setTileBackground(AbstractButton tile, ChessCoord coord) {
 		if ((coord.getRank() % 2 == 1 && coord.getFile() % 2 == 1) || (coord.getRank() % 2 == 0 && coord.getFile() % 2 == 0)) {
             tile.setBackground(DARK_COLOR);
@@ -81,7 +94,7 @@ public class ChessBoardView extends GuiSubView {
 	}
 	
 	private void setTileIcon(AbstractButton tile, ChessCoord coord) {
-		if (model.getGameModel().getGame().getBoard().getTileAt(coord).isEmpty()) {
+		if (model.getGameModel().getGame() == null || model.getGameModel().getGame().getBoard().getTileAt(coord).isEmpty()) {
 			Icon tileIcon = new ImageIcon(new BufferedImage(TILE_SIZE, TILE_SIZE, BufferedImage.TYPE_INT_ARGB));
 			tile.setIcon(tileIcon);
 			tile.setDisabledIcon(tileIcon);
@@ -139,6 +152,60 @@ public class ChessBoardView extends GuiSubView {
 				setTileIcon(tile, coord);
 			}
 		}
+		setWhiteTime(model.getGameModel().getGame().getClock().getTime(PlayerColor.COLOR_WHITE));
+		setBlackTime(model.getGameModel().getGame().getClock().getTime(PlayerColor.COLOR_BLACK));
+	}
+	
+	private void initPromotionPanel(JPanel parent) {
+		promotionPanel = new JPanel();
+		promotionPanel.setLayout(new BoxLayout(promotionPanel, BoxLayout.PAGE_AXIS));
+		parent.add(promotionPanel);
+		promotionPanel.add(new JLabel("Select a piece to promote to!", JLabel.CENTER));
+		for (int i = 0; i < ChessPieces.PROMOTABLE_PIECES.length; ++i) {
+			promotionButtons[i] = new JButton();
+
+			promotionButtons[i].setPreferredSize(new Dimension(TILE_SIZE, TILE_SIZE));
+			promotionButtons[i].setMargin(new Insets(0, 0, 0, 0));
+			promotionButtons[i].setEnabled(false);
+
+			PlayerColor color = PlayerColor.getFirst();
+			ChessPieces pieceKind = ChessPieces.PROMOTABLE_PIECES[i];
+			Icon tileIcon = GuiResourceManager.get().getChessPieceIcon(color, pieceKind);
+			promotionButtons[i].setIcon(tileIcon);
+			promotionButtons[i].setDisabledIcon(tileIcon);
+			promotionButtons[i].setBackground(HILIGHT_COLOR);
+			promotionButtons[i].addMouseListener(new PromotionButtonListener(pieceKind));
+			promotionPanel.add(promotionButtons[i]);
+		}
+		promotionPanel.setVisible(false);
+	}
+	
+	private void initClockView(JPanel parent) {
+		Font timeFont = new Font(Font.SANS_SERIF, Font.BOLD, 20);
+		clockPanel = new JPanel();
+		clockPanel.setLayout(new BoxLayout(clockPanel, BoxLayout.PAGE_AXIS));
+		parent.add(clockPanel);
+		clockPanel.add(new JLabel("White Time", JLabel.CENTER));
+		whiteTime = new JLabel(ChessClock.timeToString(0.0));
+		whiteTime.setFont(timeFont);
+		clockPanel.add(whiteTime);
+		clockPanel.add(new JLabel("Black Time", JLabel.CENTER));
+		blackTime = new JLabel(ChessClock.timeToString(0.0));
+		blackTime.setFont(timeFont);
+		clockPanel.add(blackTime);
+		clockPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		clockPanel.setVisible(true);
+		clockUpdater = new Timer(100, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ChessGame game = model.getGameModel().getGame();
+				if (game != null) {
+					setWhiteTime(game.getClock().getTime(PlayerColor.COLOR_WHITE));
+					setBlackTime(game.getClock().getTime(PlayerColor.COLOR_BLACK));
+				}
+			}
+		});
+		clockUpdater.start();
 	}
 	
 	@Override
@@ -190,27 +257,8 @@ public class ChessBoardView extends GuiSubView {
 		side.add(nextMoveButton);
 		side.add(previousMoveButton);
 		
-		promotionPanel = new JPanel();
-		promotionPanel.setLayout(new BoxLayout(promotionPanel, BoxLayout.PAGE_AXIS));
-		side.add(promotionPanel);
-		promotionPanel.add(new JLabel("Select a piece to promote to!", JLabel.CENTER));
-		for (int i = 0; i < ChessPieces.PROMOTABLE_PIECES.length; ++i) {
-			promotionButtons[i] = new JButton();
-
-			promotionButtons[i].setPreferredSize(new Dimension(TILE_SIZE, TILE_SIZE));
-			promotionButtons[i].setMargin(new Insets(0, 0, 0, 0));
-			promotionButtons[i].setEnabled(false);
-
-			PlayerColor color = PlayerColor.getFirst();
-			ChessPieces pieceKind = ChessPieces.PROMOTABLE_PIECES[i];
-			Icon tileIcon = GuiResourceManager.get().getChessPieceIcon(color, pieceKind);
-			promotionButtons[i].setIcon(tileIcon);
-			promotionButtons[i].setDisabledIcon(tileIcon);
-			promotionButtons[i].setBackground(HILIGHT_COLOR);
-			promotionButtons[i].addMouseListener(new PromotionButtonListener(pieceKind));
-			promotionPanel.add(promotionButtons[i]);
-		}
-		promotionPanel.setVisible(false);
+		initClockView(side);		
+		initPromotionPanel(side);
 	}
 	
 	private class PromotionButtonListener implements MouseListener {
