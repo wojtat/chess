@@ -1,8 +1,12 @@
 package cz.cvut.fel.pjv.tilhovoj.chess.game;
 
+import java.io.Serializable;
+
 import cz.cvut.fel.pjv.tilhovoj.chess.game.pieces.ChessPiece;
 
-public class Tile {
+public class Tile implements Serializable {
+	private static final long serialVersionUID = 1021081503421776885L;
+	
 	private ChessCoord coord;
 	private ChessPiece piece;
 	

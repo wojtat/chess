@@ -1,11 +1,14 @@
 package cz.cvut.fel.pjv.tilhovoj.chess.game;
 
+import java.io.Serializable;
 import java.util.EnumSet;
 import java.util.List;
 
 import cz.cvut.fel.pjv.tilhovoj.chess.game.pieces.*;
 
-public class ChessBoard {
+public class ChessBoard implements Serializable {
+	private static final long serialVersionUID = -8455258181430213061L;
+	
 	public static final int NUM_RANKS = 8;
 	public static final int NUM_FILES = 8;
 	

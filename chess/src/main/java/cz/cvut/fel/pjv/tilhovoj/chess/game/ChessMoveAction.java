@@ -1,10 +1,13 @@
 package cz.cvut.fel.pjv.tilhovoj.chess.game;
 
+import java.io.Serializable;
 import java.util.EnumSet;
 
 import cz.cvut.fel.pjv.tilhovoj.chess.game.pieces.ChessPieces;
 
-public class ChessMoveAction {
+public class ChessMoveAction implements Serializable {
+	private static final long serialVersionUID = -8514178583575391325L;
+	
 	private ChessMove move;
 	private PlayerColor onTurn;
 	private EnumSet<ChessCastlingRight> oldCastlingRights;

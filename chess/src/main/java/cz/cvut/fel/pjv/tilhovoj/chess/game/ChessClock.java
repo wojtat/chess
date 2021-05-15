@@ -67,6 +67,10 @@ public class ChessClock {
 		return playersTime.get(player).getTime();
 	}
 	
+	public void setTime(PlayerColor player, Double time) {
+		playersTime.get(player).setTime(time);
+	}
+	
 	public Double getIncrement() {
 		return increment;
 	}
@@ -137,8 +141,12 @@ public class ChessClock {
 			return time;
 		}
 		
+		public synchronized void setTime(Double seconds) {
+			time = seconds; 
+		}
+		
 		public synchronized void addTime(Double seconds) {
-			time += seconds;
+			setTime(time + seconds);
 			if (time < .0) {
 				time = .0;
 			}

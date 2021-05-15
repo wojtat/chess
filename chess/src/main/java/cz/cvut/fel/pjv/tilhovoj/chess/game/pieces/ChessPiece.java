@@ -1,11 +1,13 @@
 package cz.cvut.fel.pjv.tilhovoj.chess.game.pieces;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.List;
 
 import cz.cvut.fel.pjv.tilhovoj.chess.game.*;
 
-public abstract class ChessPiece {
+public abstract class ChessPiece implements Serializable {
+	private static final long serialVersionUID = -4325746427193672289L;
+	
 	protected ChessBoard board;
 	protected PlayerColor player;
 	protected ChessPieces kind;

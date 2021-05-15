@@ -74,7 +74,11 @@ public class MainGuiController {
 	}
 	
 	public void saveGame() {
-		Dialog.saveGameDialog();
+		ChessGame game = model.getGameModel().getGame();
+		if (game == null) {
+			return;
+		}
+		Dialog.saveGameDialog(game);
 	}
 	
 	public void loadGamePGN() {
@@ -87,6 +91,10 @@ public class MainGuiController {
 	}
 	
 	public void saveGamePGN() {
+		ChessGame game = model.getGameModel().getGame();
+		if (game == null) {
+			return;
+		}
 		Dialog.saveGamePGNDialog();
 	}
 	

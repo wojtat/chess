@@ -1,9 +1,12 @@
 package cz.cvut.fel.pjv.tilhovoj.chess.game;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChessCoord {
+public class ChessCoord implements Serializable {
+	private static final long serialVersionUID = -3612093434784417646L;
+	
 	public static final ChessCoord WHITE_KING_ROOK = new ChessCoord(1, 8);
 	public static final ChessCoord WHITE_QUEEN_ROOK = new ChessCoord(1, 1);
 	public static final ChessCoord BLACK_KING_ROOK = new ChessCoord(8, 8);

@@ -1,13 +1,15 @@
 package cz.cvut.fel.pjv.tilhovoj.chess.game;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.List;
 
-import cz.cvut.fel.pjv.tilhovoj.chess.game.pieces.*;
-
-public class ChessGame {
-
+public class ChessGame implements Serializable {
+	private static final long serialVersionUID = 7300158544833018878L;
+	
 	private boolean beforeStartGame;
 	private ChessClock clock;
 	private ChessBoard board;
@@ -88,4 +90,31 @@ public class ChessGame {
 	public void playerFlagged(PlayerColor player) {
 		beforeStartGame = true;
 	}
+	
+	private void readObject(ObjectInputStream in) throws ClassNotFoundException, IOException 
+    {
+		beforeStartGame = in.readBoolean();
+		board = (ChessBoard)in.readObject();
+		double startTime = in.readDouble();
+		double increment = in.readDouble();
+		double whiteTime = in.readDouble();
+		double blackTime = in.readDouble();
+		clock = new ChessClock(this, board.getOnTurn(), startTime, increment);
+		clock.setTime(PlayerColor.COLOR_WHITE, whiteTime);
+		clock.setTime(PlayerColor.COLOR_BLACK, blackTime);
+		currentMove = in.readInt();
+		moveList = (List<ChessMoveAction>)in.readObject();
+    }
+ 
+    private void writeObject(ObjectOutputStream out) throws IOException 
+    {
+    	out.writeBoolean(beforeStartGame);
+    	out.writeObject(board);
+    	out.writeDouble(clock.getStartTime());
+    	out.writeDouble(clock.getIncrement());
+    	out.writeDouble(clock.getTime(PlayerColor.COLOR_WHITE));
+    	out.writeDouble(clock.getTime(PlayerColor.COLOR_BLACK));
+    	out.writeInt(currentMove);
+    	out.writeObject(moveList);
+    }
 }
