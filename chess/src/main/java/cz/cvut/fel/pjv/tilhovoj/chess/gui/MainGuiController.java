@@ -49,6 +49,7 @@ public class MainGuiController {
 	}
 	
 	private void resetGame(ChessGame newGame) {
+		System.out.println("SETTING NEW GAME");
 		model.getGameModel().setGame(newGame);
 		model.getGameModel().getGame().startGame();
 		view.getBoardView().setSelectedTile(null);
@@ -115,6 +116,10 @@ public class MainGuiController {
 		if (game == null) {
 			return;
 		}
+		if (!game.getPlayer(game.getBoard().getOnTurn()).isLocal()) {
+			// If the local gui player isn't on turn, ignore
+			return;
+		}
 		if (view.getBoardView().isInPromotionDialog() || !game.isUpdated() || game.beforeStartGame()) {
 			// Ignore tile clicks when we're in the process of promotion or not in the current position or game hasn't started
 			return;
@@ -125,7 +130,6 @@ public class MainGuiController {
 				PlayerColor onTurn = game.getBoard().getOnTurn();
 				if (game.getBoard().getTileAt(coord).getPiece().getColor() == onTurn) {
 					view.getBoardView().setSelectedTile(coord);
-					// TODO: Show possible moves
 				}
 			}
 		} else {

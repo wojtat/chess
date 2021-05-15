@@ -14,6 +14,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import cz.cvut.fel.pjv.tilhovoj.chess.game.ChessBoard;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.ChessGame;
+import cz.cvut.fel.pjv.tilhovoj.chess.game.ComputerRandomPlayer;
+import cz.cvut.fel.pjv.tilhovoj.chess.game.HumanPlayer;
+import cz.cvut.fel.pjv.tilhovoj.chess.game.PlayerColor;
 
 public class Dialog {
 	public static ChessGame newGameDialog() {
@@ -25,7 +28,10 @@ public class Dialog {
 		};
 		int result = JOptionPane.showConfirmDialog(null, inputs, "New Game", JOptionPane.OK_CANCEL_OPTION);
 		if (result == JOptionPane.OK_OPTION) {
-			return new ChessGame(30.0, 2.0, ChessBoard.fromFEN(fenField.getText()));
+			ChessGame game = new ChessGame(30.0, 2.0, ChessBoard.fromFEN(fenField.getText()));
+			game.connectPlayer(PlayerColor.COLOR_WHITE, new HumanPlayer());
+			game.connectPlayer(PlayerColor.COLOR_BLACK, new ComputerRandomPlayer(PlayerColor.COLOR_BLACK, game));
+			return game;
 		} else {
 			return null;
 		}

@@ -5,6 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
 
 public class ChessGame implements Serializable {
@@ -13,20 +14,38 @@ public class ChessGame implements Serializable {
 	private boolean beforeStartGame;
 	private ChessClock clock;
 	private ChessBoard board;
+	private EnumMap<PlayerColor, Player> connectedPlayers;
 	private int currentMove;
 	private List<ChessMoveAction> moveList;
 	
 	public ChessGame(Double startTime, Double increment, ChessBoard board) {
 		this.clock = new ChessClock(this, board.getOnTurn(), startTime, increment);
 		this.board = board;
+		this.connectedPlayers = new EnumMap<>(PlayerColor.class);
 		this.currentMove = 0;
 		this.moveList = new ArrayList<>();
 		this.beforeStartGame = true;
 	}
 	
+	public void connectPlayer(PlayerColor color, Player player) {
+		connectedPlayers.put(color, player);
+	}
+	
+	public Player getPlayer(PlayerColor color) {
+		return connectedPlayers.get(color);
+	}
+	
 	public void startGame() {
 		beforeStartGame = false;
 		clock.start();
+		for (PlayerColor color : PlayerColor.values()) {
+			if (connectedPlayers.containsKey(color)) {
+				connectedPlayers.get(color).startPlaying();
+			}
+		}
+		if (connectedPlayers.containsKey(board.getOnTurn())) {
+			connectedPlayers.get(board.getOnTurn()).startTurn();
+		}
 	}
 	
 	public boolean beforeStartGame() {
@@ -61,6 +80,16 @@ public class ChessGame implements Serializable {
 		return true;
 	}
 	
+	private void endGame() {
+		beforeStartGame = true;
+		for (PlayerColor color : PlayerColor.values()) {
+			if (connectedPlayers.containsKey(color)) {
+				connectedPlayers.get(color).stopPlaying();
+			}
+		}
+		clock.stop();
+	}
+	
 	public void playMove(ChessMove move) {
 		if (beforeStartGame || currentMove != moveList.size()) {
 			return;
@@ -79,22 +108,38 @@ public class ChessGame implements Serializable {
 			clock.stop();
 			if (board.isKingUnderAttack(board.getOnTurn())) {
 				// Checkmate
+				endGame();
 				System.out.println("CHECKMATE, " + PlayerColor.getPrevious(board.getOnTurn()) + " wins.");
 			} else {
 				// Stalemate
+				endGame();
 				System.out.println("STALEMATE.");
 			}
 		}
-	}
-
-	public void playerFlagged(PlayerColor player) {
-		beforeStartGame = true;
+		if (!beforeStartGame) {
+			if (connectedPlayers.containsKey(board.getOnTurn())) {
+				connectedPlayers.get(board.getOnTurn()).startTurn();
+			}
+		}
 	}
 	
-	private void readObject(ObjectInputStream in) throws ClassNotFoundException, IOException 
-    {
+	public void playerFlagged(PlayerColor player) {
+		endGame();
+		System.out.println("FLAGGED.");
+	}
+	
+	private void readObject(ObjectInputStream in) throws ClassNotFoundException, IOException {
 		beforeStartGame = in.readBoolean();
 		board = (ChessBoard)in.readObject();
+		connectedPlayers = new EnumMap<>(PlayerColor.class);
+		for (PlayerColor color : PlayerColor.values()) {
+			boolean isLocal = in.readBoolean();
+			if (isLocal) {
+				connectedPlayers.put(color, new HumanPlayer());
+			} else {
+				connectedPlayers.put(color, new ComputerRandomPlayer(color, this));
+			}
+		}
 		double startTime = in.readDouble();
 		double increment = in.readDouble();
 		double whiteTime = in.readDouble();
@@ -106,10 +151,17 @@ public class ChessGame implements Serializable {
 		moveList = (List<ChessMoveAction>)in.readObject();
     }
  
-    private void writeObject(ObjectOutputStream out) throws IOException 
-    {
+    private void writeObject(ObjectOutputStream out) throws IOException {
     	out.writeBoolean(beforeStartGame);
     	out.writeObject(board);
+		for (PlayerColor color : PlayerColor.values()) {
+			Player player = connectedPlayers.get(color);
+			if (player == null || player.isLocal()) {
+				out.writeBoolean(true);
+			} else {
+				out.writeBoolean(false);
+			}
+		}
     	out.writeDouble(clock.getStartTime());
     	out.writeDouble(clock.getIncrement());
     	out.writeDouble(clock.getTime(PlayerColor.COLOR_WHITE));

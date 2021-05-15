@@ -32,7 +32,7 @@ public class ChessBoardView extends GuiSubView {
 	private JPanel clockPanel;
 	private JLabel whiteTime;
 	private JLabel blackTime;
-	private Timer clockUpdater;
+	private Timer guiUpdater;
 	
 	private boolean isInPromotionDialog;
 	private JPanel promotionPanel;
@@ -195,17 +195,6 @@ public class ChessBoardView extends GuiSubView {
 		clockPanel.add(blackTime);
 		clockPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		clockPanel.setVisible(true);
-		clockUpdater = new Timer(100, new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				ChessGame game = model.getGameModel().getGame();
-				if (game != null) {
-					setWhiteTime(game.getClock().getTime(PlayerColor.COLOR_WHITE));
-					setBlackTime(game.getClock().getTime(PlayerColor.COLOR_BLACK));
-				}
-			}
-		});
-		clockUpdater.start();
 	}
 	
 	@Override
@@ -259,6 +248,16 @@ public class ChessBoardView extends GuiSubView {
 		
 		initClockView(side);		
 		initPromotionPanel(side);
+		guiUpdater = new Timer(150, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ChessGame game = ChessBoardView.this.model.getGameModel().getGame();
+				if (game != null) {
+					updateView();
+				}
+			}
+		});
+		guiUpdater.start();
 	}
 	
 	private class PromotionButtonListener implements MouseListener {

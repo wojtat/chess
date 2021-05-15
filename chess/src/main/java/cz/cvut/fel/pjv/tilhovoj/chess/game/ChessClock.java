@@ -11,7 +11,7 @@ public class ChessClock {
 	private Double increment;
 	private EnumMap<PlayerColor, ChessTimer> playersTime;
 	private PlayerColor playerOnTurn;
-	private boolean isRunning;
+	private volatile boolean isRunning;
 	private Thread timeUpdater;
 
 	public static String timeToString(Double time) {
@@ -39,6 +39,7 @@ public class ChessClock {
 		timeUpdater = new Thread(new Runnable() {
 			@Override
 			public void run() {
+				final int waitTime = 20;
 				while (true) {
 					if (isRunning) {
 						playersTime.get(playerOnTurn).updateTime();
@@ -48,7 +49,7 @@ public class ChessClock {
 					}
 					
 					try {
-						Thread.sleep(20);
+						Thread.sleep(waitTime);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
