@@ -32,22 +32,6 @@ public class App {
 	}
 	
 	public void runApp() {
-		/*
-		ChessClock c = new ChessClock(5.0, .5);
-		c.start();
-		System.out.println("Started clock with 5 seconds and 0.5 seconds increment.");
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		c.hit();
-		System.out.println("Player thought for 1 second");
-		System.out.println("WHITE played a move");
-		System.out.println("WHITE has " + c.getTime(PlayerColor.COLOR_WHITE) + " seconds.");
-		System.out.println("BLACK has " + c.getTime(PlayerColor.COLOR_BLACK) + " seconds.");
-		*/
-		
 		// Setup logging
 		setupDebugLogging();
 		

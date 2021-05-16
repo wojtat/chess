@@ -19,9 +19,6 @@ public class MainGuiView extends GuiTopView {
 	static final int MIN_HEIGHT = 700;
 	static final String WINDOW_TITLE = "Chess game";
 	
-	private JToolBar mainToolBar;
-	
-	private GuiSubView sidePanelView;
 	private GuiSubView boardView;
 	
 	public MainGuiView() {
@@ -39,7 +36,7 @@ public class MainGuiView extends GuiTopView {
 		// Configure my view
 		this.setLayout(new BorderLayout());
 
-		mainToolBar = new JToolBar();
+		JToolBar mainToolBar = new JToolBar();
 		mainToolBar.setFloatable(false);
 		JButton newGameButton = new JButton("New Game");
 		JButton loadGameButton = new JButton("Load Game");
@@ -84,11 +81,6 @@ public class MainGuiView extends GuiTopView {
 		boardView = new ChessBoardView();
 		boardView.initView(model, controller);
 		this.add(boardView, BorderLayout.WEST);
-		
-		// Configure and add side panel view
-		sidePanelView = new SidePanelView();
-		sidePanelView.initView(model, controller);
-		//this.add(sidePanelView, BorderLayout.CENTER);
 		
 		this.setVisible(true);
 	}

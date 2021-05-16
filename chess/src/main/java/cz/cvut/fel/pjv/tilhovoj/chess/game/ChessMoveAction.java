@@ -12,6 +12,7 @@ public class ChessMoveAction implements Serializable {
 	private PlayerColor onTurn;
 	private EnumSet<ChessCastlingRight> oldCastlingRights;
 	private ChessCoord oldEnPassantCoord;
+	private int oldHalfMoveClock;
 	
 	private boolean isCapture;
 	private ChessCoord toBeCaptured;
@@ -43,6 +44,10 @@ public class ChessMoveAction implements Serializable {
 	
 	public ChessCoord getEnPassantCoord() {
 		return enPassantCoord;
+	}
+	
+	public int getOldHalfMoveClock() {
+		return oldHalfMoveClock;
 	}
 
 	public boolean isCastleLong() {
@@ -82,6 +87,7 @@ public class ChessMoveAction implements Serializable {
 		private PlayerColor onTurn;
 		private EnumSet<ChessCastlingRight> oldCastlingRights;
 		private ChessCoord oldEnPassantCoord;
+		private int oldHalfMoveClock;
 		
 		private boolean isCapture;
 		private ChessCoord toBeCaptured;
@@ -97,6 +103,7 @@ public class ChessMoveAction implements Serializable {
 			this.onTurn = onTurn;
 			this.oldCastlingRights = board.getCastlingRights().clone();
 			this.oldEnPassantCoord = board.getEnPassantCoord();
+			this.oldHalfMoveClock = board.getHalfMoveClock();
 		}
 		
 		public Builder isCapture(ChessCoord toBeCaptured, ChessBoard board) {
@@ -133,6 +140,7 @@ public class ChessMoveAction implements Serializable {
 			action.toBeCaptured = this.toBeCaptured;
 			action.beingCaptured = this.beingCaptured;
 			action.enPassantCoord = this.enPassantCoord;
+			action.oldHalfMoveClock = this.oldHalfMoveClock;
 			action.isCastleShort = this.isCastleShort;
 			action.isCastleLong = this.isCastleLong;
 			action.isPromotion = this.isPromotion;

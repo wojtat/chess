@@ -16,21 +16,83 @@ import cz.cvut.fel.pjv.tilhovoj.chess.game.ChessBoard;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.ChessGame;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.ComputerRandomPlayer;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.HumanPlayer;
+import cz.cvut.fel.pjv.tilhovoj.chess.game.Player;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.PlayerColor;
 
 public class Dialog {
 	public static ChessGame newGameDialog() {
+		final String defaultChessPosition = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+		final String computerString = "Computer";
+		final String humanString = "Human";
+		
 		JTextField fenField = new JTextField();
-		fenField.setText("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+		fenField.setText(defaultChessPosition);
+		JPanel fenPanel = new JPanel();
+		fenPanel.setLayout(new BoxLayout(fenPanel, BoxLayout.PAGE_AXIS));
+        fenPanel.add(new JLabel("FEN of the Initial Position"));
+		fenPanel.add(fenField);
+		
+		JRadioButton whiteComputer = new JRadioButton(computerString);
+		JRadioButton whiteHuman = new JRadioButton(humanString);
+		ButtonGroup whitePlayerGroup = new ButtonGroup();
+		whitePlayerGroup.add(whiteComputer);
+		whitePlayerGroup.add(whiteHuman);
+		whiteHuman.setSelected(true);
+		JPanel whiteSelectionPanel = new JPanel();
+		whiteSelectionPanel.setLayout(new BoxLayout(whiteSelectionPanel, BoxLayout.PAGE_AXIS));
+		whiteSelectionPanel.add(new JLabel("White Is"));
+		whiteSelectionPanel.add(whiteComputer);
+		whiteSelectionPanel.add(whiteHuman);
+		
+		JRadioButton blackComputer = new JRadioButton(computerString);
+		JRadioButton blackHuman = new JRadioButton(humanString);
+		ButtonGroup blackPlayerGroup = new ButtonGroup();
+		blackPlayerGroup.add(blackComputer);
+		blackPlayerGroup.add(blackHuman);
+		blackHuman.setSelected(true);
+		JPanel blackSelectionPanel = new JPanel();
+		blackSelectionPanel.setLayout(new BoxLayout(blackSelectionPanel, BoxLayout.PAGE_AXIS));
+		blackSelectionPanel.add(new JLabel("Black Is"));
+		blackSelectionPanel.add(blackComputer);
+		blackSelectionPanel.add(blackHuman);
+		
+		JPanel playerSelectionPanel = new JPanel();
+		playerSelectionPanel.setLayout(new BoxLayout(playerSelectionPanel, BoxLayout.LINE_AXIS));
+		playerSelectionPanel.add(whiteSelectionPanel);
+		playerSelectionPanel.add(blackSelectionPanel);
+		
+		JSlider startTimeSlider = new JSlider(JSlider.HORIZONTAL, 0, 60, 5);
+		startTimeSlider.setMajorTickSpacing(10);
+		startTimeSlider.setMinorTickSpacing(1);
+		startTimeSlider.setPaintLabels(true);
+		startTimeSlider.setPaintTicks(true);
+		JSlider incrementSlider = new JSlider(JSlider.HORIZONTAL, 0, 60, 5);
+		incrementSlider.setMajorTickSpacing(10);
+		incrementSlider.setMinorTickSpacing(1);
+		incrementSlider.setPaintLabels(true);
+		incrementSlider.setPaintTicks(true);
+		
+		JPanel timeControlPanel = new JPanel();
+		timeControlPanel.setLayout(new BoxLayout(timeControlPanel, BoxLayout.PAGE_AXIS));
+		timeControlPanel.add(new JLabel("Start Time in Minutes"));
+		timeControlPanel.add(startTimeSlider);
+		timeControlPanel.add(new JLabel("Increment in Seconds"));
+		timeControlPanel.add(incrementSlider);
+		
 		final JComponent[] inputs = new JComponent[] {
-		        new JLabel("FEN of the Initial Position"),
-		        fenField
+		        fenPanel,
+		        playerSelectionPanel,
+		        timeControlPanel
 		};
 		int result = JOptionPane.showConfirmDialog(null, inputs, "New Game", JOptionPane.OK_CANCEL_OPTION);
 		if (result == JOptionPane.OK_OPTION) {
-			ChessGame game = new ChessGame(30.0, 2.0, ChessBoard.fromFEN(fenField.getText()));
-			game.connectPlayer(PlayerColor.COLOR_WHITE, new HumanPlayer());
-			game.connectPlayer(PlayerColor.COLOR_BLACK, new ComputerRandomPlayer(PlayerColor.COLOR_BLACK, game));
+			int startTime = startTimeSlider.getValue() * 60;
+			int increment = incrementSlider.getValue();
+			ChessGame game = new ChessGame((double)startTime, (double)increment, ChessBoard.fromFEN(fenField.getText()));
+			Player whitePlayer = whiteHuman.isSelected() ? new HumanPlayer() : new ComputerRandomPlayer(PlayerColor.COLOR_WHITE, game);
+			Player blackPlayer = blackHuman.isSelected() ? new HumanPlayer() : new ComputerRandomPlayer(PlayerColor.COLOR_BLACK, game);
+			game.connectPlayer(PlayerColor.COLOR_WHITE, whitePlayer);
+			game.connectPlayer(PlayerColor.COLOR_BLACK, blackPlayer);
 			return game;
 		} else {
 			return null;
@@ -39,7 +101,7 @@ public class Dialog {
 	
 	public static ChessGame loadGameDialog() {
 		JFileChooser chooser = new JFileChooser();
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("Chess Game Save File", "chess");
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Chess Game Save File (*.chess)", "chess");
 	    chooser.setFileFilter(filter);
 	    int returnVal = chooser.showOpenDialog(null);
 	    if(returnVal == JFileChooser.APPROVE_OPTION) {
@@ -77,6 +139,6 @@ public class Dialog {
 		return null;
 	}
 	
-	public static void saveGamePGNDialog() {
+	public static void saveGamePGNDialog(ChessGame game) {
 	}
 }

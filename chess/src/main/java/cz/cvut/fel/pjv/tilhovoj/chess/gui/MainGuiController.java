@@ -51,7 +51,9 @@ public class MainGuiController {
 	private void resetGame(ChessGame newGame) {
 		System.out.println("SETTING NEW GAME");
 		model.getGameModel().setGame(newGame);
-		model.getGameModel().getGame().startGame();
+		if (newGame.isPlaying()) {
+			newGame.startGame();
+		}
 		view.getBoardView().setSelectedTile(null);
 		view.getBoardView().updateView();
 	}
@@ -96,7 +98,7 @@ public class MainGuiController {
 		if (game == null) {
 			return;
 		}
-		Dialog.saveGamePGNDialog();
+		Dialog.saveGamePGNDialog(game);
 	}
 	
 	public void clickPromotion(ChessMove move, ChessPieces kind) {
@@ -120,7 +122,7 @@ public class MainGuiController {
 			// If the local gui player isn't on turn, ignore
 			return;
 		}
-		if (view.getBoardView().isInPromotionDialog() || !game.isUpdated() || game.beforeStartGame()) {
+		if (view.getBoardView().isInPromotionDialog() || !game.isUpdated() || !game.isPlaying()) {
 			// Ignore tile clicks when we're in the process of promotion or not in the current position or game hasn't started
 			return;
 		}

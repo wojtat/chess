@@ -11,7 +11,10 @@ import java.util.List;
 public class ChessGame implements Serializable {
 	private static final long serialVersionUID = 7300158544833018878L;
 	
-	private boolean beforeStartGame;
+	private static final int DRAW_HALF_MOVE_CLOCK = 100;
+	
+	private State state;
+	private PlayerColor winner;
 	private ChessClock clock;
 	private ChessBoard board;
 	private EnumMap<PlayerColor, Player> connectedPlayers;
@@ -24,7 +27,7 @@ public class ChessGame implements Serializable {
 		this.connectedPlayers = new EnumMap<>(PlayerColor.class);
 		this.currentMove = 0;
 		this.moveList = new ArrayList<>();
-		this.beforeStartGame = true;
+		this.state = State.NONE;
 	}
 	
 	public void connectPlayer(PlayerColor color, Player player) {
@@ -36,7 +39,7 @@ public class ChessGame implements Serializable {
 	}
 	
 	public void startGame() {
-		beforeStartGame = false;
+		state = State.PLAYING;
 		clock.start();
 		for (PlayerColor color : PlayerColor.values()) {
 			if (connectedPlayers.containsKey(color)) {
@@ -48,8 +51,8 @@ public class ChessGame implements Serializable {
 		}
 	}
 	
-	public boolean beforeStartGame() {
-		return beforeStartGame;
+	public boolean isPlaying() {
+		return state == State.PLAYING;
 	}
 	
 	public ChessBoard getBoard() {
@@ -81,7 +84,6 @@ public class ChessGame implements Serializable {
 	}
 	
 	private void endGame() {
-		beforeStartGame = true;
 		for (PlayerColor color : PlayerColor.values()) {
 			if (connectedPlayers.containsKey(color)) {
 				connectedPlayers.get(color).stopPlaying();
@@ -91,7 +93,7 @@ public class ChessGame implements Serializable {
 	}
 	
 	public void playMove(ChessMove move) {
-		if (beforeStartGame || currentMove != moveList.size()) {
+		if (state != State.PLAYING || currentMove != moveList.size()) {
 			return;
 		}
 		ChessMoveAction action = board.getTileAt(move.getFrom()).getPiece().getActionFromMove(move);
@@ -104,19 +106,22 @@ public class ChessGame implements Serializable {
 		int numLegalMoves = board.getNumLegalMoves();
 		if (numLegalMoves == 0) {
 			// This is the end of the game
-			beforeStartGame = true;
-			clock.stop();
 			if (board.isKingUnderAttack(board.getOnTurn())) {
 				// Checkmate
-				endGame();
+				state = State.WIN;
+				winner = PlayerColor.getPrevious(board.getOnTurn());
 				System.out.println("CHECKMATE, " + PlayerColor.getPrevious(board.getOnTurn()) + " wins.");
 			} else {
 				// Stalemate
-				endGame();
 				System.out.println("STALEMATE.");
 			}
+			endGame();
+		} else if (board.getHalfMoveClock() >= DRAW_HALF_MOVE_CLOCK) {
+			state = State.DRAW;
+			System.out.println("50 MOVE RULE DRAW.");
+			endGame();
 		}
-		if (!beforeStartGame) {
+		if (state == State.PLAYING) {
 			if (connectedPlayers.containsKey(board.getOnTurn())) {
 				connectedPlayers.get(board.getOnTurn()).startTurn();
 			}
@@ -124,12 +129,15 @@ public class ChessGame implements Serializable {
 	}
 	
 	public void playerFlagged(PlayerColor player) {
-		endGame();
+		state = State.WIN;
+		winner = PlayerColor.getPrevious(player);
 		System.out.println("FLAGGED.");
+		endGame();
 	}
 	
 	private void readObject(ObjectInputStream in) throws ClassNotFoundException, IOException {
-		beforeStartGame = in.readBoolean();
+		state = (State)in.readObject();
+		winner = (PlayerColor)in.readObject();
 		board = (ChessBoard)in.readObject();
 		connectedPlayers = new EnumMap<>(PlayerColor.class);
 		for (PlayerColor color : PlayerColor.values()) {
@@ -152,7 +160,8 @@ public class ChessGame implements Serializable {
     }
  
     private void writeObject(ObjectOutputStream out) throws IOException {
-    	out.writeBoolean(beforeStartGame);
+    	out.writeObject(state);
+    	out.writeObject(winner);
     	out.writeObject(board);
 		for (PlayerColor color : PlayerColor.values()) {
 			Player player = connectedPlayers.get(color);
@@ -168,5 +177,12 @@ public class ChessGame implements Serializable {
     	out.writeDouble(clock.getTime(PlayerColor.COLOR_BLACK));
     	out.writeInt(currentMove);
     	out.writeObject(moveList);
+    }
+    
+    public static enum State {
+    	NONE,
+    	PLAYING,
+    	DRAW,
+    	WIN;
     }
 }

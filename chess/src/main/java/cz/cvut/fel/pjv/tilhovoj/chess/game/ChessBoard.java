@@ -15,6 +15,8 @@ public class ChessBoard implements Serializable {
 	private Tile[][] tiles;
 	private ChessCoord enPassantCoord;
 	
+	private int halfMoveClock;
+	
 	private PlayerColor toMove;
 	private EnumSet<ChessCastlingRight> castlingRights;
 	
@@ -23,45 +25,6 @@ public class ChessBoard implements Serializable {
 			for (int file = 1; file <= NUM_FILES; ++file) {
 				ChessCoord coord = new ChessCoord(rank, file);
 				Tile tile = new Tile(coord);
-				tiles[rank - 1][file - 1] = tile;
-			}
-		}
-	}
-	
-	private void setInitialBoard() {
-		castlingRights = EnumSet.allOf(ChessCastlingRight.class);
-		for (int rank = 1; rank <= NUM_RANKS; ++rank) {
-			for (int file = 1; file <= NUM_FILES; ++file) {
-				ChessCoord coord = new ChessCoord(rank, file);
-				Tile tile = new Tile(coord);
-				
-				if (rank == 1 || rank == 8) {
-					// Put a piece here
-					PlayerColor color = rank == 1 ? PlayerColor.COLOR_WHITE : PlayerColor.COLOR_BLACK;
-					switch (file) {
-					case 1:
-					case 8:
-						tile.setPiece(new ChessRook(this, color));
-						break;
-					case 2:
-					case 7:
-						tile.setPiece(new ChessKnight(this, color));
-						break;
-					case 3:
-					case 6:
-						tile.setPiece(new ChessBishop(this, color));
-						break;
-					case 4:
-						tile.setPiece(new ChessQueen(this, color));
-						break;
-					case 5:
-						tile.setPiece(new ChessKing(this, color));
-						break;
-					}
-				} else if (rank == 2 || rank == 7) {
-					// Put a pawn here
-					tile.setPiece(new ChessPawn(this, rank == 2 ? PlayerColor.COLOR_WHITE : PlayerColor.COLOR_BLACK));
-				}
 				tiles[rank - 1][file - 1] = tile;
 			}
 		}
@@ -161,6 +124,14 @@ public class ChessBoard implements Serializable {
 	
 	public void playMove(ChessMoveAction action) {
 		ChessMove move = action.getMove();
+		
+		if (action.isCapture() || getTileAt(move.getFrom()).getPiece().getKind() == ChessPieces.PIECE_PAWN) {
+			// Reset the half move clock
+			halfMoveClock = 0;
+		} else {
+			// Icrement the half move clock
+			++halfMoveClock;
+		}
 		// If king, then can no longer castle
 		if (getTileAt(move.getFrom()).getPiece().getKind() == ChessPieces.PIECE_KING) {
 			switch (getTileAt(move.getFrom()).getPiece().getColor()) {
@@ -230,6 +201,7 @@ public class ChessBoard implements Serializable {
 		
 		castlingRights = action.getOldCastlingRights();
 		enPassantCoord = action.getOldEnPassantCoord();
+		halfMoveClock = action.getOldHalfMoveClock();
 		
 		if (action.isCastle()) {
 			// Move the rook back as well
@@ -295,6 +267,14 @@ public class ChessBoard implements Serializable {
 			}
 		}
 		return false;
+	}
+	
+	public int getHalfMoveClock() {
+		return halfMoveClock;
+	}
+	
+	public void setHalfMoveClock(int halfMoveClock) {
+		this.halfMoveClock = halfMoveClock;
 	}
 	
 	public PlayerColor getOnTurn() {
