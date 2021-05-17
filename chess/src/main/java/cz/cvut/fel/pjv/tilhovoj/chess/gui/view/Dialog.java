@@ -1,23 +1,12 @@
 package cz.cvut.fel.pjv.tilhovoj.chess.gui.view;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import cz.cvut.fel.pjv.tilhovoj.chess.game.ChessBoard;
-import cz.cvut.fel.pjv.tilhovoj.chess.game.ChessGame;
-import cz.cvut.fel.pjv.tilhovoj.chess.game.ComputerRandomPlayer;
-import cz.cvut.fel.pjv.tilhovoj.chess.game.HumanPlayer;
-import cz.cvut.fel.pjv.tilhovoj.chess.game.Player;
-import cz.cvut.fel.pjv.tilhovoj.chess.game.PlayerColor;
+import cz.cvut.fel.pjv.tilhovoj.chess.game.*;
+import cz.cvut.fel.pjv.tilhovoj.chess.pgn.*;
 
 public class Dialog {
 	public static ChessGame newGameDialog() {
@@ -136,9 +125,45 @@ public class Dialog {
 	}
 	
 	public static ChessGame loadGamePGNDialog() {
+		JFileChooser chooser = new JFileChooser();
+		FileNameExtensionFilter filterPGN = new FileNameExtensionFilter("PGN File (*.pgn)", "pgn");
+		FileNameExtensionFilter filterTXT = new FileNameExtensionFilter("TXT File (*.txt)", "txt");
+		chooser.addChoosableFileFilter(filterTXT);
+	    chooser.setFileFilter(filterPGN);
+	    int returnVal = chooser.showOpenDialog(null);
+	    if(returnVal == JFileChooser.APPROVE_OPTION) {
+	    	File selected = chooser.getSelectedFile();
+			try {
+				FileInputStream stream = new FileInputStream(selected);
+				PGNParser parser = new PGNParser(stream);
+				parser.parse();
+				ChessGame game = parser.getResult();
+				stream.close();
+				return game;
+			} catch (IOException e) {
+				e.printStackTrace();
+			} 
+	    }
 		return null;
 	}
 	
 	public static void saveGamePGNDialog(ChessGame game) {
+		JFileChooser chooser = new JFileChooser();
+		FileNameExtensionFilter filterPGN = new FileNameExtensionFilter("PGN File (*.pgn)", "pgn");
+		FileNameExtensionFilter filterTXT = new FileNameExtensionFilter("TXT File (*.txt)", "txt");
+		chooser.addChoosableFileFilter(filterTXT);
+	    chooser.setFileFilter(filterPGN);
+	    int returnVal = chooser.showSaveDialog(null);
+	    if(returnVal == JFileChooser.APPROVE_OPTION) {
+	    	File selected = chooser.getSelectedFile();
+			try {
+				FileOutputStream stream = new FileOutputStream(selected);
+				PGNWriter writer = new PGNWriter(stream);
+				writer.writeChessGame(game);
+				stream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	    }
 	}
 }

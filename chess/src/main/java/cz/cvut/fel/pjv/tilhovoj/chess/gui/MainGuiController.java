@@ -64,6 +64,7 @@ public class MainGuiController {
 		if (newGame == null) {
 			return;
 		}
+		newGame.startGame();
 		resetGame(newGame);
 	}
 	
@@ -118,7 +119,7 @@ public class MainGuiController {
 		if (game == null) {
 			return;
 		}
-		if (!game.getPlayer(game.getBoard().getOnTurn()).isLocal()) {
+		if (game.getPlayer(game.getBoard().getOnTurn()) == null || !game.getPlayer(game.getBoard().getOnTurn()).isLocal()) {
 			// If the local gui player isn't on turn, ignore
 			return;
 		}

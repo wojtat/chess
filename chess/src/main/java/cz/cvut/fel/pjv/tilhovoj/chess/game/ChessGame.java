@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 
+import cz.cvut.fel.pjv.tilhovoj.chess.game.pieces.ChessPiece;
+import cz.cvut.fel.pjv.tilhovoj.chess.game.pieces.ChessPieces;
+
 public class ChessGame implements Serializable {
 	private static final long serialVersionUID = 7300158544833018878L;
 	
@@ -15,11 +18,12 @@ public class ChessGame implements Serializable {
 	
 	private State state;
 	private PlayerColor winner;
-	private ChessClock clock;
-	private ChessBoard board;
-	private EnumMap<PlayerColor, Player> connectedPlayers;
-	private int currentMove;
-	private List<ChessMoveAction> moveList;
+	protected ChessClock clock;
+	protected ChessBoard board;
+	protected EnumMap<PlayerColor, Player> connectedPlayers;
+	protected int currentMove;
+	protected List<ChessMoveAction> moveList;
+	protected List<String> sanMoveList;
 	
 	public ChessGame(Double startTime, Double increment, ChessBoard board) {
 		this.clock = new ChessClock(this, board.getOnTurn(), startTime, increment);
@@ -27,6 +31,7 @@ public class ChessGame implements Serializable {
 		this.connectedPlayers = new EnumMap<>(PlayerColor.class);
 		this.currentMove = 0;
 		this.moveList = new ArrayList<>();
+		this.sanMoveList = new ArrayList<>();
 		this.state = State.NONE;
 	}
 	
@@ -63,6 +68,18 @@ public class ChessGame implements Serializable {
 		return clock;
 	}
 	
+	public List<String> getSANMoveList() {
+		return sanMoveList;
+	}
+	
+	public State getState() {
+		return state;
+	}
+	
+	public PlayerColor getWinner() {
+		return winner;
+	}
+	
 	public boolean isUpdated() {
 		return currentMove == moveList.size();
 	}
@@ -92,16 +109,49 @@ public class ChessGame implements Serializable {
 		clock.stop();
 	}
 	
+	private String getSANStringForChessMoveAction(ChessMoveAction action) {
+		// Special cases
+		if (action.isCastleShort()) {
+			return "O-O";
+		} else if (action.isCastleLong()) {
+			return "O-O-O";
+		}
+		StringBuilder builder = new StringBuilder();
+		ChessPiece mover = board.getTileAt(action.getMove().getFrom()).getPiece();
+		if (mover.getKind() != ChessPieces.PIECE_PAWN) {
+			builder.append(ChessPieces.toSANCharacter(mover.getKind()));
+		}
+		// We disambiguate even when we don't have to, which should be handled correctly by other PGN readers
+		builder.append(action.getMove().getFrom().toString());
+		if (action.isCapture()) {
+			builder.append('x');
+		}
+		builder.append(action.getMove().getTo().toString());
+		if (action.isPromotion()) {
+			builder.append("=" + ChessPieces.toSANCharacter(action.getPromotionPieceKind()));
+		}
+		return builder.toString();
+	}
+	
 	public void playMove(ChessMove move) {
 		if (state != State.PLAYING || currentMove != moveList.size()) {
 			return;
 		}
 		ChessMoveAction action = board.getTileAt(move.getFrom()).getPiece().getActionFromMove(move);
+		String sanString = getSANStringForChessMoveAction(action);
 		board.playMove(action);
 		clock.hit();
 		
 		++currentMove;
 		moveList.add(action);
+		if (board.isKingUnderAttack(board.getOnTurn())) {
+			if (board.getNumLegalMoves() == 0) {
+				sanString += '#';
+			} else {
+				sanString += '+';
+			}
+		}
+		sanMoveList.add(sanString);
 		
 		int numLegalMoves = board.getNumLegalMoves();
 		if (numLegalMoves == 0) {
@@ -157,6 +207,7 @@ public class ChessGame implements Serializable {
 		clock.setTime(PlayerColor.COLOR_BLACK, blackTime);
 		currentMove = in.readInt();
 		moveList = (List<ChessMoveAction>)in.readObject();
+		sanMoveList = (List<String>)in.readObject();
     }
  
     private void writeObject(ObjectOutputStream out) throws IOException {
@@ -177,6 +228,7 @@ public class ChessGame implements Serializable {
     	out.writeDouble(clock.getTime(PlayerColor.COLOR_BLACK));
     	out.writeInt(currentMove);
     	out.writeObject(moveList);
+    	out.writeObject(sanMoveList);
     }
     
     public static enum State {

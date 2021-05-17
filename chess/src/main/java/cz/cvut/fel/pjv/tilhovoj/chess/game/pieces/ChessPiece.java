@@ -14,23 +14,8 @@ public abstract class ChessPiece implements Serializable {
 	
 	public static ChessPiece fromFENCharacter(ChessBoard board, char c) {
 		PlayerColor color = Character.isLowerCase(c) ? PlayerColor.COLOR_BLACK : PlayerColor.COLOR_WHITE;
-		c = Character.toLowerCase(c);
-		switch (c) {
-		case 'p':
-			return new ChessPawn(board, color);
-		case 'n':
-			return new ChessKnight(board, color);
-		case 'b':
-			return new ChessBishop(board, color);
-		case 'r':
-			return new ChessRook(board, color);
-		case 'q':
-			return new ChessQueen(board, color);
-		case 'k':
-			return new ChessKing(board, color);
-		default:
-			return null;
-		}
+		c = Character.toUpperCase(c);
+		return fromKind(board, color, ChessPieces.fromSANCharacter(c));
 	}
 	
 	public static ChessPiece fromKind(ChessBoard board, PlayerColor color, ChessPieces kind) {

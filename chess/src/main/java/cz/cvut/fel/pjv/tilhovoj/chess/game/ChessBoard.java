@@ -20,6 +20,8 @@ public class ChessBoard implements Serializable {
 	private PlayerColor toMove;
 	private EnumSet<ChessCastlingRight> castlingRights;
 	
+	private String startingFEN;
+	
 	private void setEmptyBoard() {
 		for (int rank = 1; rank <= NUM_RANKS; ++rank) {
 			for (int file = 1; file <= NUM_FILES; ++file) {
@@ -32,6 +34,7 @@ public class ChessBoard implements Serializable {
 	
 	public static ChessBoard fromFEN(String fenString)  {
 		ChessBoard board = new ChessBoard();
+		board.startingFEN = fenString;
 		
 		String[] fields = fenString.split(" ");
 		if (fields.length != 6) {
@@ -81,7 +84,7 @@ public class ChessBoard implements Serializable {
 		return board;
 	}
 
-	public ChessBoard() {
+	private ChessBoard() {
 		this.tiles = new Tile[NUM_RANKS][NUM_FILES];
 		this.enPassantCoord = null;
 		this.toMove = PlayerColor.getFirst();
@@ -267,6 +270,10 @@ public class ChessBoard implements Serializable {
 			}
 		}
 		return false;
+	}
+	
+	public String getStartingFEN() {
+		return startingFEN;
 	}
 	
 	public int getHalfMoveClock() {

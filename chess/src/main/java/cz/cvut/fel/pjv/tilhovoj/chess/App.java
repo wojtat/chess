@@ -14,8 +14,11 @@ import cz.cvut.fel.pjv.tilhovoj.chess.gui.*;
 import cz.cvut.fel.pjv.tilhovoj.chess.gui.model.MainGuiModel;
 import cz.cvut.fel.pjv.tilhovoj.chess.gui.view.MainGuiView;
 
+/**
+ * The main startup class that is instantiated at launch.
+ *
+ */
 public class App {
-	
 	private void setupDebugLogging() {
 		Logger rootLogger = Logger.getLogger("cz.cvut.fel.pjv.tilhovoj.chess");
 		rootLogger.setLevel(Level.FINE);
@@ -31,6 +34,9 @@ public class App {
 		rootLogger.addHandler(stdout);
 	}
 	
+	/**
+	 * Start the main GUI application.
+	 */
 	public void runApp() {
 		// Setup logging
 		setupDebugLogging();
@@ -46,6 +52,10 @@ public class App {
         });
 	}
 	
+	/**
+	 * The entry point.
+	 * @param args unused
+	 */
     public static void main(String[] args) {
         App app = new App();
         app.runApp();
