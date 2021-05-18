@@ -85,6 +85,12 @@ public class PGNParser {
 			
 			// Now we parse the move text section
 			while (!expect(token, PGNToken.Type.EOF)) {
+				if (expect(token, PGNToken.Type.ASTERISK)) {
+					// This is the unfinished game result, we can stop
+					parsed = true;
+					break;
+				}
+				
 				if (expect(token, PGNToken.Type.INTEGER)) {
 					int number = token.getInteger();
 					// If there is a move number, skip it
