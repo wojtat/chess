@@ -9,8 +9,16 @@ import cz.cvut.fel.pjv.tilhovoj.chess.game.ChessMove;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.ChessMoveAction;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.PlayerColor;
 
+/**
+ * Represents a standard chess rook piece
+ */
 public class ChessRook extends ChessDirectionalPiece {
 
+	/**
+	 * Constructs a new rook piece
+	 * @param board the board this piece will be on
+	 * @param player the owner of this piece
+	 */
 	public ChessRook(ChessBoard board, PlayerColor player) {
 		super(board, player);
 		this.kind = ChessPieces.PIECE_ROOK;

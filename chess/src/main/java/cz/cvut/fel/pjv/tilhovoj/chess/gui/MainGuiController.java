@@ -15,21 +15,35 @@ import cz.cvut.fel.pjv.tilhovoj.chess.gui.model.MainGuiModel;
 import cz.cvut.fel.pjv.tilhovoj.chess.gui.view.Dialog;
 import cz.cvut.fel.pjv.tilhovoj.chess.gui.view.MainGuiView;
 
+/**
+ * Represents a top level controller component of a GUI MVC pattern
+ */
 public class MainGuiController {
 	private static final Logger LOG = Logger.getLogger(MainGuiController.class.getName());
 	
 	private MainGuiModel model;
 	private MainGuiView view;
 	
+	/**
+	 * Constructs a new MVC controller with the specified model and view
+	 * @param model
+	 * @param view
+	 */
 	public MainGuiController(MainGuiModel model, MainGuiView view) {
 		this.model = model;
 		this.view = view;
 	}
 	
+	/**
+	 * Initialises the view
+	 */
 	public void init() {
 		view.initView(model, this);
 	}
 	
+	/**
+	 * Called when the GUI user executes the next move action
+	 */
 	public void nextMove() {
 		ChessGame game = model.getGameModel().getGame();
 		if (game == null) {
@@ -39,6 +53,9 @@ public class MainGuiController {
 		view.getBoardView().updateView();
 	}
 	
+	/**
+	 * Called when the GUI user executes the previous move action
+	 */
 	public void previousMove() {
 		ChessGame game = model.getGameModel().getGame();
 		if (game == null) {
@@ -49,7 +66,6 @@ public class MainGuiController {
 	}
 	
 	private void resetGame(ChessGame newGame) {
-		System.out.println("SETTING NEW GAME");
 		model.getGameModel().setGame(newGame);
 		if (newGame.isPlaying()) {
 			newGame.startGame();
@@ -57,7 +73,10 @@ public class MainGuiController {
 		view.getBoardView().setSelectedTile(null);
 		view.getBoardView().updateView();
 	}
-	
+
+	/**
+	 * Called when the GUI user executes the new game action
+	 */
 	public void newGame() {
 		ChessGame newGame = null;
 		newGame = Dialog.newGameDialog();
@@ -67,7 +86,10 @@ public class MainGuiController {
 		newGame.startGame();
 		resetGame(newGame);
 	}
-	
+
+	/**
+	 * Called when the GUI user executes the load game action
+	 */
 	public void loadGame() {
 		ChessGame newGame = null;
 		newGame = Dialog.loadGameDialog();
@@ -76,7 +98,10 @@ public class MainGuiController {
 		}
 		resetGame(newGame);
 	}
-	
+
+	/**
+	 * Called when the GUI user executes the save game action
+	 */
 	public void saveGame() {
 		ChessGame game = model.getGameModel().getGame();
 		if (game == null) {
@@ -84,7 +109,10 @@ public class MainGuiController {
 		}
 		Dialog.saveGameDialog(game);
 	}
-	
+
+	/**
+	 * Called when the GUI user executes the load PGN game action
+	 */
 	public void loadGamePGN() {
 		ChessGame newGame = null;
 		newGame = Dialog.loadGamePGNDialog();
@@ -93,7 +121,10 @@ public class MainGuiController {
 		}
 		resetGame(newGame);
 	}
-	
+
+	/**
+	 * Called when the GUI user executes the save PGN game action
+	 */
 	public void saveGamePGN() {
 		ChessGame game = model.getGameModel().getGame();
 		if (game == null) {
@@ -101,7 +132,10 @@ public class MainGuiController {
 		}
 		Dialog.saveGamePGNDialog(game);
 	}
-	
+
+	/**
+	 * Called when the GUI user clicks on a promotion dialog button
+	 */
 	public void clickPromotion(ChessMove move, ChessPieces kind) {
 		ChessGame game = model.getGameModel().getGame();
 		if (game == null) {
@@ -113,7 +147,10 @@ public class MainGuiController {
 		game.playMove(move);
 		view.getBoardView().updateView();
 	}
-	
+
+	/**
+	 * Called when the GUI user clicks a tile on the chess board
+	 */
 	public void clickTile(ChessCoord coord) {
 		ChessGame game = model.getGameModel().getGame();
 		if (game == null) {

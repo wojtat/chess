@@ -7,13 +7,19 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
+import java.util.logging.Logger;
 
 import cz.cvut.fel.pjv.tilhovoj.chess.game.pieces.ChessPiece;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.pieces.ChessPieces;
 
+/**
+ * Holds the information about a chess game, i.e. the clock, board,
+ * player types, the state of the game and all the moves
+ */
 public class ChessGame implements Serializable {
 	private static final long serialVersionUID = 7300158544833018878L;
 	
+	protected static Logger LOG = Logger.getLogger(ChessGame.class.getName());
 	private static final int DRAW_HALF_MOVE_CLOCK = 100;
 	
 	private State state;
@@ -25,6 +31,12 @@ public class ChessGame implements Serializable {
 	protected List<ChessMoveAction> moveList;
 	protected List<String> sanMoveList;
 	
+	/**
+	 * Constructs a new game with the given starting time and increment in seconds and the board
+	 * @param startTime the starting time in seconds
+	 * @param increment the increment in seconds
+	 * @param board the initial chess board
+	 */
 	public ChessGame(Double startTime, Double increment, ChessBoard board) {
 		this.clock = new ChessClock(this, board.getOnTurn(), startTime, increment);
 		this.board = board;
@@ -35,14 +47,26 @@ public class ChessGame implements Serializable {
 		this.state = State.NONE;
 	}
 	
+	/**
+	 * Connect the player type to the game
+	 * @param color the color of the player
+	 * @param player the player type
+	 */
 	public void connectPlayer(PlayerColor color, Player player) {
 		connectedPlayers.put(color, player);
 	}
 	
+	/**
+	 * @param color the color of the player
+	 * @return the player type associated with the color
+	 */
 	public Player getPlayer(PlayerColor color) {
 		return connectedPlayers.get(color);
 	}
 	
+	/**
+	 * Start the clock and notify the player that it is their turn
+	 */
 	public void startGame() {
 		state = State.PLAYING;
 		clock.start();
@@ -56,34 +80,59 @@ public class ChessGame implements Serializable {
 		}
 	}
 	
+	/**
+	 * @return true if the game is being played right now
+	 */
 	public boolean isPlaying() {
 		return state == State.PLAYING;
 	}
 	
+	/**
+	 * @return the current board
+	 */
 	public ChessBoard getBoard() {
 		return board;
 	}
 	
+	/**
+	 * @return the clock
+	 */
 	public ChessClock getClock() {
 		return clock;
 	}
 	
+	/**
+	 * @return the list of moves represented in standard algebraic notation
+	 */
 	public List<String> getSANMoveList() {
 		return sanMoveList;
 	}
 	
+	/**
+	 * @return the current state of the game
+	 */
 	public State getState() {
 		return state;
 	}
 	
+	/**
+	 * @return the winner of the game, if there is one, null otherwise
+	 */
 	public PlayerColor getWinner() {
 		return winner;
 	}
 	
+	/**
+	 * @return true if the board is displaying the most recent move, false otherwise
+	 */
 	public boolean isUpdated() {
 		return currentMove == moveList.size();
 	}
 	
+	/**
+	 * Makes the board display a previous move
+	 * @return false if this it is the initial position now, false otherwise 
+	 */
 	public boolean goToPreviousMove() {
 		if (currentMove <= 0) {
 			return false;
@@ -92,6 +141,10 @@ public class ChessGame implements Serializable {
 		return true;
 	}
 	
+	/**
+	 * Makes the board display the next move
+	 * @return false if it is the most recent position now, false otherwise
+	 */
 	public boolean goToNextMove() {
 		if (isUpdated()) {
 			return false;
@@ -133,6 +186,10 @@ public class ChessGame implements Serializable {
 		return builder.toString();
 	}
 	
+	/**
+	 * Plays the given move and saves it to the list of played moves
+	 * @param move the move that is to be played
+	 */
 	public void playMove(ChessMove move) {
 		if (state != State.PLAYING || currentMove != moveList.size()) {
 			return;
@@ -160,15 +217,15 @@ public class ChessGame implements Serializable {
 				// Checkmate
 				state = State.WIN;
 				winner = PlayerColor.getPrevious(board.getOnTurn());
-				System.out.println("CHECKMATE, " + PlayerColor.getPrevious(board.getOnTurn()) + " wins.");
+				LOG.fine("CHECKMATE, " + PlayerColor.getPrevious(board.getOnTurn()) + " wins.");
 			} else {
 				// Stalemate
-				System.out.println("STALEMATE.");
+				LOG.fine("STALEMATE.");
 			}
 			endGame();
 		} else if (board.getHalfMoveClock() >= DRAW_HALF_MOVE_CLOCK) {
 			state = State.DRAW;
-			System.out.println("50 MOVE RULE DRAW.");
+			LOG.fine("50 MOVE RULE DRAW.");
 			endGame();
 		}
 		if (state == State.PLAYING) {
@@ -178,10 +235,14 @@ public class ChessGame implements Serializable {
 		}
 	}
 	
+	/**
+	 * Informs the game that a player's flag has dropped
+	 * @param player the player
+	 */
 	public void playerFlagged(PlayerColor player) {
 		state = State.WIN;
 		winner = PlayerColor.getPrevious(player);
-		System.out.println("FLAGGED.");
+		LOG.fine(player + " FLAGGED.");
 		endGame();
 	}
 	
@@ -195,7 +256,7 @@ public class ChessGame implements Serializable {
 			if (isLocal) {
 				connectedPlayers.put(color, new HumanPlayer());
 			} else {
-				connectedPlayers.put(color, new ComputerRandomPlayer(color, this));
+				connectedPlayers.put(color, new ComputerPlayer(color, this));
 			}
 		}
 		double startTime = in.readDouble();
@@ -231,6 +292,9 @@ public class ChessGame implements Serializable {
     	out.writeObject(sanMoveList);
     }
     
+    /**
+     * Represents the state of the game
+     */
     public static enum State {
     	NONE,
     	PLAYING,

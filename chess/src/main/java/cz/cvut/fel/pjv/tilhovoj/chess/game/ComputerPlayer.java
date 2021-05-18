@@ -2,24 +2,38 @@ package cz.cvut.fel.pjv.tilhovoj.chess.game;
 
 import java.util.List;
 
-public class ComputerRandomPlayer implements Player {
-	private static final long serialVersionUID = 3609403614358667102L;
-	
+/**
+ * This <a href="#{@link}">{@link Player}</a> only plays the first possible move
+ * and waits a certain percentage of its time.
+ *
+ */
+public class ComputerPlayer implements Player {
 	private PlayerColor color;
 	private ChessGame game;
 	private MoveGenerator currentlyRunningMoveGenerator;
 
-	public ComputerRandomPlayer(PlayerColor color, ChessGame game) {
+	/**
+	 * Constructs a new <a href="#{@link}">{@link ComputerPlayer}</a>.
+	 * @param color the color this player will play as
+	 * @param game the game object that the player will be a part of
+	 */
+	public ComputerPlayer(PlayerColor color, ChessGame game) {
 		this.color = color;
 		this.game = game;
 		this.currentlyRunningMoveGenerator = null;
 	}
 
+	/**
+	 * Does nothing when instructed to start playing.
+	 */
 	@Override
 	public void startPlaying() {
 		// Do nothing
 	}
 
+	/**
+	 * Instructs the underlying thread to stop execution.
+	 */
 	@Override
 	public void stopPlaying() {
 		if (currentlyRunningMoveGenerator != null) {
@@ -27,6 +41,9 @@ public class ComputerRandomPlayer implements Player {
 		}
 	}
 
+	/**
+	 * Starts the underlying thread that does the computational work.
+	 */
 	@Override
 	public void startTurn() {
 		// Use 1/10 time that I have
@@ -34,20 +51,34 @@ public class ComputerRandomPlayer implements Player {
 		currentlyRunningMoveGenerator.start();
 	}
 
+	/**
+	 * Returns false, because <a href="#{@link}">{@link ComputerPlayer}</a> isn't a user of the GUI
+	 */
 	@Override
 	public boolean isLocal() {
 		return false;
 	}
 
+	/**
+	 * The <a href="#{@link}">{@link Thread}</a> class that does the computational work
+	 */
 	private class MoveGenerator extends Thread {
 		private volatile boolean shouldStop;
 		private double timeToThink;
 		
+		/**
+		 * Constructs a new <a href="#{@link}">{@link MoveGenerator}</a>
+		 * @param timeToThink the time in seconds that will be spent on the move
+		 */
 		public MoveGenerator(double timeToThink) {
 			this.shouldStop = false;
 			this.timeToThink = timeToThink;
 		}
 		
+		/**
+		 * Gets the first possible move that can be played
+		 * and then waits the time it was instructed to and plays the move
+		 */
 		@Override
 		public void run() {
 			double timeSpentThinking = 0.0;
@@ -84,6 +115,9 @@ public class ComputerRandomPlayer implements Player {
 			}
 		}
 		
+		/**
+		 * Tells the <a href="#{@link}">{@link MoveGenerator}</a> that it should stop computing
+		 */
 		public void requestStop() {
 			shouldStop = true;
 		}

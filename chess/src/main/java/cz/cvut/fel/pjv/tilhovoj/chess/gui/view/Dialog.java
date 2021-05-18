@@ -8,7 +8,16 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.*;
 import cz.cvut.fel.pjv.tilhovoj.chess.pgn.*;
 
+/**
+ * Contains various dialog methods for loading / creating / saving chess games in different formats
+ */
 public class Dialog {
+	/**
+	 * Shows the new game dialog which lets the user pick what player will be human / computer controlled,
+	 * what time control the game will be in and the starting position of the game.
+	 * @return the newly constructed chess game that corresponds to the user's pick,
+	 * null if anything went wrong
+	 */
 	public static ChessGame newGameDialog() {
 		final String defaultChessPosition = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 		final String computerString = "Computer";
@@ -78,8 +87,8 @@ public class Dialog {
 			int startTime = startTimeSlider.getValue() * 60;
 			int increment = incrementSlider.getValue();
 			ChessGame game = new ChessGame((double)startTime, (double)increment, ChessBoard.fromFEN(fenField.getText()));
-			Player whitePlayer = whiteHuman.isSelected() ? new HumanPlayer() : new ComputerRandomPlayer(PlayerColor.COLOR_WHITE, game);
-			Player blackPlayer = blackHuman.isSelected() ? new HumanPlayer() : new ComputerRandomPlayer(PlayerColor.COLOR_BLACK, game);
+			Player whitePlayer = whiteHuman.isSelected() ? new HumanPlayer() : new ComputerPlayer(PlayerColor.COLOR_WHITE, game);
+			Player blackPlayer = blackHuman.isSelected() ? new HumanPlayer() : new ComputerPlayer(PlayerColor.COLOR_BLACK, game);
 			game.connectPlayer(PlayerColor.COLOR_WHITE, whitePlayer);
 			game.connectPlayer(PlayerColor.COLOR_BLACK, blackPlayer);
 			return game;
@@ -88,6 +97,11 @@ public class Dialog {
 		}
 	}
 	
+	/**
+	 * Shows the load game dialog which lets the user specify a path to a file on the file system
+	 * containing a valid saved chess game
+	 * @return the chess game saved in the picked file, null if anything went wrong
+	 */
 	public static ChessGame loadGameDialog() {
 		JFileChooser chooser = new JFileChooser();
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Chess Game Save File (*.chess)", "chess");
@@ -106,7 +120,12 @@ public class Dialog {
 	    }
 		return null;
 	}
-	
+
+	/**
+	 * Shows the save game dialog which lets the user specify a path on the file system
+	 * where the file containing the chess game will be saved
+	 * @param game the game that will be saved to the file (may not end up being saved if the user cancels the dialog)
+	 */
 	public static void saveGameDialog(ChessGame game) {
 		JFileChooser chooser = new JFileChooser();
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Chess Game Save File", "chess");
@@ -123,7 +142,13 @@ public class Dialog {
 			}
 	    }
 	}
-	
+
+	/**
+	 * Shows the load game from PGN file dialog which lets the user specify a path to a file on the file system
+	 * containing a valid chess game in the standard PGN format. If the file is a database, it loads the first
+	 * game in the database
+	 * @return the first chess game saved in the picked file, null if anything went wrong
+	 */
 	public static ChessGame loadGamePGNDialog() {
 		JFileChooser chooser = new JFileChooser();
 		FileNameExtensionFilter filterPGN = new FileNameExtensionFilter("PGN File (*.pgn)", "pgn");
@@ -146,7 +171,12 @@ public class Dialog {
 	    }
 		return null;
 	}
-	
+
+	/**
+	 * Shows the save game as PGN dialog which lets the user specify a path on the file system
+	 * where the file containing the chess game in the standard PGN format will be saved
+	 * @param game the game that will be saved to the file (may not end up being saved if the user cancels the dialog)
+	 */
 	public static void saveGamePGNDialog(ChessGame game) {
 		JFileChooser chooser = new JFileChooser();
 		FileNameExtensionFilter filterPGN = new FileNameExtensionFilter("PGN File (*.pgn)", "pgn");

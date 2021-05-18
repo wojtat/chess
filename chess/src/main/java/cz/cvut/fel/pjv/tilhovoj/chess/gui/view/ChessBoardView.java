@@ -19,9 +19,15 @@ import cz.cvut.fel.pjv.tilhovoj.chess.gui.GuiResourceManager;
 import cz.cvut.fel.pjv.tilhovoj.chess.gui.MainGuiController;
 import cz.cvut.fel.pjv.tilhovoj.chess.gui.model.MainGuiModel;
 
+/**
+ * A sub view which shows the chess board
+ */
 public class ChessBoardView extends GuiSubView {
 	private static final Logger LOG = Logger.getLogger(ChessBoardView.class.getName());
 	
+	/**
+	 * The standard size of a chess board tile in pixels
+	 */
 	public static final int TILE_SIZE = 64;
 	private final Color LIGHT_COLOR = Color.WHITE;
 	private final Color DARK_COLOR = Color.BLACK;
@@ -39,24 +45,37 @@ public class ChessBoardView extends GuiSubView {
 	private AbstractButton[] promotionButtons;
 	private ChessMove promotionMove;
 	
+	/**
+	 * Constructs a new chess board view
+	 */
 	public ChessBoardView() {
 		super();
 		this.boardTiles = new AbstractButton[ChessBoard.NUM_RANKS][ChessBoard.NUM_FILES];
 		this.promotionButtons = new AbstractButton[ChessPieces.PROMOTABLE_PIECES.length];
 	}
 	
+	/**
+	 * Shows the side panel containing buttons for the potential promoted piece
+	 * @param move the promoting move itself
+	 */
 	public void showPromoteToDialog(ChessMove move) {
 		promotionMove = move;
 		isInPromotionDialog = true;
 		promotionPanel.setVisible(true);
 	}
 	
+	/**
+	 * Hides the side panel containing buttons for the potential promoted piece
+	 */
 	public void hidePromoteToDialog() {
 		promotionMove = null;
 		isInPromotionDialog = false;
 		promotionPanel.setVisible(false);
 	}
 	
+	/**
+	 * @param coord the new coordinate of the selected tile
+	 */
 	public void setSelectedTile(ChessCoord coord) {
 		if (selectedTile != null) {
 			// Unselect tile
@@ -69,18 +88,30 @@ public class ChessBoardView extends GuiSubView {
 		}
 	}
 	
+	/**
+	 * @return true if the promotion piece side panel is being shown, false otherwise
+	 */
 	public boolean isInPromotionDialog() {
 		return isInPromotionDialog;
 	}
 	
+	/**
+	 * @return the coordinate of the currently selected tile, or null
+	 */
 	public ChessCoord getSelectedTile() {
 		return selectedTile;
 	}
 	
+	/**
+	 * @param the new time text of the white clock label
+	 */
 	public void setWhiteTime(Double time) {
 		whiteTime.setText(ChessClock.timeToString(time));
 	}
 	
+	/**
+	 * @param the new time text of the black clock label
+	 */
 	public void setBlackTime(Double time) {
 		blackTime.setText(ChessClock.timeToString(time));
 	}
@@ -144,6 +175,9 @@ public class ChessBoardView extends GuiSubView {
 		}
 	}
 	
+	/**
+	 * Updates the internal components so that they show the current state of the view and model
+	 */
 	public void updateView() {
 		for (int y = ChessBoard.NUM_RANKS; y >= 1; --y) {
 			for (int x = 1; x < ChessBoard.NUM_FILES + 1; ++x) {

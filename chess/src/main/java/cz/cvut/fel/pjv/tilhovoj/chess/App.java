@@ -9,8 +9,7 @@ import java.util.logging.StreamHandler;
 
 import javax.swing.SwingUtilities;
 
-import cz.cvut.fel.pjv.tilhovoj.chess.game.*;
-import cz.cvut.fel.pjv.tilhovoj.chess.gui.*;
+import cz.cvut.fel.pjv.tilhovoj.chess.gui.MainGuiController;
 import cz.cvut.fel.pjv.tilhovoj.chess.gui.model.MainGuiModel;
 import cz.cvut.fel.pjv.tilhovoj.chess.gui.view.MainGuiView;
 

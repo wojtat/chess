@@ -4,6 +4,9 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.EnumMap;
 
+/**
+ * Defines the chess clock class that is connected to a chess game
+ */
 public class ChessClock {
 	private ChessGame game;
 	
@@ -14,6 +17,11 @@ public class ChessClock {
 	private volatile boolean isRunning;
 	private Thread timeUpdater;
 
+	/**
+	 * Converts the time given in seconds to a GUI friendly string representation 
+	 * @param time the time to be converted, in seconds
+	 * @return the string representation of the time
+	 */
 	public static String timeToString(Double time) {
 		final Double SECONDS_IN_MINUTE = 60.0;
 		int minutes = (int)(time / SECONDS_IN_MINUTE);
@@ -25,6 +33,13 @@ public class ChessClock {
 		return builder.toString();
 	}
 	
+	/**
+	 * Constructs a new chess clock
+	 * @param game the game this clock will be connected to
+	 * @param first the color of the player who moves first
+	 * @param startTime the initial time of both players at the start of the game in seconds
+	 * @param increment the increment that will be added to the clock of a player after each move played in seconds 
+	 */
 	public ChessClock(ChessGame game, PlayerColor first, Double startTime, Double increment) {
 		this.game = game;
 		this.startTime = startTime;
@@ -60,26 +75,47 @@ public class ChessClock {
 		timeUpdater.start();
 	}
 	
+	/**
+	 * @param player the player's color
+	 * @return true if the player's flag has dropped, false otherwise
+	 */
 	public boolean hasFlagged(PlayerColor player) {
 		return playersTime.get(player).hasFlagged();
 	}
 	
+	/**
+	 * @param player the player
+	 * @return the time in seconds that the player has left
+	 */
 	public Double getTime(PlayerColor player) {
 		return playersTime.get(player).getTime();
 	}
 	
+	/**
+	 * @param player the player
+	 * @param time the new time in seconds of the given player 
+	 */
 	public void setTime(PlayerColor player, Double time) {
 		playersTime.get(player).setTime(time);
 	}
 	
+	/**
+	 * @return the increment that is added after each move played in seconds
+	 */
 	public Double getIncrement() {
 		return increment;
 	}
 	
+	/**
+	 * @return the time both players started with in seconds
+	 */
 	public Double getStartTime() {
 		return startTime;
 	}
 	
+	/**
+	 * Make the clock of the player whose turn it is start running
+	 */
 	public void start() {
 		if (!isRunning) {
 			playersTime.get(playerOnTurn).start();
@@ -87,6 +123,9 @@ public class ChessClock {
 		}
 	}
 	
+	/**
+	 * Stop the clock of the current player
+	 */
 	public void stop() {
 		if (isRunning) {
 			playersTime.get(playerOnTurn).stop();
@@ -94,6 +133,9 @@ public class ChessClock {
 		}
 	}
 	
+	/**
+	 * Stop the clock of the current player and start the clock of the next player
+	 */
 	public void hit() {
 		// Illegal state, throw exception
 		if (!isRunning) {

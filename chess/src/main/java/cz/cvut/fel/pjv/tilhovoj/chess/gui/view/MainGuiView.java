@@ -13,18 +13,27 @@ import cz.cvut.fel.pjv.tilhovoj.chess.game.pieces.ChessPiece;
 import cz.cvut.fel.pjv.tilhovoj.chess.gui.MainGuiController;
 import cz.cvut.fel.pjv.tilhovoj.chess.gui.model.MainGuiModel;
 
+/**
+ * Represents a top level view of a GUI MVC system
+ */
 public class MainGuiView extends GuiTopView {
 	
-	static final int MIN_WIDTH = 820;
-	static final int MIN_HEIGHT = 700;
-	static final String WINDOW_TITLE = "Chess game";
+	private static final int MIN_WIDTH = 820;
+	private static final int MIN_HEIGHT = 700;
+	private static final String WINDOW_TITLE = "Chess game";
 	
 	private GuiSubView boardView;
 	
+	/**
+	 * Constructs a new top level GUI view for the chess game application
+	 */
 	public MainGuiView() {
 		super(WINDOW_TITLE);
 	}
 	
+	/**
+	 * @return the chess board view in this main GUI view 
+	 */
 	public ChessBoardView getBoardView() {
 		return (ChessBoardView)boardView;
 	}

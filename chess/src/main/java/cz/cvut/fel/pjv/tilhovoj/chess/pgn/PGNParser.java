@@ -8,12 +8,19 @@ import cz.cvut.fel.pjv.tilhovoj.chess.game.ChessBoard;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.ChessGame;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.ViewableChessGame;
 
+/**
+ * A parser that uses a tokenizer to interpret PGN formatted text stream
+ */
 public class PGNParser {
 	private static Logger LOG = Logger.getLogger(PGNParser.class.getName());
 	private PGNTokenizer tokenizer;
 	private ViewableChessGame result;
 	private boolean parsed;
 	
+	/**
+	 * Constructs a new PGN parser object with the given input stream source
+	 * @param in the input stream text source
+	 */
 	public PGNParser(InputStream in) {
 		this.tokenizer = new PGNTokenizer(in);
 		this.parsed = false;
@@ -34,6 +41,10 @@ public class PGNParser {
 		}
 	}
 	
+	/**
+	 * Parse the first PGN chess game in the parser's input stream source
+	 * @return true if parsing went correctly, false if a problem occured
+	 */
 	public boolean parse() {
 		if (parsed) {
 			LOG.warning("Attempt to parse an already parsed file");
@@ -118,6 +129,9 @@ public class PGNParser {
 		return parsed;
 	}
 	
+	/**
+	 * @return the parsed game, if parsed correctly, null otherwise
+	 */
 	public ChessGame getResult() {
 		if (!parsed) {
 			return null;

@@ -6,10 +6,21 @@ import java.util.List;
 
 import cz.cvut.fel.pjv.tilhovoj.chess.game.pieces.*;
 
+/**
+ * The main class for holding the tile grid, chess pieces, and the general state
+ * that is specific to a position on the board.
+ */
 public class ChessBoard implements Serializable {
 	private static final long serialVersionUID = -8455258181430213061L;
 	
+	/**
+	 * Number of ranks of a chess board (i.e. the height)
+	 */
 	public static final int NUM_RANKS = 8;
+
+	/**
+	 * Number of files of a chess board (i.e. the width)
+	 */
 	public static final int NUM_FILES = 8;
 	
 	private Tile[][] tiles;
@@ -32,6 +43,11 @@ public class ChessBoard implements Serializable {
 		}
 	}
 	
+	/**
+	 * Constructs a new ChessBoard given a FEN position
+	 * @param fenString the FEN position represented as a string
+	 * @return
+	 */
 	public static ChessBoard fromFEN(String fenString)  {
 		ChessBoard board = new ChessBoard();
 		board.startingFEN = fenString;
@@ -91,7 +107,13 @@ public class ChessBoard implements Serializable {
 		this.castlingRights = EnumSet.noneOf(ChessCastlingRight.class);
 		setEmptyBoard();
 	}
-	
+
+	/**
+	 * The recursive 'performance test' method computes how many choices of moves there are
+	 * for a specified depth
+	 * @param depth the maximum depth of the calculation
+	 * @return the number of choices of moves after a maximum of depth moves
+	 */
 	public int perft(int depth) {
 		if (depth == 0) {
 			return 1;
@@ -112,6 +134,10 @@ public class ChessBoard implements Serializable {
 		return total;
 	}
 	
+	/**
+	 * The number of legal moves
+	 * @return the number of legal moves that can be played from this position
+	 */
 	public int getNumLegalMoves() {
 		// For every piece, get its number of possible moves
 		int total = 0;
@@ -125,6 +151,10 @@ public class ChessBoard implements Serializable {
 		return total;
 	}
 	
+	/**
+	 * Plays the specified move and updates the board state accordingly
+	 * @param action the move action that is to be executed on the board
+	 */
 	public void playMove(ChessMoveAction action) {
 		ChessMove move = action.getMove();
 		
@@ -199,6 +229,11 @@ public class ChessBoard implements Serializable {
 		toMove = PlayerColor.getNext(action.getOnTurn());
 	}
 	
+	/**
+	 * Recovers the board to the state before the specified move action was executed,
+	 * assumes the action is valid.
+	 * @param action the move action that will be undone
+	 */
 	public void unplayMove(ChessMoveAction action) {
 		ChessMove move = action.getMove();
 		
@@ -246,6 +281,13 @@ public class ChessBoard implements Serializable {
 		return false;
 	}
 	
+	/**
+	 * Checks whether the coordinate is under attack by a player
+	 * @param coord the coordinate on the board that will be examined
+	 * @param player a player
+	 * @return true if any single player's piece controls (i.e. could pseudo legally move there) the coordinate,
+	 * false otherwise
+	 */
 	public boolean isUnderAttackBy(ChessCoord coord, PlayerColor player) {
 		// For every piece, see if it can move to this square pseudo-legally
 		for (int rank = 1; rank <= NUM_RANKS; ++rank) {
@@ -261,6 +303,11 @@ public class ChessBoard implements Serializable {
 		return false;
 	}
 	
+	/**
+	 * Checks whether the king of a player is under attack (i.e. in check)
+	 * @param color the color of the king
+	 * @return true if the king of the given color is under attack, false otherwise
+	 */
 	public boolean isKingUnderAttack(PlayerColor color) {
 		for (int rank = 1; rank <= NUM_RANKS; ++rank) {
 			for (int file = 1; file <= NUM_FILES; ++file) {
@@ -272,54 +319,100 @@ public class ChessBoard implements Serializable {
 		return false;
 	}
 	
+	/**
+	 * @return the starting FEN position string of the chess board
+	 */
 	public String getStartingFEN() {
 		return startingFEN;
 	}
 	
+	/**
+	 * @return the half move clock (i.e. the number of moves since the last capture or pawn move)
+	 */
 	public int getHalfMoveClock() {
 		return halfMoveClock;
 	}
 	
+	/**
+	 * @param halfMoveClock the new value for the half move clock counter
+	 */
 	public void setHalfMoveClock(int halfMoveClock) {
 		this.halfMoveClock = halfMoveClock;
 	}
 	
+	/**
+	 * @return the color of the player whose turn it currently is
+	 */
 	public PlayerColor getOnTurn() {
 		return toMove;
 	}
 	
+	/**
+	 * @param coord the new coordinate of the en passant square (the square the capturing pawn moves to
+	 * when it captures en passant
+	 */
 	public void setEnPassantCoord(ChessCoord coord) {
 		enPassantCoord = coord;
 	}
 	
+	/**
+	 * @return the new coordinate of the en passant square (the square the capturing pawn moves to
+	 * when it captures en passant
+	 */
 	public ChessCoord getEnPassantCoord() {
 		return enPassantCoord;
 	}
 	
+	/**
+	 * @return the castling rights in the position on the board
+	 */
 	public EnumSet<ChessCastlingRight> getCastlingRights() {
 		return castlingRights;
 	}
 	
+	/**
+	 * @return true if white can castle king side, false otherwise
+	 */
 	public boolean whiteCanCastleShort() {
 		return castlingRights.contains(ChessCastlingRight.WHITE_KINGSIDE);
 	}
-	
+
+	/**
+	 * @return true if white can castle queen side, false otherwise
+	 */
 	public boolean whiteCanCastleLong() {
 		return castlingRights.contains(ChessCastlingRight.WHITE_QUEENSIDE);
 	}
-	
+
+	/**
+	 * @return true if black can castle king side, false otherwise
+	 */
 	public boolean blackCanCastleShort() {
 		return castlingRights.contains(ChessCastlingRight.BLACK_KINGSIDE);
 	}
 	
+	/**
+	 * @return true if black can castle queen side, false otherwise
+	 */
 	public boolean blackCanCastleLong() {
 		return castlingRights.contains(ChessCastlingRight.BLACK_QUEENSIDE);
 	}
 	
+	/**
+	 * Returns the tile that the coordinate specifies
+	 * @param coord the coordinate of the tile
+	 * @return the tile that the coordinate specifies
+	 */
 	public Tile getTileAt(ChessCoord coord) {
 		return tiles[coord.getRank() - 1][coord.getFile() - 1];
 	}
-	
+
+	/**
+	 * Returns the tile that the coordinate specifies
+	 * @param rank rank of the coordinate of the tile
+	 * @param file file of the coordinate of the tile
+	 * @return the tile that the coordinate specifies
+	 */
 	public Tile getTileAt(int rank, int file) {
 		return tiles[rank - 1][file - 1];
 	}

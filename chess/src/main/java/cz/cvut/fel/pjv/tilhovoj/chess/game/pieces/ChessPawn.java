@@ -9,11 +9,19 @@ import cz.cvut.fel.pjv.tilhovoj.chess.game.ChessMove;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.ChessMoveAction;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.PlayerColor;
 
+/**
+ * Represents a standard chess pawn piece
+ */
 public class ChessPawn extends ChessPiece {
 	private final int PROMOTION_RANK;
 	private final int MOVE_DIRECTION;
 	private final int START_RANK;
 
+	/**
+	 * Constructs a new pawn piece
+	 * @param board the board this piece will be on
+	 * @param player the owner of this piece
+	 */
 	public ChessPawn(ChessBoard board, PlayerColor player) {
 		super(board, player);
 		this.kind = ChessPieces.PIECE_PAWN;

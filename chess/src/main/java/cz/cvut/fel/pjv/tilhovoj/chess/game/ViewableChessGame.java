@@ -2,8 +2,15 @@ package cz.cvut.fel.pjv.tilhovoj.chess.game;
 
 import cz.cvut.fel.pjv.tilhovoj.chess.game.pieces.*;
 
+/**
+ * A convenience wrapper class around a ChessGame
+ */
 public class ViewableChessGame extends ChessGame {
 
+	/**
+	 * Constructs a new chess game with no specified time controls
+	 * @param board the starting board of this chess game
+	 */
 	public ViewableChessGame(ChessBoard board) {
 		super(0.0, 0.0, board);
 	}
@@ -96,6 +103,10 @@ public class ViewableChessGame extends ChessGame {
 		return null;
 	}
 	
+	/**
+	 * Decodes the given string representation of the move and plays it on its chess board  
+	 * @param move the standard algebraic notation of the move to interpret and play
+	 */
 	public void decodeAndPlayMove(String move) {
 		// Store the move as string
 		sanMoveList.add(move);
@@ -126,7 +137,7 @@ public class ViewableChessGame extends ChessGame {
 			promoteTo = ChessPieces.fromSANCharacter(move.charAt(equalsIndex+1));
 			move = move.substring(0, equalsIndex);
 		}
-		System.out.println("MOVE LENGTH " + move.length());
+
 		if (move.length() == 3) {
 			// Either file spec or rank spec
 			if (move.charAt(0) >= '0' && move.charAt(0) <= '9') {
@@ -145,7 +156,7 @@ public class ViewableChessGame extends ChessGame {
 		}
 		// Now we only have 2 characters that specify the destination
 		destination = ChessCoord.fromString(move);
-		System.out.println("MOVING " + pieceKind + " TO " + destination);
+		LOG.fine("MOVING " + pieceKind + " TO " + destination);
 		ChessMoveAction action = findMovingPieceAction(pieceKind, destination, rankSpec, fileSpec, promoteTo);
 		insertMove(action);
 	}

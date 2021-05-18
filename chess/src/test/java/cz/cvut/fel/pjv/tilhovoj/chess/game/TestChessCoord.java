@@ -3,6 +3,9 @@ package cz.cvut.fel.pjv.tilhovoj.chess.game;
 import org.junit.*;
 import static org.junit.Assert.*;
 
+/**
+ * Sets up tests for the creation of chess coordinates from string representations
+ */
 public class TestChessCoord {
 
 	@Test

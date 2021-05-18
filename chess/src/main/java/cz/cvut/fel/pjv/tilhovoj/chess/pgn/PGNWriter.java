@@ -7,9 +7,16 @@ import java.io.OutputStreamWriter;
 
 import cz.cvut.fel.pjv.tilhovoj.chess.game.*;
 
+/**
+ * Represents a PGN text stream writer
+ */
 public class PGNWriter {
-	OutputStreamWriter out;
+	private OutputStreamWriter out;
 	
+	/**
+	 * Construct a new PGN stream writer
+	 * @param out the output text stream
+	 */
 	public PGNWriter(OutputStream out) {
 		this.out = new OutputStreamWriter(out);
 	}
@@ -48,9 +55,15 @@ public class PGNWriter {
 		out.write('\n');
 	}
 	
+	/**
+	 * Writes the given chess game in its PGN format representation
+	 * @param game the game to write to the stream
+	 * @throws IOException when an error occurs while writing to the output stream
+	 */
 	public void writeChessGame(ChessGame game) throws IOException {
 		String resultString = getResultString(game.getState(), game.getWinner());
 		writeTagPairs(resultString);
+		
 		List<String> moveList = game.getSANMoveList();
 		final int maxLineLength = 70;
 		int currentLineLength = 0;
