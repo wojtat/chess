@@ -14,8 +14,8 @@ public class Tile implements Serializable {
 	private ChessPiece piece;
 	
 	/**
-	 * Constructs an empty square with a coordinate
-	 * @param coord the coordinate of the tile
+	 * Constructs an empty square with a coordinate.
+	 * @param coord the coordinate of the tile.
 	 */
 	public Tile(ChessCoord coord) {
 		this.coord = coord;
@@ -23,27 +23,31 @@ public class Tile implements Serializable {
 	}
 	
 	/**
-	 * @param piece the new piece that will reside on this tile, or null
+	 * Set the new piece.
+	 * @param piece the new piece that will reside on this tile, or null.
 	 */
 	public void setPiece(ChessPiece piece) {
 		this.piece = piece;
 	}
 	
 	/**
-	 * @return the piece that resides on this tile, or null if empty
+	 * Get the piece.
+	 * @return the piece that resides on this tile, or null if empty.
 	 */
 	public ChessPiece getPiece() {
 		return piece;
 	}
 	
 	/**
-	 * @return the coordinate of this tile
+	 * Get the coordinate.
+	 * @return the coordinate of this tile.
 	 */
 	public ChessCoord getCoord() {
 		return coord;
 	}
 	
 	/**
+	 * Get whether this tile is empty.
 	 * @return true if the tile is empty, false otherwise
 	 */
 	public boolean isEmpty() {

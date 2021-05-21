@@ -16,7 +16,7 @@ import cz.cvut.fel.pjv.tilhovoj.chess.gui.view.Dialog;
 import cz.cvut.fel.pjv.tilhovoj.chess.gui.view.MainGuiView;
 
 /**
- * Represents a top level controller component of a GUI MVC pattern
+ * Represents a top level controller component of a GUI MVC pattern.
  */
 public class MainGuiController {
 	private static final Logger LOG = Logger.getLogger(MainGuiController.class.getName());
@@ -25,9 +25,9 @@ public class MainGuiController {
 	private MainGuiView view;
 	
 	/**
-	 * Constructs a new MVC controller with the specified model and view
-	 * @param model
-	 * @param view
+	 * Constructs a new MVC controller with the specified model and view.
+	 * @param model the model.
+	 * @param view the view.
 	 */
 	public MainGuiController(MainGuiModel model, MainGuiView view) {
 		this.model = model;
@@ -35,14 +35,14 @@ public class MainGuiController {
 	}
 	
 	/**
-	 * Initialises the view
+	 * Initialises the view.
 	 */
 	public void init() {
 		view.initView(model, this);
 	}
 	
 	/**
-	 * Called when the GUI user executes the next move action
+	 * Called when the GUI user executes the next move action.
 	 */
 	public void nextMove() {
 		ChessGame game = model.getGameModel().getGame();
@@ -54,7 +54,7 @@ public class MainGuiController {
 	}
 	
 	/**
-	 * Called when the GUI user executes the previous move action
+	 * Called when the GUI user executes the previous move action.
 	 */
 	public void previousMove() {
 		ChessGame game = model.getGameModel().getGame();
@@ -75,7 +75,7 @@ public class MainGuiController {
 	}
 
 	/**
-	 * Called when the GUI user executes the new game action
+	 * Called when the GUI user executes the new game action.
 	 */
 	public void newGame() {
 		ChessGame newGame = null;
@@ -88,7 +88,7 @@ public class MainGuiController {
 	}
 
 	/**
-	 * Called when the GUI user executes the load game action
+	 * Called when the GUI user executes the load game action.
 	 */
 	public void loadGame() {
 		ChessGame newGame = null;
@@ -100,7 +100,7 @@ public class MainGuiController {
 	}
 
 	/**
-	 * Called when the GUI user executes the save game action
+	 * Called when the GUI user executes the save game action.
 	 */
 	public void saveGame() {
 		ChessGame game = model.getGameModel().getGame();
@@ -111,7 +111,7 @@ public class MainGuiController {
 	}
 
 	/**
-	 * Called when the GUI user executes the load PGN game action
+	 * Called when the GUI user executes the load PGN game action.
 	 */
 	public void loadGamePGN() {
 		ChessGame newGame = null;
@@ -123,7 +123,7 @@ public class MainGuiController {
 	}
 
 	/**
-	 * Called when the GUI user executes the save PGN game action
+	 * Called when the GUI user executes the save PGN game action.
 	 */
 	public void saveGamePGN() {
 		ChessGame game = model.getGameModel().getGame();
@@ -134,7 +134,7 @@ public class MainGuiController {
 	}
 
 	/**
-	 * Called when the GUI user clicks on a promotion dialog button
+	 * Called when the GUI user clicks on a promotion dialog button.
 	 */
 	public void clickPromotion(ChessMove move, ChessPieces kind) {
 		ChessGame game = model.getGameModel().getGame();
@@ -149,7 +149,7 @@ public class MainGuiController {
 	}
 
 	/**
-	 * Called when the GUI user clicks a tile on the chess board
+	 * Called when the GUI user clicks a tile on the chess board.
 	 */
 	public void clickTile(ChessCoord coord) {
 		ChessGame game = model.getGameModel().getGame();

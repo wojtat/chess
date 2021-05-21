@@ -6,7 +6,7 @@ import cz.cvut.fel.pjv.tilhovoj.chess.gui.MainGuiController;
 import cz.cvut.fel.pjv.tilhovoj.chess.gui.model.MainGuiModel;
 
 /**
- * Represents a top level view of the MVC GUI architecture
+ * Represents a top level view of the MVC GUI architecture.
  */
 public abstract class GuiTopView extends JFrame implements GuiView {
 	

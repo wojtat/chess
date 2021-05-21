@@ -15,7 +15,6 @@ import cz.cvut.fel.pjv.tilhovoj.chess.gui.view.MainGuiView;
 
 /**
  * The main startup class that is instantiated at launch.
- *
  */
 public class App {
 	private void setupDebugLogging() {

@@ -3,13 +3,13 @@ package cz.cvut.fel.pjv.tilhovoj.chess.game;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.pieces.*;
 
 /**
- * A convenience wrapper class around a ChessGame
+ * A convenience wrapper class around a ChessGame.
  */
 public class ViewableChessGame extends ChessGame {
 
 	/**
-	 * Constructs a new chess game with no specified time controls
-	 * @param board the starting board of this chess game
+	 * Constructs a new chess game with no specified time controls.
+	 * @param board the starting board of this chess game.
 	 */
 	public ViewableChessGame(ChessBoard board) {
 		super(0.0, 0.0, board);
@@ -104,8 +104,8 @@ public class ViewableChessGame extends ChessGame {
 	}
 	
 	/**
-	 * Decodes the given string representation of the move and plays it on its chess board  
-	 * @param move the standard algebraic notation of the move to interpret and play
+	 * Decodes the given string representation of the move and plays it on its chess board.
+	 * @param move the standard algebraic notation of the move to interpret and play.
 	 */
 	public void decodeAndPlayMove(String move) {
 		// Store the move as string

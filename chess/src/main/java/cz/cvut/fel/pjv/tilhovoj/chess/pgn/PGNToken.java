@@ -1,16 +1,16 @@
 package cz.cvut.fel.pjv.tilhovoj.chess.pgn;
 
 /**
- * Represents a token in the PGN text stream
+ * Represents a token in the PGN text stream.
  */
 public class PGNToken {
 	private Type type;
 	private Object value;
 	
 	/**
-	 * Construct a new PGN token
-	 * @param type the type of the token
-	 * @param value the value associated with the token type
+	 * Construct a new PGN token.
+	 * @param type the type of the token.
+	 * @param value the value associated with the token type.
 	 */
 	public PGNToken(Type type, Object value) {
 		this.type = type;
@@ -18,29 +18,32 @@ public class PGNToken {
 	}
 
 	/**
-	 * Construct a new PGN token
-	 * @param type the type of the token
+	 * Construct a new PGN token.
+	 * @param type the type of the token.
 	 */
 	public PGNToken(Type type) {
 		this(type, null);
 	}
 	
 	/**
-	 * @return the type of the token
+	 * Get the type of the token.
+	 * @return the type of the token.
 	 */
 	public Type getType() {
 		return type;
 	}
 	
 	/**
-	 * @return the value of the token in the form of an integer
+	 * Get the integer value of the token.
+	 * @return the value of the token in the form of an integer.
 	 */
 	public int getInteger() {
 		return (int)value;
 	}
 	
 	/**
-	 * @return the value of the token in the form of a string
+	 * Get the string value of the token.
+	 * @return the value of the token in the form of a string.
 	 */
 	public String getString() {
 		return (String)value;
@@ -62,7 +65,7 @@ public class PGNToken {
 	}
 	
 	/**
-	 * The token type
+	 * The token type.
 	 */
 	public static enum Type {
 		EOF,

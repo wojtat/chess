@@ -12,14 +12,14 @@ import cz.cvut.fel.pjv.tilhovoj.chess.game.ChessMoveAction;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.PlayerColor;
 
 /**
- * Represents a standard chess knight piece
+ * Represents a standard chess knight piece.
  */
 public class ChessKnight extends ChessPiece {
 
 	/**
-	 * Constructs a new knight piece
-	 * @param board the board this piece will be on
-	 * @param player the owner of this piece
+	 * Constructs a new knight piece.
+	 * @param board the board this piece will be on.
+	 * @param player the owner of this piece.
 	 */
 	public ChessKnight(ChessBoard board, PlayerColor player) {
 		super(board, player);

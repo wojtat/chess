@@ -14,7 +14,7 @@ import cz.cvut.fel.pjv.tilhovoj.chess.gui.MainGuiController;
 import cz.cvut.fel.pjv.tilhovoj.chess.gui.model.MainGuiModel;
 
 /**
- * Represents a top level view of a GUI MVC system
+ * Represents a top level view of a GUI MVC system.
  */
 public class MainGuiView extends GuiTopView {
 	
@@ -25,14 +25,15 @@ public class MainGuiView extends GuiTopView {
 	private GuiSubView boardView;
 	
 	/**
-	 * Constructs a new top level GUI view for the chess game application
+	 * Constructs a new top level GUI view for the chess game application.
 	 */
 	public MainGuiView() {
 		super(WINDOW_TITLE);
 	}
 	
 	/**
-	 * @return the chess board view in this main GUI view 
+	 * Get the board view.
+	 * @return the chess board view in this main GUI view.
 	 */
 	public ChessBoardView getBoardView() {
 		return (ChessBoardView)boardView;

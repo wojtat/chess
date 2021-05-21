@@ -9,7 +9,7 @@ import cz.cvut.fel.pjv.tilhovoj.chess.game.ChessGame;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.ViewableChessGame;
 
 /**
- * A parser that uses a tokenizer to interpret PGN formatted text stream
+ * A parser that uses a tokenizer to interpret PGN formatted text stream.
  */
 public class PGNParser {
 	private static Logger LOG = Logger.getLogger(PGNParser.class.getName());
@@ -18,8 +18,8 @@ public class PGNParser {
 	private boolean parsed;
 	
 	/**
-	 * Constructs a new PGN parser object with the given input stream source
-	 * @param in the input stream text source
+	 * Constructs a new PGN parser object with the given input stream source.
+	 * @param in the input stream text source.
 	 */
 	public PGNParser(InputStream in) {
 		this.tokenizer = new PGNTokenizer(in);
@@ -42,8 +42,8 @@ public class PGNParser {
 	}
 	
 	/**
-	 * Parse the first PGN chess game in the parser's input stream source
-	 * @return true if parsing went correctly, false if a problem occured
+	 * Parse the first PGN chess game in the parser's input stream source.
+	 * @return true if parsing went correctly, false if a problem occured.
 	 */
 	public boolean parse() {
 		if (parsed) {
@@ -136,7 +136,8 @@ public class PGNParser {
 	}
 	
 	/**
-	 * @return the parsed game, if parsed correctly, null otherwise
+	 * Get the parsed chess game.
+	 * @return the parsed game, if parsed correctly, null otherwise.
 	 */
 	public ChessGame getResult() {
 		if (!parsed) {

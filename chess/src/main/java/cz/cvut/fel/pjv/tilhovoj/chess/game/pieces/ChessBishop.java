@@ -10,14 +10,14 @@ import cz.cvut.fel.pjv.tilhovoj.chess.game.ChessMoveAction;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.PlayerColor;
 
 /**
- * Represents a standard chess bishop piece
+ * Represents a standard chess bishop piece.
  */
 public class ChessBishop extends ChessDirectionalPiece {
 
 	/**
-	 * Constructs a new bishop piece
-	 * @param board the board this piece will be on
-	 * @param player the owner of this piece
+	 * Constructs a new bishop piece.
+	 * @param board the board this piece will be on.
+	 * @param player the owner of this piece.
 	 */
 	public ChessBishop(ChessBoard board, PlayerColor player) {
 		super(board, player);

@@ -3,7 +3,7 @@ package cz.cvut.fel.pjv.tilhovoj.chess.game;
 /**
  * Defines an interface between a player type implementation and the chess game.
  * Allows for different types of players, such as a network human player,
- * computer player, local human player
+ * computer player, local human player.
  */
 public interface Player {
 	/**
@@ -23,7 +23,7 @@ public interface Player {
 	public abstract void startTurn();
 	/**
 	 * Local players are the ones whose moves come from the UI connected to the game.
-	 * @return true if this player is local, false otherwise
+	 * @return true if this player is local, false otherwise.
 	 */
 	public boolean isLocal();
 }

@@ -6,7 +6,7 @@ import java.util.EnumSet;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.pieces.ChessPieces;
 
 /**
- * Represents the chess move and allows for reverting to positions before the move was played
+ * Represents the chess move and allows for reverting to positions before the move was played.
  */
 public class ChessMoveAction implements Serializable {
 	private static final long serialVersionUID = -8514178583575391325L;
@@ -30,69 +30,79 @@ public class ChessMoveAction implements Serializable {
 	}
 	
 	/**
-	 * @return the old castling rights
+	 * Get the old castling rights.
+	 * @return the old castling rights.
 	 */
 	public EnumSet<ChessCastlingRight> getOldCastlingRights() {
 		return oldCastlingRights;
 	}
 	
 	/**
-	 * @return the old en passant coordinate
+	 * Get the old en passant coordinate.
+	 * @return the old en passant coordinate.
 	 */
 	public ChessCoord getOldEnPassantCoord() {
 		return oldEnPassantCoord;
 	}
 
 	/**
-	 * @return true if the move is a promotion, false otherwise
+	 * Get whether the move is a promotion.
+	 * @return true if the move is a promotion, false otherwise.
 	 */
 	public boolean isPromotion() {
 		return isPromotion;
 	}
 	
 	/**
-	 * @return the promotion piece kind if it is a promotion, null otherwise
+	 * Get the promotion piece kind.
+	 * @return the promotion piece kind if it is a promotion, null otherwise.
 	 */
 	public ChessPieces getPromotionPieceKind() {
 		return promotionPieceKind;
 	}
 	
 	/**
-	 * @return the new en passant coordinate
+	 * Get the new en passant coordinate.
+	 * @return the new en passant coordinate.
 	 */
 	public ChessCoord getEnPassantCoord() {
 		return enPassantCoord;
 	}
 	
 	/**
-	 * @return the old half move clock
+	 * Get the old half move clock.
+	 * @return the old half move clock.
 	 */
 	public int getOldHalfMoveClock() {
 		return oldHalfMoveClock;
 	}
 
 	/**
-	 * @return true if it is a queen side castle move
+	 * Get whether it is a queen side castle move.
+	 * @return true if it is a queen side castle move.
 	 */
 	public boolean isCastleLong() {
 		return isCastleLong;
 	}
 
 	/**
-	 * @return true if it is a king side castle move
+	 * Get whether it is a king side castle move.
+	 * @return true if it is a king side castle move.
 	 */
 	public boolean isCastleShort() {
 		return isCastleShort;
 	}
 
 	/**
-	 * @return true if it is a castle move
+	 * Get whether it is a castle move.
+	 * @return true if it is a castle move.
 	 */
 	public boolean isCastle() {
 		return isCastleShort || isCastleLong;
 	}
 	
 	/**
+	 * Get the coordinate of the piece that will be captures.
 	 * @return the coordinate of the piece that will be captured, if it is a capture, null otherwise
 	 */
 	public ChessCoord getToBeCaptured() {
@@ -100,35 +110,39 @@ public class ChessMoveAction implements Serializable {
 	}
 
 	/**
-	 * @return true if it is a capture move, false otherwise
+	 * Get whether it is a capture move.
+	 * @return true if it is a capture move, false otherwise.
 	 */
 	public boolean isCapture() {
 		return isCapture;
 	}
 	
 	/**
-	 * @return the piece kind of the piece being captured, if it is a capture, null otherwise
+	 * Get the piece kind of the piece being captured.
+	 * @return the piece kind of the piece being captured, if it is a capture, null otherwise.
 	 */
 	public ChessPieces getBeingCaptured() {
 		return beingCaptured;
 	}
 
 	/**
-	 * @return the underlying base move
+	 * Get the underlying base move.
+	 * @return the underlying base move.
 	 */
 	public ChessMove getMove() {
 		return move;
 	}
 
 	/**
-	 * @return the color of the player playing the move
+	 * Get the color of the player playing the move.
+	 * @return the color of the player playing the move.
 	 */
 	public PlayerColor getOnTurn() {
 		return onTurn;
 	}
 	
 	/**
-	 * The builder of the ChessMoveAction class for convenience object creation
+	 * The builder of the ChessMoveAction class for convenience object creation.
 	 */
 	public static class Builder {
 		private ChessMove move;
@@ -147,10 +161,10 @@ public class ChessMoveAction implements Serializable {
 		private ChessPieces promotionPieceKind;
 		
 		/**
-		 * Creates a new Builder with the mandatory arguments
-		 * @param move the underlying move
-		 * @param onTurn the color of the player who plays the move
-		 * @param board the board position this move happens in
+		 * Creates a new Builder with the mandatory arguments.
+		 * @param move the underlying move.
+		 * @param onTurn the color of the player who plays the move.
+		 * @param board the board position this move happens in.
 		 */
 		public Builder(ChessMove move, PlayerColor onTurn, ChessBoard board) {
 			this.move = move;
@@ -161,10 +175,9 @@ public class ChessMoveAction implements Serializable {
 		}
 		
 		/**
-		 * Build parameters for a move capture
-		 * @param toBeCaptured the coordinate of the piece that will be captured
-		 * @param board the board position the move happens in
-		 * @return
+		 * Build parameters for a move capture.
+		 * @param toBeCaptured the coordinate of the piece that will be captured.
+		 * @param board the board position the move happens in.
 		 */
 		public Builder isCapture(ChessCoord toBeCaptured, ChessBoard board) {
 			this.isCapture = true;
@@ -174,9 +187,8 @@ public class ChessMoveAction implements Serializable {
 		}
 		
 		/**
-		 * Build parameters for initial double pawn move
-		 * @param enPassantCoord the destination coordinate of a capturing pawn in the event of a following en passant capture 
-		 * @return
+		 * Build parameters for initial double pawn move.
+		 * @param enPassantCoord the destination coordinate of a capturing pawn in the event of a following en passant capture.
 		 */
 		public Builder isPawnDoubleMove(ChessCoord enPassantCoord) {
 			this.enPassantCoord = enPassantCoord;
@@ -184,9 +196,8 @@ public class ChessMoveAction implements Serializable {
 		}
 		
 		/**
-		 * Build parameters for a castling move
-		 * @param isShort flag specifying whether this is king side or queen side castling
-		 * @return
+		 * Build parameters for a castling move.
+		 * @param isShort flag specifying whether this is king side or queen side castling.
 		 */
 		public Builder isCastle(boolean isShort) {
 			this.isCastleShort = isShort;
@@ -195,9 +206,8 @@ public class ChessMoveAction implements Serializable {
 		}
 		
 		/**
-		 * Build parameters for a promotion move
-		 * @param promotionPieceKind the kind of the promoted piece
-		 * @return
+		 * Build parameters for a promotion move.
+		 * @param promotionPieceKind the kind of the promoted piece.
 		 */
 		public Builder isPromotion(ChessPieces promotionPieceKind) {
 			this.isPromotion = true;
@@ -206,7 +216,8 @@ public class ChessMoveAction implements Serializable {
 		}
 		
 		/**
-		 * @return the ChessMoveAction built with the specified build parameters
+		 * Build the ChessMoveAction.
+		 * @return the ChessMoveAction built with the specified build parameters.
 		 */
 		public ChessMoveAction build() {
 			ChessMoveAction action = new ChessMoveAction();

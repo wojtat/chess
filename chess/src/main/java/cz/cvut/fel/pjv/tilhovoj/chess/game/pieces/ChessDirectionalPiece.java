@@ -9,9 +9,9 @@ public abstract class ChessDirectionalPiece extends ChessPiece {
 
 	/**
 	 * Constructs a new abstract directional piece, which means it can't jump over
-	 * other pieces and moves in a predefined set of directions 
-	 * @param board the board this piece will be on
-	 * @param player the owner of this piece
+	 * other pieces and moves in a predefined set of directions.
+	 * @param board the board this piece will be on.
+	 * @param player the owner of this piece.
 	 */
 	public ChessDirectionalPiece(ChessBoard board, PlayerColor player) {
 		super(board, player);

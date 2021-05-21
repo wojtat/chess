@@ -5,7 +5,6 @@ import java.util.List;
 /**
  * This <a href="#{@link}">{@link Player}</a> only plays the first possible move
  * and waits a certain percentage of its time.
- *
  */
 public class ComputerPlayer implements Player {
 	private PlayerColor color;
@@ -52,7 +51,7 @@ public class ComputerPlayer implements Player {
 	}
 
 	/**
-	 * Returns false, because <a href="#{@link}">{@link ComputerPlayer}</a> isn't a user of the GUI
+	 * Returns false, because <a href="#{@link}">{@link ComputerPlayer}</a> isn't a user of the GUI.
 	 */
 	@Override
 	public boolean isLocal() {
@@ -60,14 +59,14 @@ public class ComputerPlayer implements Player {
 	}
 
 	/**
-	 * The <a href="#{@link}">{@link Thread}</a> class that does the computational work
+	 * The <a href="#{@link}">{@link Thread}</a> class that does the computational work.
 	 */
 	private class MoveGenerator extends Thread {
 		private volatile boolean shouldStop;
 		private double timeToThink;
 		
 		/**
-		 * Constructs a new <a href="#{@link}">{@link MoveGenerator}</a>
+		 * Constructs a new <a href="#{@link}">{@link MoveGenerator}</a>.
 		 * @param timeToThink the time in seconds that will be spent on the move
 		 */
 		public MoveGenerator(double timeToThink) {
@@ -77,7 +76,7 @@ public class ComputerPlayer implements Player {
 		
 		/**
 		 * Gets the first possible move that can be played
-		 * and then waits the time it was instructed to and plays the move
+		 * and then waits the time it was instructed to and plays the move.
 		 */
 		@Override
 		public void run() {
@@ -116,7 +115,7 @@ public class ComputerPlayer implements Player {
 		}
 		
 		/**
-		 * Tells the <a href="#{@link}">{@link MoveGenerator}</a> that it should stop computing
+		 * Tells the <a href="#{@link}">{@link MoveGenerator}</a> that it should stop computing.
 		 */
 		public void requestStop() {
 			shouldStop = true;

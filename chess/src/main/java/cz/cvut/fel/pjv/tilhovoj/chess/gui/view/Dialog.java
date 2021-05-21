@@ -9,14 +9,14 @@ import cz.cvut.fel.pjv.tilhovoj.chess.game.*;
 import cz.cvut.fel.pjv.tilhovoj.chess.pgn.*;
 
 /**
- * Contains various dialog methods for loading / creating / saving chess games in different formats
+ * Contains various dialog methods for loading / creating / saving chess games in different formats.
  */
 public class Dialog {
 	/**
 	 * Shows the new game dialog which lets the user pick what player will be human / computer controlled,
 	 * what time control the game will be in and the starting position of the game.
 	 * @return the newly constructed chess game that corresponds to the user's pick,
-	 * null if anything went wrong
+	 * null if anything went wrong.
 	 */
 	public static ChessGame newGameDialog() {
 		final String defaultChessPosition = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
@@ -99,8 +99,8 @@ public class Dialog {
 	
 	/**
 	 * Shows the load game dialog which lets the user specify a path to a file on the file system
-	 * containing a valid saved chess game
-	 * @return the chess game saved in the picked file, null if anything went wrong
+	 * containing a valid saved chess game.
+	 * @return the chess game saved in the picked file, null if anything went wrong.
 	 */
 	public static ChessGame loadGameDialog() {
 		JFileChooser chooser = new JFileChooser();
@@ -123,8 +123,8 @@ public class Dialog {
 
 	/**
 	 * Shows the save game dialog which lets the user specify a path on the file system
-	 * where the file containing the chess game will be saved
-	 * @param game the game that will be saved to the file (may not end up being saved if the user cancels the dialog)
+	 * where the file containing the chess game will be saved.
+	 * @param game the game that will be saved to the file (may not end up being saved if the user cancels the dialog).
 	 */
 	public static void saveGameDialog(ChessGame game) {
 		JFileChooser chooser = new JFileChooser();
@@ -146,8 +146,8 @@ public class Dialog {
 	/**
 	 * Shows the load game from PGN file dialog which lets the user specify a path to a file on the file system
 	 * containing a valid chess game in the standard PGN format. If the file is a database, it loads the first
-	 * game in the database
-	 * @return the first chess game saved in the picked file, null if anything went wrong
+	 * game in the database.
+	 * @return the first chess game saved in the picked file, null if anything went wrong.
 	 */
 	public static ChessGame loadGamePGNDialog() {
 		JFileChooser chooser = new JFileChooser();
@@ -174,8 +174,8 @@ public class Dialog {
 
 	/**
 	 * Shows the save game as PGN dialog which lets the user specify a path on the file system
-	 * where the file containing the chess game in the standard PGN format will be saved
-	 * @param game the game that will be saved to the file (may not end up being saved if the user cancels the dialog)
+	 * where the file containing the chess game in the standard PGN format will be saved.
+	 * @param game the game that will be saved to the file (may not end up being saved if the user cancels the dialog).
 	 */
 	public static void saveGamePGNDialog(ChessGame game) {
 		JFileChooser chooser = new JFileChooser();

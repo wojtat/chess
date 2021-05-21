@@ -10,14 +10,14 @@ import cz.cvut.fel.pjv.tilhovoj.chess.game.ChessMoveAction;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.PlayerColor;
 
 /**
- * Represents a standard chess queen piece
+ * Represents a standard chess queen piece.
  */
 public class ChessQueen extends ChessDirectionalPiece {
 
 	/**
-	 * Constructs a new queen piece
-	 * @param board the board this piece will be on
-	 * @param player the owner of this piece
+	 * Constructs a new queen piece.
+	 * @param board the board this piece will be on.
+	 * @param player the owner of this piece.
 	 */
 	public ChessQueen(ChessBoard board, PlayerColor player) {
 		super(board, player);

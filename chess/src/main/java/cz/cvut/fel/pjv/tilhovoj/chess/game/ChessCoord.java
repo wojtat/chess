@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Bundles together the rank and the file that make a chess board coordinate
+ * Bundles together the rank and the file that make a chess board coordinate.
  */
 public class ChessCoord implements Serializable {
 	private static final long serialVersionUID = -3612093434784417646L;
@@ -25,10 +25,10 @@ public class ChessCoord implements Serializable {
 	private Integer file;
 	
 	/**
-	 * Contructs a new coordinate from the given string representation
+	 * Contructs a new coordinate from the given string representation.
 	 * @param notation must be a 2 character string where the first character
-	 * specifies the file and the second one the rank
-	 * @return the coordinate that corresponds to the string
+	 * specifies the file and the second one the rank.
+	 * @return the coordinate that corresponds to the string.
 	 */
 	public static ChessCoord fromString(String notation) {
 		if (notation.length() != 2) {
@@ -46,9 +46,9 @@ public class ChessCoord implements Serializable {
 	}
 	
 	/**
-	 * Construct a coordinate from the rank and the file
-	 * @param rank the rank
-	 * @param file the file
+	 * Construct a coordinate from the rank and the file.
+	 * @param rank the rank.
+	 * @param file the file.
 	 */
 	public ChessCoord(Integer rank, Integer file) {
 		this.rank = rank;
@@ -56,21 +56,24 @@ public class ChessCoord implements Serializable {
 	}
 	
 	/**
-	 * @return the rank
+	 * Get the rank.
+	 * @return the rank.
 	 */
 	public Integer getRank() {
 		return rank;
 	}
 	
 	/**
-	 * @return the file
+	 * Get the file.
+	 * @return the file.
 	 */
 	public Integer getFile() {
 		return file;
 	}
 	
 	/**
-	 * @return a list of coordinates in the increasing rank direction
+	 * Get the coordinates in the increasing rank direction.
+	 * @return a list of coordinates in the increasing rank direction.
 	 */
 	public List<ChessCoord> getAllUp() {
 		List<ChessCoord> coords = new ArrayList<>();
@@ -83,7 +86,8 @@ public class ChessCoord implements Serializable {
 	}
 
 	/**
-	 * @return a list of coordinates in the decreasing rank direction
+	 * Get the coordinates in the decreasing rank direction.
+	 * @return a list of coordinates in the decreasing rank direction.
 	 */
 	public List<ChessCoord> getAllDown() {
 		List<ChessCoord> coords = new ArrayList<>();
@@ -96,7 +100,8 @@ public class ChessCoord implements Serializable {
 	}
 
 	/**
-	 * @return a list of coordinates in the decreasing file direction
+	 * Get the coordinates in the decreasing file direction.
+	 * @return a list of coordinates in the decreasing file direction.
 	 */
 	public List<ChessCoord> getAllLeft() {
 		List<ChessCoord> coords = new ArrayList<>();
@@ -109,7 +114,8 @@ public class ChessCoord implements Serializable {
 	}
 
 	/**
-	 * @return a list of coordinates in the increasing file direction
+	 * Get the coordinates in the increasing file direction.
+	 * @return a list of coordinates in the increasing file direction.
 	 */
 	public List<ChessCoord> getAllRight() {
 		List<ChessCoord> coords = new ArrayList<>();
@@ -122,7 +128,8 @@ public class ChessCoord implements Serializable {
 	}
 
 	/**
-	 * @return a list of coordinates in the increasing rank and decreasing file direction
+	 * Get the coordinates in the increasing rank and decreasing file direction.
+	 * @return a list of coordinates in the increasing rank and decreasing file direction.
 	 */
 	public List<ChessCoord> getAllUpLeft() {
 		List<ChessCoord> coords = new ArrayList<>();
@@ -135,7 +142,8 @@ public class ChessCoord implements Serializable {
 	}
 
 	/**
-	 * @return a list of coordinates in the increasing rank and increasing file direction
+	 * Get the coordinates in the increasing rank and increasing file direction.
+	 * @return a list of coordinates in the increasing rank and increasing file direction.
 	 */
 	public List<ChessCoord> getAllUpRight() {
 		List<ChessCoord> coords = new ArrayList<>();
@@ -148,7 +156,8 @@ public class ChessCoord implements Serializable {
 	}
 
 	/**
-	 * @return a list of coordinates in the decreasing rank and decreasing file direction
+	 * Get the coordinates in the decreasing rank and decreasing file direction.
+	 * @return a list of coordinates in the decreasing rank and decreasing file direction.
 	 */
 	public List<ChessCoord> getAllDownLeft() {
 		List<ChessCoord> coords = new ArrayList<>();
@@ -161,7 +170,8 @@ public class ChessCoord implements Serializable {
 	}
 
 	/**
-	 * @return a list of coordinates in the decreasing rank and increasing file direction
+	 * Get the coordinates in the decreasing rank and increasing file direction.
+	 * @return a list of coordinates in the decreasing rank and increasing file direction.
 	 */
 	public List<ChessCoord> getAllDownRight() {
 		List<ChessCoord> coords = new ArrayList<>();
@@ -174,7 +184,8 @@ public class ChessCoord implements Serializable {
 	}
 
 	/**
-	 * @return a list of coordinates that directly neighbor this coordinate (a king's move away)
+	 * Get the coordinates that directly neighbor this coordinate.
+	 * @return a list of coordinates that directly neighbor this coordinate (a king's move away).
 	 */
 	public List<ChessCoord> getNeighbours() {
 		List<ChessCoord> neighbours = new ArrayList<>();
@@ -202,7 +213,8 @@ public class ChessCoord implements Serializable {
 	}
 
 	/**
-	 * @return a list of coordinates that are a knight's move away
+	 * Get the coordinates that are a knight's move away.
+	 * @return a list of coordinates that are a knight's move away.
 	 */
 	public List<ChessCoord> getKnightMoves() {
 		List<ChessCoord> knights = new ArrayList<>();
@@ -240,7 +252,8 @@ public class ChessCoord implements Serializable {
 	}
 	
 	/**
-	 * @return true if it represents a valid coordinate on the chess board
+	 * Get whether the coordinate represents a valid coordinate on the chess board.
+	 * @return true if it represents a valid coordinate on the chess board.
 	 */
 	public boolean isValid() {
 		return rank > 0 && rank <= ChessBoard.NUM_RANKS && file > 0 && file <= ChessBoard.NUM_FILES;

@@ -14,13 +14,15 @@ import cz.cvut.fel.pjv.tilhovoj.chess.game.pieces.*;
 import cz.cvut.fel.pjv.tilhovoj.chess.gui.view.ChessBoardView;
 
 /**
- * Manages resources, namely piece bitmaps, for the use of a GUI
+ * Manages resources, namely piece bitmaps, for the use of a GUI.
  */
 public class GuiResourceManager {
 	private static GuiResourceManager singletonInstance = new GuiResourceManager();
 	private static Logger LOG = Logger.getLogger(GuiResourceManager.class.getName());
+	
 	/**
-	 * @return the singleton instance of the resource manager
+	 * Get the instance of the manager.
+	 * @return the singleton instance of the resource manager.
 	 */
 	public static GuiResourceManager get() {
 		return singletonInstance;
@@ -51,9 +53,10 @@ public class GuiResourceManager {
     }
 	
     /**
-     * @param color the color of the piece the icon will represent
-     * @param piece the piece the returned icon will represent
-     * @return an icon representing the given piece of a specified color
+     * Get an icon representing the given piece kind of a specified color.
+     * @param color the color of the piece the icon will represent.
+     * @param piece the piece the returned icon will represent.
+     * @return an icon representing the given piece of a specified color.
      */
 	public Icon getChessPieceIcon(PlayerColor color, ChessPieces piece) {
 		int colorIndex = 1 - color.ordinal();

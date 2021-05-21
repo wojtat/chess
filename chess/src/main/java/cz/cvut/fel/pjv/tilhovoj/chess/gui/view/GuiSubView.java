@@ -7,7 +7,7 @@ import cz.cvut.fel.pjv.tilhovoj.chess.gui.*;
 import cz.cvut.fel.pjv.tilhovoj.chess.gui.model.*;
 
 /**
- * Represents an abstract view that is a part of a top view
+ * Represents an abstract view that is a part of a top view.
  */
 public abstract class GuiSubView extends JPanel implements GuiView {
 	

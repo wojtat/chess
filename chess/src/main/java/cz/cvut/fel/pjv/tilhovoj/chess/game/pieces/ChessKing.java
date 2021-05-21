@@ -7,16 +7,16 @@ import cz.cvut.fel.pjv.tilhovoj.chess.game.*;
 import cz.cvut.fel.pjv.tilhovoj.chess.game.ChessMoveAction.Builder;
 
 /**
- * Represents a standard chess king piece
+ * Represents a standard chess king piece.
  */
 public class ChessKing extends ChessPiece {
 	private final ChessCoord LONG_CASTLE_DESTINATION;
 	private final ChessCoord SHORT_CASTLE_DESTINATION;
 	
 	/**
-	 * Constructs a new king piece
-	 * @param board the board this piece will be on
-	 * @param player the owner of this piece
+	 * Constructs a new king piece.
+	 * @param board the board this piece will be on.
+	 * @param player the owner of this piece.
 	 */
 	public ChessKing(ChessBoard board, PlayerColor player) {
 		super(board, player);

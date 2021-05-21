@@ -6,7 +6,7 @@ package cz.cvut.fel.pjv.tilhovoj.chess.game;
 public class HumanPlayer implements Player {
 	
 	/**
-	 * Does nothing
+	 * Does nothing.
 	 */
 	@Override
 	public void startPlaying() {
@@ -14,7 +14,7 @@ public class HumanPlayer implements Player {
 	}
 
 	/**
-	 * Does nothing
+	 * Does nothing.
 	 */
 	@Override
 	public void stopPlaying() {
@@ -22,7 +22,7 @@ public class HumanPlayer implements Player {
 	}
 
 	/**
-	 * Does nothing
+	 * Does nothing.
 	 */
 	@Override
 	public void startTurn() {
@@ -30,7 +30,7 @@ public class HumanPlayer implements Player {
 	}
 
 	/**
-	 * Returns true because it represents a GUI aware player
+	 * Returns true because it represents a GUI aware player.
 	 */
 	@Override
 	public boolean isLocal() {

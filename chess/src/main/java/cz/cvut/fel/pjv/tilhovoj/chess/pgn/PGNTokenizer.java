@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Represents a PGN text stream tokenizer
+ * Represents a PGN text stream tokenizer.
  */
 public class PGNTokenizer {
 	private InputStream in;
@@ -12,8 +12,8 @@ public class PGNTokenizer {
 	private boolean isNextCached;
 	
 	/**
-	 * Construct a new PGN stream tokenizer
-	 * @param in the input text stream
+	 * Construct a new PGN stream tokenizer.
+	 * @param in the input text stream.
 	 */
 	public PGNTokenizer(InputStream in) {
 		this.in = in;
@@ -78,8 +78,9 @@ public class PGNTokenizer {
 	}
 
 	/**
-	 * @return the next token in the stream or EOF if there is no next token
-	 * @throws IOException when an error occurs in the stream
+	 * Get the next token in the stream.
+	 * @return the next token in the stream or EOF if there is no next token.
+	 * @throws IOException when an error occurs in the stream.
 	 */
 	public PGNToken nextToken() throws IOException {
 		int nextByte = -1;
