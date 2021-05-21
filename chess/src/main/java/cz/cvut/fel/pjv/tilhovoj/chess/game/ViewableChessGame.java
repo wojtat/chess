@@ -44,39 +44,45 @@ public class ViewableChessGame extends ChessGame {
 			return getCorrectMove(piece, new ChessCoord(rankSpec, fileSpec), destination, promoteTo);
 		} else if (fileSpec != 0) {
 			for (int rank = 1; rank <= ChessBoard.NUM_RANKS; ++rank) {
-				if (!board.getTileAt(rank, fileSpec).isEmpty()) {
-					ChessPiece piece = board.getTileAt(rank, fileSpec).getPiece();
-					if (piece.getKind() == pieceKind && piece.getColor() == board.getOnTurn()) {
-						ChessMoveAction action = getCorrectMove(piece, new ChessCoord(rank, fileSpec), destination, promoteTo);
-						if (action != null) {
-							return action;
-						}
-					}
+				if (board.getTileAt(rank, fileSpec).isEmpty()) {
+					continue;
+				}
+				ChessPiece piece = board.getTileAt(rank, fileSpec).getPiece();
+				if (piece.getKind() != pieceKind || piece.getColor() != board.getOnTurn()) {
+					continue;
+				}
+				ChessMoveAction action = getCorrectMove(piece, new ChessCoord(rank, fileSpec), destination, promoteTo);
+				if (action != null) {
+					return action;
 				}
 			}
 		} else if (rankSpec != 0) {
 			for (int file = 1; file <= ChessBoard.NUM_FILES; ++file) {
-				if (!board.getTileAt(rankSpec, file).isEmpty()) {
-					ChessPiece piece = board.getTileAt(rankSpec, file).getPiece();
-					if (piece.getKind() == pieceKind && piece.getColor() == board.getOnTurn()) {
-						ChessMoveAction action = getCorrectMove(piece, new ChessCoord(rankSpec, file), destination, promoteTo);
-						if (action != null) {
-							return action;
-						}
-					}
+				if (board.getTileAt(rankSpec, file).isEmpty()) {
+					continue;
+				}
+				ChessPiece piece = board.getTileAt(rankSpec, file).getPiece();
+				if (piece.getKind() != pieceKind || piece.getColor() != board.getOnTurn()) {
+					continue;
+				}
+				ChessMoveAction action = getCorrectMove(piece, new ChessCoord(rankSpec, file), destination, promoteTo);
+				if (action != null) {
+					return action;
 				}
 			}
 		} else {
 			for (int rank = 1; rank <= ChessBoard.NUM_RANKS; ++rank) {
 				for (int file = 1; file <= ChessBoard.NUM_FILES; ++file) {
-					if (!board.getTileAt(rank, file).isEmpty()) {
-						ChessPiece piece = board.getTileAt(rank, file).getPiece();
-						if (piece.getKind() == pieceKind && piece.getColor() == board.getOnTurn()) {
-							ChessMoveAction action = getCorrectMove(piece, new ChessCoord(rank, file), destination, promoteTo);
-							if (action != null) {
-								return action;
-							}
-						}
+					if (board.getTileAt(rank, file).isEmpty()) {
+						continue;
+					}
+					ChessPiece piece = board.getTileAt(rank, file).getPiece();
+					if (piece.getKind() != pieceKind || piece.getColor() != board.getOnTurn()) {
+						continue;
+					}
+					ChessMoveAction action = getCorrectMove(piece, new ChessCoord(rank, file), destination, promoteTo);
+					if (action != null) {
+						return action;
 					}
 				}
 			}
@@ -85,19 +91,24 @@ public class ViewableChessGame extends ChessGame {
 	}
 	
 	private ChessMoveAction findCastleAction(boolean isShort) {
-		// NOTE: This could be optimised because the king must either be on e1 or e8
-		for (int rank = 1; rank <= ChessBoard.NUM_RANKS; ++rank) {
-			for (int file = 1; file <= ChessBoard.NUM_FILES; ++file) {
-				if (!board.getTileAt(rank, file).isEmpty()) {
-					ChessPiece piece = board.getTileAt(rank, file).getPiece();
-					if (piece.getKind() == ChessPieces.PIECE_KING && piece.getColor() == board.getOnTurn()) {
-						for (ChessMoveAction action : piece.generateLegalMoves(new ChessCoord(rank, file))) {
-							if ((action.isCastleShort() && isShort) || (action.isCastleLong() && !isShort)) {
-								return action;
-							}
-						}
-					}
-				}
+		ChessCoord kingCoord;
+		if (board.getOnTurn() == PlayerColor.COLOR_WHITE) {
+			kingCoord = new ChessCoord(1, 5);
+		} else {
+			kingCoord = new ChessCoord(8, 5);
+		}
+		
+		if (board.getTileAt(kingCoord).isEmpty()) {
+			return null;
+		}
+		
+		ChessPiece piece = board.getTileAt(kingCoord).getPiece();
+		if (piece.getKind() != ChessPieces.PIECE_KING || piece.getColor() != board.getOnTurn()) {
+			return null;
+		}
+		for (ChessMoveAction action : piece.generateLegalMoves(kingCoord)) {
+			if ((action.isCastleShort() && isShort) || (action.isCastleLong() && !isShort)) {
+				return action;
 			}
 		}
 		return null;
