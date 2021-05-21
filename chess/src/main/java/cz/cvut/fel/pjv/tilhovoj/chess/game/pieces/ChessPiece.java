@@ -96,14 +96,14 @@ public abstract class ChessPiece implements Serializable {
 	/**
 	 * Generate a list of all coordinates controlled by the piece.
 	 * @param coord the position of the piece on the chess board.
-	 * @return a list of all coordinates controlled by this piece. 
+	 * @return an unmodifiable list of all coordinates controlled by this piece. 
 	 */
 	public abstract List<ChessCoord> generateAllControlledCoords(ChessCoord coord);
 	
 	/**
 	 * Generate a list of all the legal moves of this piece.
 	 * @param coord the position of the piece on the chess board.
-	 * @return a list of all legal chess moves that this piece has.
+	 * @return an unmodifiable list of all legal chess moves that this piece has.
 	 */
 	public abstract List<ChessMoveAction> generateLegalMoves(ChessCoord coord);
 }

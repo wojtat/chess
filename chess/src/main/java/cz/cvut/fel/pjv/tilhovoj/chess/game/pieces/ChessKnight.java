@@ -1,6 +1,7 @@
 package cz.cvut.fel.pjv.tilhovoj.chess.game.pieces;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -39,12 +40,12 @@ public class ChessKnight extends ChessPiece {
 			}
 		}
 		
-		return moves;
+		return Collections.unmodifiableList(moves);
 	}
 
 	@Override
 	public List<ChessCoord> generateAllControlledCoords(ChessCoord coord) {
-		return coord.getKnightMoves();
+		return Collections.unmodifiableList(coord.getKnightMoves());
 	}
 
 	@Override

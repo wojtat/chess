@@ -1,6 +1,7 @@
 package cz.cvut.fel.pjv.tilhovoj.chess.game.pieces;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import cz.cvut.fel.pjv.tilhovoj.chess.game.*;
@@ -97,12 +98,12 @@ public class ChessKing extends ChessPiece {
 			}
 		}
 		
-		return moves;
+		return Collections.unmodifiableList(moves);
 	}
 
 	@Override
 	public List<ChessCoord> generateAllControlledCoords(ChessCoord coord) {
-		return coord.getNeighbours();
+		return Collections.unmodifiableList(coord.getNeighbours());
 	}
 
 	@Override

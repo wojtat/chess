@@ -1,6 +1,7 @@
 package cz.cvut.fel.pjv.tilhovoj.chess.game.pieces;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import cz.cvut.fel.pjv.tilhovoj.chess.game.ChessBoard;
@@ -33,7 +34,7 @@ public class ChessBishop extends ChessDirectionalPiece {
 		doMovementDirection(moves, coord.getAllDownLeft(), coord);
 		doMovementDirection(moves, coord.getAllDownRight(), coord);
 		
-		return moves;
+		return Collections.unmodifiableList(moves);
 	}
 
 	@Override
@@ -45,6 +46,6 @@ public class ChessBishop extends ChessDirectionalPiece {
 		doControllDirection(coords, coord.getAllDownLeft(), coord);
 		doControllDirection(coords, coord.getAllDownRight(), coord);
 		
-		return coords;
+		return Collections.unmodifiableList(coords);
 	}
 }

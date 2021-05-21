@@ -1,6 +1,7 @@
 package cz.cvut.fel.pjv.tilhovoj.chess.game.pieces;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import cz.cvut.fel.pjv.tilhovoj.chess.game.ChessBoard;
@@ -102,7 +103,7 @@ public class ChessPawn extends ChessPiece {
 			}
 		}
 		
-		return moves;
+		return Collections.unmodifiableList(moves);
 	}
 
 	@Override
@@ -118,7 +119,7 @@ public class ChessPawn extends ChessPiece {
 			coords.add(forwardRight);
 		}
 		
-		return coords;
+		return Collections.unmodifiableList(coords);
 	}
 
 	@Override
