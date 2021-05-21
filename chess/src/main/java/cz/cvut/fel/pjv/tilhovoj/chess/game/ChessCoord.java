@@ -3,6 +3,7 @@ package cz.cvut.fel.pjv.tilhovoj.chess.game;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Bundles together the rank and the file that make a chess board coordinate.
@@ -25,24 +26,24 @@ public class ChessCoord implements Serializable {
 	private Integer file;
 	
 	/**
-	 * Contructs a new coordinate from the given string representation.
+	 * Constructs a new coordinate from the given string representation.
 	 * @param notation must be a 2 character string where the first character
 	 * specifies the file and the second one the rank.
 	 * @return the coordinate that corresponds to the string.
 	 */
-	public static ChessCoord fromString(String notation) {
+	public static Optional<ChessCoord> fromString(String notation) {
 		if (notation.length() != 2) {
-			return null;
+			return Optional.empty();
 		}
 		char fileChar = Character.toLowerCase(notation.charAt(0));
 		char rankChar = notation.charAt(1);
 		if (!Character.isDigit(rankChar)) {
-			return null;
+			return Optional.empty();
 		}
 		
 		int file = fileChar - 'a' + 1;
 		int rank = rankChar - '0';
-		return new ChessCoord(rank, file);
+		return Optional.of(new ChessCoord(rank, file));
 	}
 	
 	/**

@@ -2,6 +2,8 @@ package cz.cvut.fel.pjv.tilhovoj.chess.game.pieces;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import cz.cvut.fel.pjv.tilhovoj.chess.game.*;
 
@@ -21,35 +23,39 @@ public abstract class ChessPiece implements Serializable {
 	 * @param c the character to be interpreted.
 	 * @return the piece that corresponds to the specified character that will live on the chess board.
 	 */
-	public static ChessPiece fromFENCharacter(ChessBoard board, char c) {
+	public static Optional<ChessPiece> fromFENCharacter(ChessBoard board, char c) {
 		PlayerColor color = Character.isLowerCase(c) ? PlayerColor.COLOR_BLACK : PlayerColor.COLOR_WHITE;
 		c = Character.toUpperCase(c);
-		return fromKind(board, color, ChessPieces.fromSANCharacter(c));
+		try {
+			return fromKind(board, color, ChessPieces.fromSANCharacter(c).get());
+		} catch (NoSuchElementException e) {
+			return Optional.empty();
+		}
 	}
 	
 	/**
-	 * Get a new piece from the pice kind and player color.
+	 * Get a new piece from the piece kind and player color.
 	 * @param board the board this piece will live on.
 	 * @param color the owner of the piece.
 	 * @param kind the kind of the piece.
 	 * @return a concrete piece represented by the piece kind.
 	 */
-	public static ChessPiece fromKind(ChessBoard board, PlayerColor color, ChessPieces kind) {
+	public static Optional<ChessPiece> fromKind(ChessBoard board, PlayerColor color, ChessPieces kind) {
 		switch (kind) {
 		case PIECE_PAWN:
-			return new ChessPawn(board, color);
+			return Optional.of((ChessPiece)new ChessPawn(board, color));
 		case PIECE_BISHOP:
-			return new ChessBishop(board, color);
+			return Optional.of((ChessPiece)new ChessBishop(board, color));
 		case PIECE_KNIGHT:
-			return new ChessKnight(board, color);
+			return Optional.of((ChessPiece)new ChessKnight(board, color));
 		case PIECE_ROOK:
-			return new ChessRook(board, color);
+			return Optional.of((ChessPiece)new ChessRook(board, color));
 		case PIECE_QUEEN:
-			return new ChessQueen(board, color);
+			return Optional.of((ChessPiece)new ChessQueen(board, color));
 		case PIECE_KING:
-			return new ChessKing(board, color);
+			return Optional.of((ChessPiece)new ChessKing(board, color));
 		default:
-			return null;
+			return Optional.empty();
 		}
 	}
 	

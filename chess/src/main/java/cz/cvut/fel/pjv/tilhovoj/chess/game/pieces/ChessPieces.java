@@ -1,5 +1,7 @@
 package cz.cvut.fel.pjv.tilhovoj.chess.game.pieces;
 
+import java.util.Optional;
+
 /**
  * Represents the kind of a chess piece.
  */
@@ -16,22 +18,22 @@ public enum ChessPieces {
 	 * @param c the character representing a piece in standard algebraic notation.
 	 * @return the chess piece kind that corresponds to the given character.
 	 */
-	public static ChessPieces fromSANCharacter(char c) {
+	public static Optional<ChessPieces> fromSANCharacter(char c) {
 		switch (c) {
 		case 'P':
-			return PIECE_PAWN;
+			return Optional.of(PIECE_PAWN);
 		case 'N':
-			return PIECE_KNIGHT;
+			return Optional.of(PIECE_KNIGHT);
 		case 'B':
-			return PIECE_BISHOP;
+			return Optional.of(PIECE_BISHOP);
 		case 'R':
-			return PIECE_ROOK;
+			return Optional.of(PIECE_ROOK);
 		case 'Q':
-			return PIECE_QUEEN;
+			return Optional.of(PIECE_QUEEN);
 		case 'K':
-			return PIECE_KING;
+			return Optional.of(PIECE_KING);
 		default:
-			return null;
+			return Optional.empty();
 		}
 	}
 	
@@ -40,22 +42,23 @@ public enum ChessPieces {
 	 * @param kind the kind of the chess piece.
 	 * @return the character representing this kind of chess piece in standard algebraic notation.
 	 */
-	public static char toSANCharacter(ChessPieces kind) {
+	public static Optional<Character> toSANCharacter(ChessPieces kind) {
 		switch (kind) {
 		case PIECE_PAWN:
-			return 'P';
+			return Optional.of('P');
 		case PIECE_KNIGHT:
-			return 'N';
+			return Optional.of('N');
 		case PIECE_BISHOP:
-			return 'B';
+			return Optional.of('B');
 		case PIECE_ROOK:
-			return 'R';
+			return Optional.of('R');
 		case PIECE_QUEEN:
-			return 'Q';
+			return Optional.of('Q');
 		case PIECE_KING:
-			return 'K';
+			return Optional.of('K');
+		default:
+			return Optional.empty();
 		}
-		return 0;
 	}
 	
 	/**

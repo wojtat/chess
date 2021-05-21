@@ -66,7 +66,7 @@ public class ChessPawn extends ChessPiece {
 		}
 		// if (is valid && (is en passant coord || is enemy piece)):
 		if (forwardLeft.isValid() 
-			&& (forwardLeft.equals(board.getEnPassantCoord())
+			&& (forwardLeft.equals(board.getEnPassantCoord().orElse(null))
 			|| (!board.getTileAt(forwardLeft).isEmpty() && board.getTileAt(forwardLeft).getPiece().player != this.player))) {
 			
 			if (forwardLeft.getRank() == PROMOTION_RANK) {
@@ -85,7 +85,7 @@ public class ChessPawn extends ChessPiece {
 		}
 		// if (is valid && (is en passant coord || is enemy piece)):
 		if (forwardRight.isValid() 
-			&& (forwardRight.equals(board.getEnPassantCoord())
+			&& (forwardRight.equals(board.getEnPassantCoord().orElse(null))
 			|| (!board.getTileAt(forwardRight).isEmpty() && board.getTileAt(forwardRight).getPiece().player != this.player))) {
 
 			if (forwardRight.getRank() == PROMOTION_RANK) {
@@ -132,7 +132,8 @@ public class ChessPawn extends ChessPiece {
 			builder.isCapture(move.getTo(), board);
 		} else if (fileDifference != 0) {
 			// Must be en passant
-			ChessCoord toBeCaptured = new ChessCoord(board.getEnPassantCoord().getRank() - MOVE_DIRECTION, board.getEnPassantCoord().getFile());
+			ChessCoord enPassantCoord = board.getEnPassantCoord().get();
+			ChessCoord toBeCaptured = new ChessCoord(enPassantCoord.getRank() - MOVE_DIRECTION, enPassantCoord.getFile());
 			builder.isCapture(toBeCaptured, board);
 		}
 		if (Math.abs(rankDifference) > 1) {
@@ -141,8 +142,7 @@ public class ChessPawn extends ChessPiece {
 			builder.isPawnDoubleMove(enPassantCoord);
 		}
 		if (move.getTo().getRank() == PROMOTION_RANK) {
-			// TODO: Add the concept of promotion to different pieces
-			builder.isPromotion(move.getPromoteToKind());
+			builder.isPromotion(move.getPromoteToKind().get());
 		}
 		
 		ChessMoveAction action = builder.build();

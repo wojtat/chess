@@ -180,7 +180,7 @@ public class MainGuiController {
 				ChessMove move = action.getMove();
 				if (coord.equals(move.getTo())) {
 					// The move is possible
-					if (move.getPromoteToKind() != null) {
+					if (!move.getPromoteToKind().isEmpty()) {
 						// It's a promotion. Let the player choose the promoted piece
 						view.getBoardView().showPromoteToDialog(move);
 						break;

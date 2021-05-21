@@ -2,6 +2,7 @@ package cz.cvut.fel.pjv.tilhovoj.chess.game;
 
 import java.io.Serializable;
 import java.util.EnumSet;
+import java.util.Optional;
 
 import cz.cvut.fel.pjv.tilhovoj.chess.game.pieces.ChessPieces;
 
@@ -14,17 +15,17 @@ public class ChessMoveAction implements Serializable {
 	private ChessMove move;
 	private PlayerColor onTurn;
 	private EnumSet<ChessCastlingRight> oldCastlingRights;
-	private ChessCoord oldEnPassantCoord;
+	private Optional<ChessCoord> oldEnPassantCoord;
 	private int oldHalfMoveClock;
 	
 	private boolean isCapture;
-	private ChessCoord toBeCaptured;
-	private ChessPieces beingCaptured;
-	private ChessCoord enPassantCoord;
+	private Optional<ChessCoord> toBeCaptured;
+	private Optional<ChessPieces> beingCaptured;
+	private Optional<ChessCoord> enPassantCoord;
 	private boolean isCastleShort;
 	private boolean isCastleLong;
 	private boolean isPromotion;
-	private ChessPieces promotionPieceKind;
+	private Optional<ChessPieces> promotionPieceKind;
 	
 	private ChessMoveAction() {
 	}
@@ -41,7 +42,7 @@ public class ChessMoveAction implements Serializable {
 	 * Get the old en passant coordinate.
 	 * @return the old en passant coordinate.
 	 */
-	public ChessCoord getOldEnPassantCoord() {
+	public Optional<ChessCoord> getOldEnPassantCoord() {
 		return oldEnPassantCoord;
 	}
 
@@ -58,14 +59,14 @@ public class ChessMoveAction implements Serializable {
 	 * @return the promotion piece kind if it is a promotion, null otherwise.
 	 */
 	public ChessPieces getPromotionPieceKind() {
-		return promotionPieceKind;
+		return promotionPieceKind.get();
 	}
 	
 	/**
 	 * Get the new en passant coordinate.
 	 * @return the new en passant coordinate.
 	 */
-	public ChessCoord getEnPassantCoord() {
+	public Optional<ChessCoord> getEnPassantCoord() {
 		return enPassantCoord;
 	}
 	
@@ -106,7 +107,7 @@ public class ChessMoveAction implements Serializable {
 	 * @return the coordinate of the piece that will be captured, if it is a capture, null otherwise
 	 */
 	public ChessCoord getToBeCaptured() {
-		return toBeCaptured;
+		return toBeCaptured.get();
 	}
 
 	/**
@@ -122,7 +123,7 @@ public class ChessMoveAction implements Serializable {
 	 * @return the piece kind of the piece being captured, if it is a capture, null otherwise.
 	 */
 	public ChessPieces getBeingCaptured() {
-		return beingCaptured;
+		return beingCaptured.get();
 	}
 
 	/**
@@ -148,17 +149,17 @@ public class ChessMoveAction implements Serializable {
 		private ChessMove move;
 		private PlayerColor onTurn;
 		private EnumSet<ChessCastlingRight> oldCastlingRights;
-		private ChessCoord oldEnPassantCoord;
+		private Optional<ChessCoord> oldEnPassantCoord;
 		private int oldHalfMoveClock;
 		
 		private boolean isCapture;
-		private ChessCoord toBeCaptured;
-		private ChessPieces beingCaptured;
-		private ChessCoord enPassantCoord;
+		private Optional<ChessCoord> toBeCaptured;
+		private Optional<ChessPieces> beingCaptured;
+		private Optional<ChessCoord> enPassantCoord;
 		private boolean isCastleShort;
 		private boolean isCastleLong;
 		private boolean isPromotion;
-		private ChessPieces promotionPieceKind;
+		private Optional<ChessPieces> promotionPieceKind;
 		
 		/**
 		 * Creates a new Builder with the mandatory arguments.
@@ -172,6 +173,10 @@ public class ChessMoveAction implements Serializable {
 			this.oldCastlingRights = board.getCastlingRights().clone();
 			this.oldEnPassantCoord = board.getEnPassantCoord();
 			this.oldHalfMoveClock = board.getHalfMoveClock();
+			this.toBeCaptured = Optional.empty();
+			this.beingCaptured = Optional.empty();
+			this.enPassantCoord = Optional.empty();
+			this.promotionPieceKind = Optional.empty();
 		}
 		
 		/**
@@ -181,8 +186,8 @@ public class ChessMoveAction implements Serializable {
 		 */
 		public Builder isCapture(ChessCoord toBeCaptured, ChessBoard board) {
 			this.isCapture = true;
-			this.toBeCaptured = toBeCaptured;
-			this.beingCaptured = board.getTileAt(toBeCaptured).getPiece().getKind();
+			this.toBeCaptured = Optional.of(toBeCaptured);
+			this.beingCaptured = Optional.of(board.getTileAt(toBeCaptured).getPiece().getKind());
 			return this;
 		}
 		
@@ -191,7 +196,7 @@ public class ChessMoveAction implements Serializable {
 		 * @param enPassantCoord the destination coordinate of a capturing pawn in the event of a following en passant capture.
 		 */
 		public Builder isPawnDoubleMove(ChessCoord enPassantCoord) {
-			this.enPassantCoord = enPassantCoord;
+			this.enPassantCoord = Optional.of(enPassantCoord);
 			return this;
 		}
 		
@@ -211,7 +216,7 @@ public class ChessMoveAction implements Serializable {
 		 */
 		public Builder isPromotion(ChessPieces promotionPieceKind) {
 			this.isPromotion = true;
-			this.promotionPieceKind = promotionPieceKind;
+			this.promotionPieceKind = Optional.of(promotionPieceKind);
 			return this;
 		}
 		

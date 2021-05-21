@@ -1,5 +1,7 @@
 package cz.cvut.fel.pjv.tilhovoj.chess.game;
 
+import java.util.NoSuchElementException;
+
 import cz.cvut.fel.pjv.tilhovoj.chess.game.pieces.*;
 
 /**
@@ -123,8 +125,8 @@ public class ViewableChessGame extends ChessGame {
 		sanMoveList.add(move);
 		// Remove all uninteresting characters
 		move = move.replaceAll("[\\-\\+x#]", "");
-		ChessPieces pieceKind;
-		ChessCoord destination;
+		ChessPieces pieceKind = null;
+		ChessCoord destination = null;
 		ChessPieces promoteTo = null;
 		int rankSpec = 0;
 		int fileSpec = 0;
@@ -136,7 +138,11 @@ public class ViewableChessGame extends ChessGame {
 			return;
 		} else if (Character.isUpperCase(move.charAt(0))) {
 			// It's a piece move
-			pieceKind = ChessPieces.fromSANCharacter(move.charAt(0));
+			try {
+				pieceKind = ChessPieces.fromSANCharacter(move.charAt(0)).get();
+			} catch (NoSuchElementException e) {
+				LOG.severe(move.charAt(0) + " is an invalid chess piece.");
+			}
 			move = move.substring(1);
 		} else {
 			// It's a pawn move
@@ -145,7 +151,11 @@ public class ViewableChessGame extends ChessGame {
 		int equalsIndex = move.indexOf('=');
 		if (equalsIndex != -1) {
 			// It's a promotion
-			promoteTo = ChessPieces.fromSANCharacter(move.charAt(equalsIndex+1));
+			try {
+				promoteTo = ChessPieces.fromSANCharacter(move.charAt(equalsIndex+1)).get();
+			} catch (NoSuchElementException e) {
+				LOG.severe(move.charAt(equalsIndex+1) + " is an invalid chess piece.");
+			}
 			move = move.substring(0, equalsIndex);
 		}
 
@@ -166,7 +176,11 @@ public class ViewableChessGame extends ChessGame {
 			move = move.substring(2);
 		}
 		// Now we only have 2 characters that specify the destination
-		destination = ChessCoord.fromString(move);
+		try {
+			destination = ChessCoord.fromString(move).get();
+		} catch (NoSuchElementException e) {
+			LOG.severe(move + " is an invalid chess coordinate.");
+		}
 		LOG.fine("MOVING " + pieceKind + " TO " + destination);
 		ChessMoveAction action = findMovingPieceAction(pieceKind, destination, rankSpec, fileSpec, promoteTo);
 		insertMove(action);

@@ -3,6 +3,9 @@ package cz.cvut.fel.pjv.tilhovoj.chess.game;
 import java.io.Serializable;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.logging.Logger;
 
 import cz.cvut.fel.pjv.tilhovoj.chess.game.pieces.*;
 
@@ -12,6 +15,8 @@ import cz.cvut.fel.pjv.tilhovoj.chess.game.pieces.*;
  */
 public class ChessBoard implements Serializable {
 	private static final long serialVersionUID = -8455258181430213061L;
+	
+	private static Logger LOG = Logger.getLogger(ChessBoard.class.getName());
 	
 	/**
 	 * Number of ranks of a chess board (i.e. the height).
@@ -24,7 +29,7 @@ public class ChessBoard implements Serializable {
 	public static final int NUM_FILES = 8;
 	
 	private Tile[][] tiles;
-	private ChessCoord enPassantCoord;
+	private Optional<ChessCoord> enPassantCoord;
 	
 	private int halfMoveClock;
 	
@@ -70,7 +75,11 @@ public class ChessBoard implements Serializable {
 				if (Character.isDigit(c)) {
 					file += Character.getNumericValue(c);
 				} else {
-					board.getTileAt(rank, file++).setPiece(ChessPiece.fromFENCharacter(board, c));
+					try {
+						board.getTileAt(rank, file++).setPiece(ChessPiece.fromFENCharacter(board, c).get());
+					} catch (NoSuchElementException e) {
+						LOG.severe("Invalid chess piece '" + c + "'");
+					}
 				}
 			}
 		}
@@ -94,7 +103,7 @@ public class ChessBoard implements Serializable {
 			}
 		}
 		
-		// NOTE: If en passant coord is '-', then ChessCoord.fromString() returns null
+		// NOTE: If en passant coord is '-', then ChessCoord.fromString() returns no value
 		board.enPassantCoord = ChessCoord.fromString(fields[3]);
 		
 		return board;
@@ -102,7 +111,7 @@ public class ChessBoard implements Serializable {
 
 	private ChessBoard() {
 		this.tiles = new Tile[NUM_RANKS][NUM_FILES];
-		this.enPassantCoord = null;
+		this.enPassantCoord = Optional.empty();
 		this.toMove = PlayerColor.getFirst();
 		this.castlingRights = EnumSet.noneOf(ChessCastlingRight.class);
 		setEmptyBoard();
@@ -204,7 +213,7 @@ public class ChessBoard implements Serializable {
 		movePieceAndReplace(move.getFrom(), move.getTo());
 		if (action.isPromotion()) {
 			// If promotion, then replace the pawn with the promoted piece
-			ChessPiece promotedPiece = ChessPiece.fromKind(this, action.getOnTurn(), action.getPromotionPieceKind());
+			ChessPiece promotedPiece = ChessPiece.fromKind(this, action.getOnTurn(), action.getPromotionPieceKind()).get();
 			getTileAt(move.getTo()).setPiece(promotedPiece);
 		}
 		if (action.isCastle()) {
@@ -266,7 +275,7 @@ public class ChessBoard implements Serializable {
 		movePieceAndReplace(move.getTo(), move.getFrom());
 		if (action.isCapture()) {
 			// If a capture happened, put the captured piece on the board
-			ChessPiece capturedPiece = ChessPiece.fromKind(this, PlayerColor.getPrevious(action.getOnTurn()), action.getBeingCaptured());
+			ChessPiece capturedPiece = ChessPiece.fromKind(this, PlayerColor.getPrevious(action.getOnTurn()), action.getBeingCaptured()).get();
 			getTileAt(action.getToBeCaptured()).setPiece(capturedPiece);
 		}
 		toMove = action.getOnTurn();
@@ -356,7 +365,7 @@ public class ChessBoard implements Serializable {
 	 * @param coord the new coordinate of the en passant square (the square the capturing pawn moves to
 	 * when it captures en passant.
 	 */
-	public void setEnPassantCoord(ChessCoord coord) {
+	public void setEnPassantCoord(Optional<ChessCoord> coord) {
 		enPassantCoord = coord;
 	}
 	
@@ -365,7 +374,7 @@ public class ChessBoard implements Serializable {
 	 * @return the new coordinate of the en passant square (the square the capturing pawn moves to
 	 * when it captures en passant.
 	 */
-	public ChessCoord getEnPassantCoord() {
+	public Optional<ChessCoord> getEnPassantCoord() {
 		return enPassantCoord;
 	}
 	

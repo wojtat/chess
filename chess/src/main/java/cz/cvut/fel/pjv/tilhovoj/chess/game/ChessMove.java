@@ -1,6 +1,7 @@
 package cz.cvut.fel.pjv.tilhovoj.chess.game;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 import cz.cvut.fel.pjv.tilhovoj.chess.game.pieces.ChessPieces;
 
@@ -13,7 +14,7 @@ public class ChessMove implements Serializable {
 	
 	private ChessCoord from;
 	private ChessCoord to;
-	private ChessPieces promoteToKind;
+	private Optional<ChessPieces> promoteToKind;
 	
 	/**
 	 * Constructs a new chess move from the source coordinate, destination coordinate and the promotion piece kind.
@@ -24,7 +25,7 @@ public class ChessMove implements Serializable {
 	public ChessMove(ChessCoord from, ChessCoord to, ChessPieces promoteToKind) {
 		this.from = from;
 		this.to = to;
-		this.promoteToKind = promoteToKind;
+		this.promoteToKind = Optional.of(promoteToKind);
 	}
 
 	/**
@@ -33,7 +34,9 @@ public class ChessMove implements Serializable {
 	 * @param to the destination coordinate.
 	 */
 	public ChessMove(ChessCoord from, ChessCoord to) {
-		this(from, to, null);
+		this.from = from;
+		this.to = to;
+		this.promoteToKind = Optional.empty();
 	}
 
 	/**
@@ -56,7 +59,7 @@ public class ChessMove implements Serializable {
 	 * Get the promotion piece kind.
 	 * @return the promotion piece kind, if it is a promotion, null otherwise.
 	 */
-	public ChessPieces getPromoteToKind() {
+	public Optional<ChessPieces> getPromoteToKind() {
 		return promoteToKind;
 	}
 }
