@@ -1,6 +1,7 @@
 package cz.cvut.fel.pjv.tilhovoj.chess.gui.view;
 
 import java.io.*;
+import java.util.logging.Logger;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -12,6 +13,12 @@ import cz.cvut.fel.pjv.tilhovoj.chess.pgn.*;
  * Contains various dialog methods for loading / creating / saving chess games in different formats.
  */
 public class Dialog {
+	private static Logger LOG = Logger.getLogger(Dialog.class.getName());
+	
+	private static void showErrorDialog(String title, String message) {
+		JOptionPane.showMessageDialog(null, message, title, JOptionPane.ERROR_MESSAGE);
+	}
+	
 	/**
 	 * Shows the new game dialog which lets the user pick what player will be human / computer controlled,
 	 * what time control the game will be in and the starting position of the game.
@@ -115,7 +122,10 @@ public class Dialog {
 				stream.close();
 				return game;
 			} catch (IOException | ClassNotFoundException e) {
+				String message = "Could not open file '" + selected + "' to read a .chess game save."; 
 				e.printStackTrace();
+				LOG.severe(message);
+				showErrorDialog("Error opening file for reading", message);
 			} 
 	    }
 		return null;
@@ -138,7 +148,10 @@ public class Dialog {
 				stream.writeObject(game);
 				stream.close();
 			} catch (IOException e) {
+				String message = "Could not write to file '" + selected + "' to save a chess save."; 
+				LOG.severe(message);
 				e.printStackTrace();
+				showErrorDialog("Error opening file for writing", message);
 			}
 	    }
 	}
@@ -166,7 +179,10 @@ public class Dialog {
 				stream.close();
 				return game;
 			} catch (IOException e) {
+				String message = "Could not open file '" + selected + "' to load a PGN game.";
+				LOG.severe(message);
 				e.printStackTrace();
+				showErrorDialog("Error opening file for reading", message);
 			} 
 	    }
 		return null;
@@ -192,7 +208,10 @@ public class Dialog {
 				writer.writeChessGame(game);
 				stream.close();
 			} catch (IOException e) {
+				String message = "Could not write to file '" + selected + "' to save a PGN game.";
+				LOG.severe(message);
 				e.printStackTrace();
+				showErrorDialog("Error opening file for writing", message);
 			}
 	    }
 	}
